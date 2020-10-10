@@ -1,0 +1,235 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Archivos de origen">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Archivos de encabezado">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="Archivos de recursos">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Shaders">
+      <UniqueIdentifier>{39dcc48f-275b-407c-b8cb-a42e9c1135cd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de encabezado\Clase Base">
+      <UniqueIdentifier>{de75c403-b3d9-4eb8-a1dc-9c1716846384}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de origen\Clase Base">
+      <UniqueIdentifier>{1bb95810-3525-4e25-a491-3d4ef6aa5365}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de origen\ClasesOGL">
+      <UniqueIdentifier>{fec1ee4b-9b7b-420b-b850-d1cdc72fbe71}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de origen\ClasesDX">
+      <UniqueIdentifier>{d40ebbe9-1574-4b05-bdf5-17f9a24275af}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de encabezado\ClasesOGL">
+      <UniqueIdentifier>{b070135b-0745-45ae-9027-50fd0790278d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de encabezado\ClasesDX">
+      <UniqueIdentifier>{ddbb9a41-d22c-4939-9a4d-8f97f0ab8004}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="main.cpp">
+      <Filter>Archivos de origen</Filter>
+    </ClCompile>
+    <ClCompile Include="glad.c">
+      <Filter>Archivos de origen</Filter>
+    </ClCompile>
+    <ClCompile Include="CGraphiAPI.cpp">
+      <Filter>Archivos de origen\Clase Base</Filter>
+    </ClCompile>
+    <ClCompile Include="COGLGraphiAPI.cpp">
+      <Filter>Archivos de origen\ClasesOGL</Filter>
+    </ClCompile>
+    <ClCompile Include="CDXGraphiAPI.cpp">
+      <Filter>Archivos de origen\ClasesDX</Filter>
+    </ClCompile>
+    <ClCompile Include="CDeviceContextOGL.cpp">
+      <Filter>Archivos de origen\ClasesOGL</Filter>
+    </ClCompile>
+    <ClCompile Include="CSwapChainOGL.cpp">
+      <Filter>Archivos de origen\ClasesOGL</Filter>
+    </ClCompile>
+    <ClCompile Include="CTexture.cpp">
+      <Filter>Archivos de origen\Clase Base</Filter>
+    </ClCompile>
+    <ClCompile Include="CTextureDX.cpp">
+      <Filter>Archivos de origen\ClasesDX</Filter>
+    </ClCompile>
+    <ClCompile Include="CTextureOGL.cpp">
+      <Filter>Archivos de origen\ClasesOGL</Filter>
+    </ClCompile>
+    <ClCompile Include="CDepthStencilView.cpp">
+      <Filter>Archivos de origen\Clase Base</Filter>
+    </ClCompile>
+    <ClCompile Include="CDepthStencilViewDX.cpp">
+      <Filter>Archivos de origen\ClasesDX</Filter>
+    </ClCompile>
+    <ClCompile Include="CDepthStencilViewOGL.cpp">
+      <Filter>Archivos de origen\ClasesOGL</Filter>
+    </ClCompile>
+    <ClCompile Include="CVertexShader.cpp">
+      <Filter>Archivos de origen\Clase Base</Filter>
+    </ClCompile>
+    <ClCompile Include="CVertexShaderDX.cpp">
+      <Filter>Archivos de origen\ClasesDX</Filter>
+    </ClCompile>
+    <ClCompile Include="CVertexShaderOGL.cpp">
+      <Filter>Archivos de origen\ClasesOGL</Filter>
+    </ClCompile>
+    <ClCompile Include="CPixelShader.cpp">
+      <Filter>Archivos de origen\Clase Base</Filter>
+    </ClCompile>
+    <ClCompile Include="CPixelShaderDX.cpp">
+      <Filter>Archivos de origen\ClasesDX</Filter>
+    </ClCompile>
+    <ClCompile Include="CPixelShaderOGL.cpp">
+      <Filter>Archivos de origen\ClasesOGL</Filter>
+    </ClCompile>
+    <ClCompile Include="CInputLayout.cpp">
+      <Filter>Archivos de origen\Clase Base</Filter>
+    </ClCompile>
+    <ClCompile Include="CInputLayoutDX.cpp">
+      <Filter>Archivos de origen\ClasesDX</Filter>
+    </ClCompile>
+    <ClCompile Include="CInputLayoutOGL.cpp">
+      <Filter>Archivos de origen\ClasesOGL</Filter>
+    </ClCompile>
+    <ClCompile Include="CBuffer.cpp">
+      <Filter>Archivos de origen\Clase Base</Filter>
+    </ClCompile>
+    <ClCompile Include="CBufferDX.cpp">
+      <Filter>Archivos de origen\ClasesDX</Filter>
+    </ClCompile>
+    <ClCompile Include="CBufferOGL.cpp">
+      <Filter>Archivos de origen\ClasesOGL</Filter>
+    </ClCompile>
+    <ClCompile Include="CShaderResourceView.cpp">
+      <Filter>Archivos de origen\Clase Base</Filter>
+    </ClCompile>
+    <ClCompile Include="CShaderResourceViewDX.cpp">
+      <Filter>Archivos de origen\ClasesDX</Filter>
+    </ClCompile>
+    <ClCompile Include="CShaderResourceViewOGL.cpp">
+      <Filter>Archivos de origen\ClasesOGL</Filter>
+    </ClCompile>
+    <ClCompile Include="CSamplerState.cpp">
+      <Filter>Archivos de origen\Clase Base</Filter>
+    </ClCompile>
+    <ClCompile Include="CSamplerStateDX.cpp">
+      <Filter>Archivos de origen\ClasesDX</Filter>
+    </ClCompile>
+    <ClCompile Include="CSamplerStateOGL.cpp">
+      <Filter>Archivos de origen\ClasesOGL</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="resource.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="CGraphiAPI.h">
+      <Filter>Archivos de encabezado\Clase Base</Filter>
+    </ClInclude>
+    <ClInclude Include="COGLGraphiAPI.h">
+      <Filter>Archivos de encabezado\ClasesOGL</Filter>
+    </ClInclude>
+    <ClInclude Include="CDXGraphiAPI.h">
+      <Filter>Archivos de encabezado\ClasesDX</Filter>
+    </ClInclude>
+    <ClInclude Include="CDeviceContextOGL.h">
+      <Filter>Archivos de encabezado\ClasesOGL</Filter>
+    </ClInclude>
+    <ClInclude Include="CSwapChainOGL.h">
+      <Filter>Archivos de encabezado\ClasesOGL</Filter>
+    </ClInclude>
+    <ClInclude Include="CTexture.h">
+      <Filter>Archivos de encabezado\Clase Base</Filter>
+    </ClInclude>
+    <ClInclude Include="CTextureDX.h">
+      <Filter>Archivos de encabezado\ClasesDX</Filter>
+    </ClInclude>
+    <ClInclude Include="CTextureOGL.h">
+      <Filter>Archivos de encabezado\ClasesOGL</Filter>
+    </ClInclude>
+    <ClInclude Include="CDepthStencilView.h">
+      <Filter>Archivos de encabezado\Clase Base</Filter>
+    </ClInclude>
+    <ClInclude Include="CDepthStencilViewDX.h">
+      <Filter>Archivos de encabezado\ClasesDX</Filter>
+    </ClInclude>
+    <ClInclude Include="CDepthStencilViewOGL.h">
+      <Filter>Archivos de encabezado\ClasesOGL</Filter>
+    </ClInclude>
+    <ClInclude Include="CVertexShader.h">
+      <Filter>Archivos de encabezado\Clase Base</Filter>
+    </ClInclude>
+    <ClInclude Include="CVertexShaderDX.h">
+      <Filter>Archivos de encabezado\ClasesDX</Filter>
+    </ClInclude>
+    <ClInclude Include="CVertexShaderOGL.h">
+      <Filter>Archivos de encabezado\ClasesOGL</Filter>
+    </ClInclude>
+    <ClInclude Include="CPixelShader.h">
+      <Filter>Archivos de encabezado\Clase Base</Filter>
+    </ClInclude>
+    <ClInclude Include="CPixelShaderDX.h">
+      <Filter>Archivos de encabezado\ClasesDX</Filter>
+    </ClInclude>
+    <ClInclude Include="CPixelShaderOGL.h">
+      <Filter>Archivos de encabezado\ClasesOGL</Filter>
+    </ClInclude>
+    <ClInclude Include="CInputLayout.h">
+      <Filter>Archivos de encabezado\Clase Base</Filter>
+    </ClInclude>
+    <ClInclude Include="CInputLayoutDX.h">
+      <Filter>Archivos de encabezado\ClasesDX</Filter>
+    </ClInclude>
+    <ClInclude Include="CInputLayoutOGL.h">
+      <Filter>Archivos de encabezado\ClasesOGL</Filter>
+    </ClInclude>
+    <ClInclude Include="CBuffer.h">
+      <Filter>Archivos de encabezado\Clase Base</Filter>
+    </ClInclude>
+    <ClInclude Include="CBufferDX.h">
+      <Filter>Archivos de encabezado\ClasesDX</Filter>
+    </ClInclude>
+    <ClInclude Include="CBufferOGL.h">
+      <Filter>Archivos de encabezado\ClasesOGL</Filter>
+    </ClInclude>
+    <ClInclude Include="CShaderResourceView.h">
+      <Filter>Archivos de encabezado\Clase Base</Filter>
+    </ClInclude>
+    <ClInclude Include="CShaderResourceViewDX.h">
+      <Filter>Archivos de encabezado\ClasesDX</Filter>
+    </ClInclude>
+    <ClInclude Include="CShaderResourceViewOGL.h">
+      <Filter>Archivos de encabezado\ClasesOGL</Filter>
+    </ClInclude>
+    <ClInclude Include="CSamplerState.h">
+      <Filter>Archivos de encabezado\Clase Base</Filter>
+    </ClInclude>
+    <ClInclude Include="CSamplerStateDX.h">
+      <Filter>Archivos de encabezado\ClasesDX</Filter>
+    </ClInclude>
+    <ClInclude Include="CSamplerStateOGL.h">
+      <Filter>Archivos de encabezado\ClasesOGL</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Graficas_II.rc">
+      <Filter>Archivos de recursos</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="..\Tutorial02.fx">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+  </ItemGroup>
+</Project>
