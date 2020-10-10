@@ -205,11 +205,12 @@ void CDXGraphiAPI::CreateTexture1D()
 CTexture* CDXGraphiAPI::CreateTexture2D(unsigned int width,
 	                                    unsigned int height,
 	                                    TEXTURE_FORMAT format,
-	                                    unsigned int bindFlags)
+	                                    unsigned int bindFlags,
+                                        TYPE_USAGE Usage,
+                                        unsigned int numberTexture)
 {
     auto texture = new CTextureDX();
 
-    D3D11_USAGE usage = D3D11_USAGE_DEFAULT;  //Hacer esto un parametro
 
     CD3D11_TEXTURE2D_DESC desc(static_cast<DXGI_FORMAT>(format),
                                width,
@@ -217,7 +218,7 @@ CTexture* CDXGraphiAPI::CreateTexture2D(unsigned int width,
                                1,
                                0,
                                bindFlags,
-                               usage);
+                               static_cast<D3D11_USAGE>(Usage));
 
     //Crear textura
     HRESULT hr = m_pd3dDevice->CreateTexture2D(&desc, nullptr, &texture->m_Texture);

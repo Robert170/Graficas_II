@@ -8,9 +8,11 @@ class COGLGraphiAPI : public CGraphiAPI
 public:
 
 	unsigned int m_AttachShaderID;
+	GLFWwindow* m_window;
 
 protected:
 	void InitWindow(unsigned int width, unsigned int height) override;
+	//void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 	void CreateDeviceandSwap() override;
 	void CreateDeferredContext() override;
 public:
@@ -36,9 +38,11 @@ public:
 	void CreateTexture1D() override;
 
 	CTexture* CreateTexture2D(unsigned int width,
-		unsigned int height,
-		TEXTURE_FORMAT format = TF_R8G8B8A8_UNORM,
-		unsigned int bindFlags = TEXTURE_BIND_SHADER_RESOURCE) override;
+		                      unsigned int height,
+		                      TEXTURE_FORMAT format ,
+		                      unsigned int bindFlags ,
+		                      TYPE_USAGE Usage,
+		                      unsigned int numberTexture) override;
 
 	void CreateTexture3D() override;
 	CPixelShader* CreatePixelShaders(std::string FileName,

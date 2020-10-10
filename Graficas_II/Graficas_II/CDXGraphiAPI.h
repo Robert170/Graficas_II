@@ -57,8 +57,10 @@ public:
     
 	CTexture* CreateTexture2D(unsigned int width,
 							  unsigned int height,
-							  TEXTURE_FORMAT format = TF_R8G8B8A8_UNORM,
-							  unsigned int bindFlags = TEXTURE_BIND_SHADER_RESOURCE) override;
+							  TEXTURE_FORMAT format,
+							  unsigned int bindFlags,
+		                      TYPE_USAGE Usage ,
+		                      unsigned int numberTexture) override;
 
     void CreateTexture3D() override;
 	CPixelShader* CreatePixelShaders(std::string FileName,

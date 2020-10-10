@@ -150,6 +150,14 @@ using TEXTURE_BIND_FLAG = enum
 	TEXTURE_BIND_UNORDERED_ACCESS = 0x80L,
 };
 
+using TYPE_USAGE = enum
+{
+	TYPE_USAGE_DEFAULT = 0,
+	TYPE_USAGE_IMMUTABLE = 1,
+	TYPE_USAGE_DYNAMIC = 2,
+	TYPE_USAGE_STAGING = 3
+};	
+
 struct SimpleVertex
 {
 	glm::vec3 Pos;
@@ -200,9 +208,11 @@ public:
 		                                     unsigned int bindFlags) = 0;
 	virtual void CreateTexture1D() = 0;
 	virtual CTexture* CreateTexture2D(unsigned int width,
-									  unsigned int height,
-									  TEXTURE_FORMAT format = TF_R8G8B8A8_UNORM,
-									  unsigned int bindFlags = TEXTURE_BIND_SHADER_RESOURCE) = 0;
+		                              unsigned int height,
+		                              TEXTURE_FORMAT format = TF_R8G8B8A8_UNORM,
+		                              unsigned int bindFlags = TEXTURE_BIND_SHADER_RESOURCE,
+		                              TYPE_USAGE Usage = TYPE_USAGE_DEFAULT,
+		                              unsigned int numberTexture = 1) = 0;
 	virtual void CreateTexture3D() = 0;
 	virtual CPixelShader* CreatePixelShaders(std::string FileName,
 		                                    std::string Entry = "",
