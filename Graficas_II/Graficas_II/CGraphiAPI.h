@@ -1,5 +1,6 @@
 #pragma once
 #include <iostream>
+#include <vector>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
@@ -12,6 +13,7 @@ class CSamplerState;
 class CPixelShader;
 class CVertexShader;
 class CInputLayout;
+class CRasterizerState;
 
 using TEXTURE_FORMAT = enum
 {
@@ -158,6 +160,12 @@ using TYPE_USAGE = enum
 	TYPE_USAGE_STAGING = 3
 };	
 
+using CLEAR_FLAG = enum
+{
+	CLEAR_DEPTH = 0x1L,
+	CLEAR_STENCIL = 0x2L
+};
+
 struct SimpleVertex
 {
 	glm::vec3 Pos;
@@ -196,35 +204,42 @@ public:
 
 	//create
 	
-	virtual CBuffer* CreateVertexBuffer(SimpleVertex Ver[],
-		                                unsigned int bindFlags) = 0;
-	virtual CBuffer* CreateIndexBuffer(unsigned int Ind[],
-		                               unsigned int bindFlags) = 0;
-	virtual CBuffer* CreateConstantBufferNC(CBNeverChanges CBNC,
-		                                    unsigned int bindFlags) = 0;
-	virtual CBuffer* CreateConstantBufferCOR(CBChangeOnResize CBCR,
-		                                     unsigned int bindFlags) = 0;
-	virtual CBuffer* CreateConstantBufferCEF(CBChangesEveryFrame CBCEF,
-		                                     unsigned int bindFlags) = 0;
+	virtual CBuffer* CreateVertexBuffer(unsigned int bindFlags, 
+		                                std::vector <SimpleVertex> Ver = 
+		                                { {glm::vec3(0.0f, 0.0f, 0.0f), 
+		                                 glm::vec2(0.0f, 0.0f)} },
+		                                unsigned int ID = 0) = 0;
+	virtual CBuffer* CreateIndexBuffer(unsigned int bindFlags,
+		                               std::vector<unsigned int> Ind = { 0 },
+		                               unsigned int ID = 0) = 0;
+	virtual CBuffer* CreateConstantBufferNC(unsigned int bindFlags) = 0;
+	virtual CBuffer* CreateConstantBufferCOR(unsigned int bindFlags) = 0;
+	virtual CBuffer* CreateConstantBufferCEF(unsigned int bindFlags) = 0;
 	virtual void CreateTexture1D() = 0;
 	virtual CTexture* CreateTexture2D(unsigned int width,
 		                              unsigned int height,
+		                              unsigned int numberTexture,
 		                              TEXTURE_FORMAT format = TF_R8G8B8A8_UNORM,
 		                              unsigned int bindFlags = TEXTURE_BIND_SHADER_RESOURCE,
-		                              TYPE_USAGE Usage = TYPE_USAGE_DEFAULT,
-		                              unsigned int numberTexture = 1) = 0;
+		                              TYPE_USAGE Usage = TYPE_USAGE_DEFAULT) = 0;
+
 	virtual void CreateTexture3D() = 0;
+
 	virtual CPixelShader* CreatePixelShaders(std::string FileName,
 		                                    std::string Entry = "",
 		                                    std::string ShaderModel = "",
 		                                    int ID = 1) = 0;
+
 	virtual	CVertexShader* CreateVertexShaders(std::string FileName,
-		                             std::string Entry = "",
-		                             std::string ShaderModel = "",
-		                             int ID = 1) = 0;
+		                                       std::string Entry = "",
+		                                       std::string ShaderModel = "",
+		                                       int ID = 1) = 0;
+
 	virtual CInputLayout* CreateInputLayout() = 0;
+
 	virtual CSamplerState* CreateSamplerState() = 0;
-	virtual void CreateRasterizerState() = 0;
+
+	virtual CRasterizerState* CreateRasterizerState() = 0;
 	
 
 	//set
@@ -233,31 +248,60 @@ public:
 		                         unsigned int NumBuffer,
 		                         unsigned int stride,
 		                         unsigned int offset) = 0;
+
 	virtual void SetIndexBuffer(CBuffer* IndBuff, 
 		                        unsigned int offset) = 0;
+
 	virtual void SetConstantBufferNC(CBuffer* ConstBuff,
 		                             unsigned int StartSlot,
 		                             unsigned int NumBuffer) = 0;
+
 	virtual void SetConstantBufferCOR(CBuffer* ConstBuff,
 		                              unsigned int StartSlot,
 		                              unsigned int NumBuffer) = 0;
+
 	virtual void SetConstantBufferCEF(CBuffer* ConstBuff,
 		                              unsigned int StartSlot,
 		                              unsigned int NumBuffer) = 0;
+
 	virtual void SetPixelShaders(CPixelShader * Pixel) = 0;
+
 	virtual void SetVertexShaders(CVertexShader* Vertex) = 0;
+
 	virtual void SetInputLayout(CInputLayout* Inp) = 0;
+
 	virtual void SetSamplerState(CSamplerState* Sam,
 		                         unsigned int StartSlot,
 		                         unsigned int NumSamplers) = 0;
-	virtual void SetDepthStencil() = 0;
-	virtual void SetRasterizerState() = 0;
-	virtual void SetRenderTarget(CTexture* pRTTex, 
-		                         CTexture* pDSTex = nullptr) = 0;
-	virtual void SetDepthStencil() = 0;
-	virtual void SetShaderResouerce(CTexture* pRTTex) = 0;
 
+	virtual void SetDepthStencil() = 0;
+
+	virtual void SetRasterizerState(CRasterizerState* RasState) = 0;
+
+	virtual void SetRenderTarget(CTexture* pRTTex, 
+		                         CTexture* pDSTex = nullptr,
+		                         unsigned int NumView=0) = 0;
+
+	virtual void SetDepthStencil() = 0;
+	virtual void SetShaderResouerce(CTexture* pRTTex, 
+		                            unsigned int StartSlot = 0,
+		                            unsigned int NumSamplers = 0) = 0;
+		                            
+	virtual void SetViewport(unsigned int NumViewport,
+		                     float Width,
+		                     float Height,
+		                     float TopLeftX = 0,
+		                     float TopLeftY = 0 ) = 0;
 	//clear
+
+	virtual void ClearRendTarView(CTexture* RT,
+		                          std::vector<float> ClearColor = { 0.0f, 0.0f, 0.0f, 0.0f }) = 0;
+
+	virtual void ClearDepthStenView(CTexture* RT,
+		                               CLEAR_FLAG ClerFlag = CLEAR_DEPTH,
+		                               float Depth = 1.0f,
+		                               unsigned int Stencil = 0) = 0;
+		
 
 	//draw
 	virtual void Drawindex(int SizeIndex, int StartindexLocation) = 0;

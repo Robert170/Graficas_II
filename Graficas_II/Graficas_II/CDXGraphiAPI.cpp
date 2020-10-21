@@ -1,7 +1,11 @@
 #include "CDXGraphiAPI.h"
-#include "CTextureDX.h"
+//#include "CTextureDX.h"
 #include "CInputLayoutDX.h"
 #include "CBufferDX.h"
+#include "CVertexShaderDX.h"
+#include "CPixelShaderDX.h"
+#include "CSamplerStateDX.h"
+#include "CRasterizerStateDX.h"
 #include <vector>
 
 
@@ -92,7 +96,7 @@ void CDXGraphiAPI::CreateDeviceandSwap()
     }
     if (FAILED(hr))
     {
-        //Gritame en la cara que algo salio mal
+        std::cout << "//error fallo la creacion del device y swapchain" << std::endl;
     }
 }
 
@@ -100,8 +104,9 @@ void CDXGraphiAPI::CreateDeferredContext()
 {
 }
 
-CBuffer* CDXGraphiAPI::CreateVertexBuffer(SimpleVertex Ver[],
-                                          unsigned int bindFlags)
+CBuffer* CDXGraphiAPI::CreateVertexBuffer(unsigned int bindFlags,
+                                          vector <SimpleVertex> Ver,
+                                          unsigned int ID)
 {
     auto VertexBuffer = new CBufferDX();
     CD3D11_BUFFER_DESC BufferDesc(sizeof(SimpleVertex),
@@ -109,22 +114,23 @@ CBuffer* CDXGraphiAPI::CreateVertexBuffer(SimpleVertex Ver[],
 
     D3D11_SUBRESOURCE_DATA InitData;
     ZeroMemory(&InitData, sizeof(InitData));
-    InitData.pSysMem = Ver;
+    InitData.pSysMem = Ver.data();
 
     HRESULT hr = m_pd3dDevice->CreateBuffer(&BufferDesc, 
                                             &InitData, 
                                             &VertexBuffer->m_pVertexBuffer);
     if (FAILED(hr))
     {
-        //error
+        std::cout << "//error fallo la creacion del vertex buffer" << std::endl;
         return nullptr;
     }
     return VertexBuffer;
         
 }
 
-CBuffer* CDXGraphiAPI::CreateIndexBuffer(unsigned int Ind[],
-                                     unsigned int bindFlags)
+CBuffer* CDXGraphiAPI::CreateIndexBuffer(unsigned int bindFlags, 
+                                         vector<unsigned int> Ind,
+                                         unsigned int ID)
 {
     auto IndexBuffer = new CBufferDX();
     CD3D11_BUFFER_DESC BufferDesc(sizeof(unsigned int),
@@ -132,58 +138,57 @@ CBuffer* CDXGraphiAPI::CreateIndexBuffer(unsigned int Ind[],
 
     D3D11_SUBRESOURCE_DATA InitData;
     ZeroMemory(&InitData, sizeof(InitData));
-    InitData.pSysMem = Ind;
+    InitData.pSysMem = Ind.data();
 
     HRESULT hr = m_pd3dDevice->CreateBuffer(&BufferDesc,
                                             &InitData,
                                             &IndexBuffer->m_pIndexBuffer);
     if (FAILED(hr))
     {
-        //error
+        std::cout << "//error fallo la creacion del Index buffer" << std::endl;
         return nullptr;
     }
     return IndexBuffer;
 }
 
-CBuffer* CDXGraphiAPI::CreateConstantBufferNC(CBNeverChanges CBNC, 
-                                              unsigned int bindFlags)
+CBuffer* CDXGraphiAPI::CreateConstantBufferNC(unsigned int bindFlags)
 {
     auto ConsBuffer = new CBufferDX();
-    CD3D11_BUFFER_DESC BufferDesc(sizeof(CBNC),
+    CD3D11_BUFFER_DESC BufferDesc(sizeof(CBNeverChanges),
                                   bindFlags);
     HRESULT hr = m_pd3dDevice->CreateBuffer(&BufferDesc,
                                             nullptr,
                                             &ConsBuffer->m_pCBNeverChanges);
     if (FAILED(hr))
     {
-        //error
+        std::cout << "//error fallo la creacion del Constant buffer Never Change" <<std::endl;
         return nullptr;
     }
     return ConsBuffer;
 }
 
-CBuffer* CDXGraphiAPI::CreateConstantBufferCOR(CBChangeOnResize CBCR, unsigned int bindFlags)
+CBuffer* CDXGraphiAPI::CreateConstantBufferCOR(unsigned int bindFlags)
 {
     auto ConsBuffer = new CBufferDX();
-    CD3D11_BUFFER_DESC BufferDesc(sizeof(CBCR),
+    CD3D11_BUFFER_DESC BufferDesc(sizeof(CBChangeOnResize),
                                   bindFlags);
+
     HRESULT hr  = m_pd3dDevice->CreateBuffer(&BufferDesc,
                                              nullptr,
                                              &ConsBuffer->m_pCBChangeOnResize);
     if (FAILED(hr))
     {
-        //error
+        std::cout << "//error fallo la creacion del Constant buffer Change On Resize" << std::endl;
         return nullptr;
     }
 
     return ConsBuffer;
 }
 
-CBuffer* CDXGraphiAPI::CreateConstantBufferCEF(CBChangesEveryFrame CBCEF, 
-                                               unsigned int bindFlags)
+CBuffer* CDXGraphiAPI::CreateConstantBufferCEF(unsigned int bindFlags)
 {
     auto ConsBuffer = new CBufferDX();
-    CD3D11_BUFFER_DESC BufferDesc(sizeof(CBCEF),
+    CD3D11_BUFFER_DESC BufferDesc(sizeof(CBChangesEveryFrame),
                                   bindFlags);
     //change every frame
     HRESULT hr = m_pd3dDevice->CreateBuffer(&BufferDesc,
@@ -191,7 +196,7 @@ CBuffer* CDXGraphiAPI::CreateConstantBufferCEF(CBChangesEveryFrame CBCEF,
                                             &ConsBuffer->m_pCBChangesEveryFrame);
     if (FAILED(hr))
     {
-        //error
+        std::cout << "//error fallo la creacion del Constant buffer Changes Every Frame" << std::endl;
         return nullptr;
     }
 
@@ -204,10 +209,10 @@ void CDXGraphiAPI::CreateTexture1D()
 
 CTexture* CDXGraphiAPI::CreateTexture2D(unsigned int width,
 	                                    unsigned int height,
+                                        unsigned int numberTexture,
 	                                    TEXTURE_FORMAT format,
 	                                    unsigned int bindFlags,
-                                        TYPE_USAGE Usage,
-                                        unsigned int numberTexture)
+                                        TYPE_USAGE Usage)
 {
     auto texture = new CTextureDX();
 
@@ -224,7 +229,7 @@ CTexture* CDXGraphiAPI::CreateTexture2D(unsigned int width,
     HRESULT hr = m_pd3dDevice->CreateTexture2D(&desc, nullptr, &texture->m_Texture);
     if(FAILED(hr))
     {
-        //Dime que no se pudo crear la textura!
+        std::cout << "//error fallo la creacion de la textura" << std::endl;
         return nullptr;
     }
 
@@ -272,9 +277,9 @@ void CDXGraphiAPI::CreateTexture3D()
 } //falta
 
 CPixelShader* CDXGraphiAPI::CreatePixelShaders(std::string FileName,
-                                      std::string Entry,
-                                      std::string ShaderModel,
-                                      int ID)
+                                               std::string Entry,
+                                               std::string ShaderModel,
+                                               int ID)
 {
     auto PixelShader = new CPixelShaderDX();
     LPWSTR File = new wchar_t[FileName.size()];
@@ -283,16 +288,19 @@ CPixelShader* CDXGraphiAPI::CreatePixelShaders(std::string FileName,
                                                  ShaderModel.c_str(),
                                                  &m_VSBlob));
     {
-        //error fallo la compilacion del shader
+        std::cout << " //error fallo la compilacion del shader" << std::endl;
+        return nullptr;
     }
 
     HRESULT hr = m_pd3dDevice->CreatePixelShader(m_VSBlob->GetBufferPointer(),
-        m_VSBlob->GetBufferSize(),
-        NULL, &PixelShader->m_PixelShader);
+                                                 m_VSBlob->GetBufferSize(),
+                                                 nullptr, 
+                                                 &PixelShader->m_PixelShader);
+
     if (FAILED(hr))
     {
         m_VSBlob->Release();
-        ///error
+        std::cout << "//error fallo la creacion del Pixel shader" << std::endl;
         return nullptr;
     }
 
@@ -300,9 +308,9 @@ CPixelShader* CDXGraphiAPI::CreatePixelShaders(std::string FileName,
 }
 
 CVertexShader* CDXGraphiAPI::CreateVertexShaders(std::string FileName,
-                                       std::string Entry,
-                                       std::string ShaderModel,
-                                       int ID)
+                                                 std::string Entry,
+                                                 std::string ShaderModel,
+                                                 int ID)
 {
     auto VertexShaders = new CVertexShaderDX();
     LPWSTR File = new wchar_t[FileName.size()];
@@ -311,15 +319,17 @@ CVertexShader* CDXGraphiAPI::CreateVertexShaders(std::string FileName,
                                                    ShaderModel.c_str(), 
                                                    &m_VSBlob));
     {
-        //error fallo la compilacion del shader
+        std::cout << "//error fallo la compilacion del shader" << std::endl;
     }
 
     HRESULT hr = m_pd3dDevice->CreateVertexShader(m_VSBlob->GetBufferPointer(), 
                                                   m_VSBlob->GetBufferSize(), 
-                                                  NULL, &VertexShaders->m_VertexShader);
+                                                  nullptr, 
+                                                  &VertexShaders->m_VertexShader);
     if (FAILED(hr))
     {
         m_VSBlob->Release();
+        std::cout << "//error fallo la creacion del vertex shader" << std::endl;
         ///error
         return nullptr;
     }
@@ -330,13 +340,13 @@ CInputLayout* CDXGraphiAPI::CreateInputLayout()
 {
     auto InputLayout = new CInputLayoutDX();
    
-   D3D11_INPUT_ELEMENT_DESC layout[] =
+   vector<D3D11_INPUT_ELEMENT_DESC> layout =
     {
         { "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
         { "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 },
     };
-    HRESULT  hr = m_pd3dDevice->CreateInputLayout(layout, 
-                                                  ARRAYSIZE(layout),
+    HRESULT  hr = m_pd3dDevice->CreateInputLayout(layout.data(), 
+                                                  layout.size(),
                                                   m_VSBlob->GetBufferPointer(),
                                                   m_VSBlob->GetBufferSize(), 
                                                   &InputLayout->m_pVertexLayout);
@@ -344,6 +354,7 @@ CInputLayout* CDXGraphiAPI::CreateInputLayout()
 
     if (FAILED(hr))
     {
+        std::cout << "//error fallo la creacion del Input layout" << std::endl;
         return nullptr;
     }
 
@@ -359,12 +370,19 @@ CSamplerState* CDXGraphiAPI::CreateSamplerState()
 
     m_pd3dDevice->CreateSamplerState(&SamStDesc,
                                      &SamplerState->m_pSamplerLinear);
-
+   
     return SamplerState;
 }
 
-void CDXGraphiAPI::CreateRasterizerState()
+CRasterizerState* CDXGraphiAPI::CreateRasterizerState()
 {
+    auto RasState = new CRasterizerStateDX();
+
+    CD3D11_RASTERIZER_DESC RasDesc;
+
+    m_pd3dDevice->CreateRasterizerState(&RasDesc,
+                                        &RasState->m_pRasterizerState);
+    return RasState;
 }
 
 void CDXGraphiAPI::SetConstantBufferNC(CBuffer* ConstBuff, 
@@ -401,9 +419,11 @@ void CDXGraphiAPI::SetConstantBufferCEF(CBuffer* ConstBuff,
                                               &Buffer->m_pCBChangesEveryFrame);
 }
 
-void CDXGraphiAPI::SetIndexBuffer(CBuffer* IndBuff,unsigned int offset)
+void CDXGraphiAPI::SetIndexBuffer(CBuffer* IndBuff,
+                                  unsigned int offset)
 {
     auto IndexBuff = reinterpret_cast<CBufferDX*>(IndBuff);
+
     m_pImmediateContext->IASetIndexBuffer(IndexBuff->m_pIndexBuffer,
                                           DXGI_FORMAT_R16_UINT, 
                                           offset);
@@ -429,6 +449,7 @@ void CDXGraphiAPI::SetVertexBuffer(CBuffer* VerBuff,
 void CDXGraphiAPI::SetPixelShaders(CPixelShader* Pixel)
 {
     auto PixelSh = reinterpret_cast<CPixelShaderDX*>(Pixel);
+
     m_pImmediateContext->PSSetShader(PixelSh->m_PixelShader, 
                                      nullptr, 
                                      0);
@@ -443,7 +464,9 @@ void CDXGraphiAPI::SetVertexShaders(CVertexShader* Vertex)
 }
 
 
-void CDXGraphiAPI::SetRenderTarget(CTexture* pRTTex, CTexture* pDSTex)
+void CDXGraphiAPI::SetRenderTarget(CTexture* pRTTex, 
+                                   CTexture* pDSTex,
+                                   unsigned int NumView)
 {
     auto pRTDX = reinterpret_cast<CTextureDX*>(pRTTex);
     ID3D11DepthStencilView* pDSV = nullptr;
@@ -453,7 +476,9 @@ void CDXGraphiAPI::SetRenderTarget(CTexture* pRTTex, CTexture* pDSTex)
       pDSV = pDSDX->m_DSV;
     }
 
-    m_pImmediateContext->OMSetRenderTargets(1, &pRTDX->m_RTV, pDSV);
+    m_pImmediateContext->OMSetRenderTargets(NumView,
+                                            &pRTDX->m_RTV, 
+                                            pDSV);
 }
 
 
@@ -478,22 +503,67 @@ void CDXGraphiAPI::SetDepthStencil()
 {
 }
 
-void CDXGraphiAPI::SetShaderResouerce(CTexture* pRTTex)
+void CDXGraphiAPI::SetShaderResouerce(CTexture* pRTTex,
+                                      unsigned int StartSlot,
+                                      unsigned int NumSamplers)
 {
     auto pRTDX = reinterpret_cast<CTextureDX*>(pRTTex);
-    m_pImmediateContext->PSSetShaderResources(0, 1, &pRTDX->m_SRV);
+    m_pImmediateContext->PSSetShaderResources(StartSlot, 
+                                              NumSamplers, 
+                                              &pRTDX->m_SRV);
 }
 
-void CDXGraphiAPI::SetRasterizerState()
+void CDXGraphiAPI::SetViewport(unsigned int NumViewport,
+                               float Width,
+                               float Height,
+                               float TopLeftX,
+                               float TopLeftY)
 {
+    CD3D11_VIEWPORT Vp(TopLeftX,
+                       TopLeftY,
+                       Width,
+                       Height);
+
+    m_pImmediateContext->RSSetViewports(NumViewport, &Vp);
 }
 
-void CDXGraphiAPI::Drawindex(int SizeIndex, int StartindexLocation)
+
+void CDXGraphiAPI::SetRasterizerState(CRasterizerState * RasState)
+{
+    auto pRasteState = reinterpret_cast<CRasterizerStateDX*>(RasState);
+    m_pImmediateContext->RSSetState(pRasteState->m_pRasterizerState);
+}
+
+void CDXGraphiAPI::ClearRendTarView(CTexture* RT,
+                                    vector<float> ClearColor)
+{
+    auto pRTDX = reinterpret_cast<CTextureDX*>(RT);
+    m_pImmediateContext->ClearRenderTargetView(pRTDX->m_RTV, ClearColor.data());
+}
+
+
+void CDXGraphiAPI::ClearDepthStenView(CTexture* DS,
+                                      CLEAR_FLAG ClerFlag, 
+                                      float Depth, 
+                                      unsigned int Stencil)
+{
+    auto pDSDX = reinterpret_cast<CTextureDX*>(DS);
+
+     
+
+    m_pImmediateContext->ClearDepthStencilView(pDSDX->m_DSV,
+                                               static_cast<D3D11_CLEAR_FLAG>(ClerFlag),
+                                               Depth,
+                                               Stencil);
+}
+
+void CDXGraphiAPI::Drawindex(int SizeIndex, 
+                             int StartindexLocation)
 {
     m_pImmediateContext->Draw(SizeIndex, StartindexLocation);
 }
 
 void CDXGraphiAPI::Present()
 {
-    //m_pSwapChain->Present()
+    m_pSwapChain->Present(0, 0);
 }

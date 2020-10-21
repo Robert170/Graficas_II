@@ -2,8 +2,7 @@
 #include "CPixelShader.h"
 #include <fstream>
 #include <sstream>
-class CPixelShaderOGL :
-    public CPixelShader
+class CPixelShaderOGL : public CPixelShader
 {
 protected:
 	CPixelShaderOGL() = default;

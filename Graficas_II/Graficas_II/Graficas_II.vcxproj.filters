@@ -129,6 +129,15 @@
     <ClCompile Include="CSamplerStateOGL.cpp">
       <Filter>Archivos de origen\ClasesOGL</Filter>
     </ClCompile>
+    <ClCompile Include="CRasterizerState.cpp">
+      <Filter>Archivos de origen\Clase Base</Filter>
+    </ClCompile>
+    <ClCompile Include="CRasterizerStateDX.cpp">
+      <Filter>Archivos de origen\ClasesDX</Filter>
+    </ClCompile>
+    <ClCompile Include="CRasterizerStateOGL.cpp">
+      <Filter>Archivos de origen\ClasesOGL</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="resource.h">
@@ -219,6 +228,15 @@
       <Filter>Archivos de encabezado\ClasesDX</Filter>
     </ClInclude>
     <ClInclude Include="CSamplerStateOGL.h">
+      <Filter>Archivos de encabezado\ClasesOGL</Filter>
+    </ClInclude>
+    <ClInclude Include="CRasterizerState.h">
+      <Filter>Archivos de encabezado\Clase Base</Filter>
+    </ClInclude>
+    <ClInclude Include="CRasterizerStateDX.h">
+      <Filter>Archivos de encabezado\ClasesDX</Filter>
+    </ClInclude>
+    <ClInclude Include="CRasterizerStateOGL.h">
       <Filter>Archivos de encabezado\ClasesOGL</Filter>
     </ClInclude>
   </ItemGroup>

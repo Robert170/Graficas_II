@@ -163,6 +163,9 @@
     <ClCompile Include="CPixelShader.cpp" />
     <ClCompile Include="CPixelShaderDX.cpp" />
     <ClCompile Include="CPixelShaderOGL.cpp" />
+    <ClCompile Include="CRasterizerState.cpp" />
+    <ClCompile Include="CRasterizerStateDX.cpp" />
+    <ClCompile Include="CRasterizerStateOGL.cpp" />
     <ClCompile Include="CSamplerState.cpp" />
     <ClCompile Include="CSamplerStateDX.cpp" />
     <ClCompile Include="CSamplerStateOGL.cpp" />
@@ -196,6 +199,9 @@
     <ClInclude Include="CPixelShader.h" />
     <ClInclude Include="CPixelShaderDX.h" />
     <ClInclude Include="CPixelShaderOGL.h" />
+    <ClInclude Include="CRasterizerState.h" />
+    <ClInclude Include="CRasterizerStateDX.h" />
+    <ClInclude Include="CRasterizerStateOGL.h" />
     <ClInclude Include="CSamplerState.h" />
     <ClInclude Include="CSamplerStateDX.h" />
     <ClInclude Include="CSamplerStateOGL.h" />
