@@ -8,6 +8,7 @@ protected:
 	~CBufferOGL() = default;
 
 	unsigned int m_VBO;
+	unsigned int m_VAO;
 
 	friend class COGLGraphiAPI;
 };

@@ -102,6 +102,7 @@ void CDXGraphiAPI::CreateDeviceandSwap()
 
 void CDXGraphiAPI::CreateDeferredContext()
 {
+    //m_pd3dDevice->CreateDeferredContext()
 }
 
 CBuffer* CDXGraphiAPI::CreateVertexBuffer(unsigned int bindFlags,
@@ -503,7 +504,7 @@ void CDXGraphiAPI::SetDepthStencil()
 {
 }
 
-void CDXGraphiAPI::SetShaderResouerce(CTexture* pRTTex,
+void CDXGraphiAPI::SetShaderResource(CTexture* pRTTex,
                                       unsigned int StartSlot,
                                       unsigned int NumSamplers)
 {

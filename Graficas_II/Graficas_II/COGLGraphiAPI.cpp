@@ -50,24 +50,22 @@ COGLGraphiAPI::~COGLGraphiAPI()
 }
 
 
-CBuffer* COGLGraphiAPI::CreateVertexBuffer(SimpleVertex Ver[],
-	                                       unsigned int bindFlags,
+CBuffer* COGLGraphiAPI::CreateVertexBuffer(unsigned int bindFlags,
+	                                       std::vector <SimpleVertex> Ver,
 	                                       unsigned int ID)
 {
 	auto VertexBuffer = new CBufferOGL();
 
 	glGenBuffers(ID, &VertexBuffer->m_VBO);
 
-	unsigned int VAO;
-	glGenVertexArrays(1, &VAO);
-	//glBindVertexArray(VAO);
+	
+	glGenVertexArrays(1, &VertexBuffer->m_VAO);
 
-	/*glBindBuffer(GL_ARRAY_BUFFER, VBO);*/
 	return VertexBuffer;
 }
 
 CBuffer* COGLGraphiAPI::CreateIndexBuffer(unsigned int bindFlags,
-	                                      unsigned int Ind[],
+	                                      std::vector<unsigned int> Ind,
 	                                      unsigned int ID)
 {
 	return nullptr;
@@ -165,7 +163,7 @@ CSamplerState* COGLGraphiAPI::CreateSamplerState()
 	return nullptr;
 }
 
-void COGLGraphiAPI::CreateRasterizerState()
+CRasterizerState* COGLGraphiAPI::CreateRasterizerState()
 {
 }
 
@@ -177,6 +175,7 @@ void COGLGraphiAPI::SetVertexBuffer(CBuffer* VerBuff,
 {
 	auto VertBuff = reinterpret_cast<CBufferOGL*>(VerBuff);
 	glBindBuffer(GL_ARRAY_BUFFER, VertBuff->m_VBO);
+	glBindVertexArray(VertBuff->m_VAO);
 }
 
 void COGLGraphiAPI::SetIndexBuffer(CBuffer* IndBuff, unsigned int offset)
@@ -233,15 +232,39 @@ void COGLGraphiAPI::SetDepthStencil()
 {
 }
 
-void COGLGraphiAPI::SetShaderResouerce(CTexture* pRTTex)
+void COGLGraphiAPI::SetShaderResource(CTexture* pRTTex,
+	                                  unsigned int StartSlot,
+	                                  unsigned int NumSamplers)
 {
 }
 
-void COGLGraphiAPI::SetRasterizerState()
+void COGLGraphiAPI::SetViewport(unsigned int NumViewport, 
+	                            float Width, 
+	                            float Height, 
+	                            float TopLeftX, 
+	                            float TopLeftY)
 {
 }
 
-void COGLGraphiAPI::SetRenderTarget(CTexture* pRTTex, CTexture* pDSTex)
+void COGLGraphiAPI::ClearRendTarView(CTexture* RT, 
+	                                 std::vector<float> ClearColor)
+{
+}
+
+void COGLGraphiAPI::ClearDepthStenView(CTexture* RT, 
+	                                   CLEAR_FLAG ClerFlag, 
+	                                   float Depth, 
+	                                   unsigned int Stencil)
+{
+}
+
+void COGLGraphiAPI::SetRasterizerState(CRasterizerState* RasState)
+{
+}
+
+void COGLGraphiAPI::SetRenderTarget(CTexture* pRTTex,
+	                                CTexture* pDSTex,
+	                                unsigned int NumView)
 {
 }
 
