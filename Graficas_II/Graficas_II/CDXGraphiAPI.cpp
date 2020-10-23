@@ -284,10 +284,10 @@ CPixelShader* CDXGraphiAPI::CreatePixelShaders(std::string FileName,
 {
     auto PixelShader = new CPixelShaderDX();
     LPWSTR File = new wchar_t[FileName.size()];
-    if (PixelShader->CompileVertexShaderFromFile(File,
-                                                 Entry.c_str(),
-                                                 ShaderModel.c_str(),
-                                                 &m_VSBlob));
+    if (PixelShader->CompilePixelShaderFromFile(File,
+                                                Entry.c_str(),
+                                                ShaderModel.c_str(),
+                                                &m_VSBlob));
     {
         std::cout << " //error fallo la compilacion del shader" << std::endl;
         return nullptr;
@@ -337,7 +337,7 @@ CVertexShader* CDXGraphiAPI::CreateVertexShaders(std::string FileName,
     return VertexShaders;
 }
 
-CInputLayout* CDXGraphiAPI::CreateInputLayout()
+CInputLayout* CDXGraphiAPI::CreateInputLayout(unsigned int ID)
 {
     auto InputLayout = new CInputLayoutDX();
    
@@ -350,7 +350,7 @@ CInputLayout* CDXGraphiAPI::CreateInputLayout()
                                                   layout.size(),
                                                   m_VSBlob->GetBufferPointer(),
                                                   m_VSBlob->GetBufferSize(), 
-                                                  &InputLayout->m_pVertexLayout);
+                                                  &InputLayout->m_pInputLayout);
     m_VSBlob->Release();
 
     if (FAILED(hr))
@@ -364,7 +364,7 @@ CInputLayout* CDXGraphiAPI::CreateInputLayout()
 
 }
 
-CSamplerState* CDXGraphiAPI::CreateSamplerState()
+CSamplerState* CDXGraphiAPI::CreateSamplerState(unsigned int ID)
 {
     auto SamplerState = new CSamplerStateDX();
     CD3D11_SAMPLER_DESC SamStDesc;
@@ -487,7 +487,7 @@ void CDXGraphiAPI::SetRenderTarget(CTexture* pRTTex,
 void CDXGraphiAPI::SetInputLayout(CInputLayout* Inp)
 {
     auto InpLay = reinterpret_cast<CInputLayoutDX*>(Inp);
-    m_pImmediateContext->IASetInputLayout(InpLay->m_pVertexLayout);
+    m_pImmediateContext->IASetInputLayout(InpLay->m_pInputLayout);
 }
 
 void CDXGraphiAPI::SetSamplerState(CSamplerState* Sam, 

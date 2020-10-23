@@ -1,3 +1,18 @@
+/**
+ * @class CDXGraphiAPI
+ *
+ * @brief class for the api of directx
+ *
+ * This class is the ejecutate directx
+ *
+ * @author Roberto Ramírez (idv18c.rramirez@uartesdigitales.edu.mx)
+ *
+ * @date 9/24/2020
+ *
+ *
+ * @bug	No know Bugs
+ */
+
 #pragma once
 
 #include <d3d11.h>
@@ -219,14 +234,14 @@ public:
 	 * @bug		   No know Bugs
 	 * @return     Returns a pointer of CInputLayout
 	*/
-	CInputLayout* CreateInputLayout() override;
+	CInputLayout* CreateInputLayout(unsigned int ID) override;
 
 	/**
 	 * @brief      CreateSamplerState function, to create the sampler state
 	 * @bug		   No know Bugs
 	 * @return     Returns a pointer of CSamplerState
 	*/
-	CSamplerState* CreateSamplerState() override;
+	CSamplerState* CreateSamplerState(unsigned int ID) override;
 
 	/**
 	 * @brief      CreateRasterizerState function, to create the sampler state

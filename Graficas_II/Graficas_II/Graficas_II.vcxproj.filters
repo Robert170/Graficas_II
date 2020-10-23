@@ -51,12 +51,6 @@
     <ClCompile Include="CDXGraphiAPI.cpp">
       <Filter>Archivos de origen\ClasesDX</Filter>
     </ClCompile>
-    <ClCompile Include="CDeviceContextOGL.cpp">
-      <Filter>Archivos de origen\ClasesOGL</Filter>
-    </ClCompile>
-    <ClCompile Include="CSwapChainOGL.cpp">
-      <Filter>Archivos de origen\ClasesOGL</Filter>
-    </ClCompile>
     <ClCompile Include="CTexture.cpp">
       <Filter>Archivos de origen\Clase Base</Filter>
     </ClCompile>
@@ -151,12 +145,6 @@
     </ClInclude>
     <ClInclude Include="CDXGraphiAPI.h">
       <Filter>Archivos de encabezado\ClasesDX</Filter>
-    </ClInclude>
-    <ClInclude Include="CDeviceContextOGL.h">
-      <Filter>Archivos de encabezado\ClasesOGL</Filter>
-    </ClInclude>
-    <ClInclude Include="CSwapChainOGL.h">
-      <Filter>Archivos de encabezado\ClasesOGL</Filter>
     </ClInclude>
     <ClInclude Include="CTexture.h">
       <Filter>Archivos de encabezado\Clase Base</Filter>

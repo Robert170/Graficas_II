@@ -35,7 +35,7 @@ protected:
 	 * @return     Returns nothing
 	*/
 	void InitWindow(unsigned int width,
-		unsigned int height) override;
+		            unsigned int height) override;
 
 	/**
 	 * @brief      CreateDeviceandSwap function, to create device and swapchain
@@ -71,7 +71,7 @@ public:
 	 * @return     Returns nothing
 	*/
 	void Init(unsigned int width,
-		unsigned int height) override;
+		      unsigned int height) override;
 
 	//create
 
@@ -84,8 +84,8 @@ public:
 	 * @return     Returns a pointer of CBuffer
 	*/
 	CBuffer* CreateVertexBuffer(unsigned int bindFlags,
-		std::vector <SimpleVertex> Ver,
-		unsigned int ID) override;
+		                        std::vector <SimpleVertex> Ver,
+		                        unsigned int ID) override;
 
 	/**
 	 * @brief      CreateIndexBuffer function, to create index buffer
@@ -96,8 +96,8 @@ public:
 	 * @return     Returns a pointer of CBuffer
 	*/
 	CBuffer* CreateIndexBuffer(unsigned int bindFlags,
-		std::vector<unsigned int> Ind,
-		unsigned int ID) override;
+		                       std::vector<unsigned int> Ind,
+		                       unsigned int ID) override;
 
 	/**
 	 * @brief      CreateConstantBufferNC function, to create constant buffer
@@ -145,11 +145,11 @@ public:
 	 * @return     Returns a pointer of CTexture
 	*/
 	CTexture* CreateTexture2D(unsigned int width,
-		unsigned int height,
-		unsigned int numberTexture,
-		TEXTURE_FORMAT format,
-		unsigned int bindFlags,
-		TYPE_USAGE Usage) override;
+		                      unsigned int height,
+		                      unsigned int numberTexture,
+		                      TEXTURE_FORMAT format,
+		                      unsigned int bindFlags,
+		                      TYPE_USAGE Usage) override;
 
 	/**
 	 * @brief      CreateTexture3D function, to create a texture 3D
@@ -168,9 +168,9 @@ public:
 	 * @return     Returns a pointer of CPixelShader
 	*/
 	CPixelShader* CreatePixelShaders(std::string FileName,
-		std::string Entry,
-		std::string ShaderModel,
-		int ID) override;
+		                             std::string Entry,
+		                             std::string ShaderModel,
+		                             int ID) override;
 
 	/**
 	 * @brief      CreateVertexShaders function, to create vertex shader
@@ -182,23 +182,23 @@ public:
 	 * @return     Returns a pointer of CVertexShader
 	*/
 	CVertexShader* CreateVertexShaders(std::string FileName,
-		std::string Entry,
-		std::string ShaderModel,
-		int ID) override;
+		                               std::string Entry,
+		                               std::string ShaderModel,
+		                               int ID) override;
 
 	/**
 	 * @brief      CreateInputLayout function, to create the input layaout
 	 * @bug		   No know Bugs
 	 * @return     Returns a pointer of CInputLayout
 	*/
-	CInputLayout* CreateInputLayout() override;
+	CInputLayout* CreateInputLayout(unsigned int ID) override;
 
 	/**
 	 * @brief      CreateSamplerState function, to create the sampler state
 	 * @bug		   No know Bugs
 	 * @return     Returns a pointer of CSamplerState
 	*/
-	CSamplerState* CreateSamplerState() override;
+	CSamplerState* CreateSamplerState(unsigned int ID) override;
 
 	/**
 	 * @brief      CreateRasterizerState function, to create the sampler state
@@ -221,10 +221,10 @@ public:
 	 * @return     Returns nothing
 	*/
 	void SetVertexBuffer(CBuffer* VerBuff,
-		unsigned int StartSlot,
-		unsigned int NumBuffer,
-		unsigned int stride,
-		unsigned int offset) override;
+		                 unsigned int StartSlot,
+		                 unsigned int NumBuffer,
+		                 unsigned int stride,
+		                 unsigned int offset) override;
 
 
 	/**
@@ -247,8 +247,8 @@ public:
 	 * @return     Returns nothing
 	*/
 	void SetConstantBufferNC(CBuffer* ConstBuff,
-		unsigned int StartSlot,
-		unsigned int NumBuffer) override;
+		                     unsigned int StartSlot,
+		                     unsigned int NumBuffer) override;
 
 	/**
 	 * @brief      SetConstantBufferCOR function, to set constant buffer
@@ -260,8 +260,8 @@ public:
 	 * @return     Returns nothing
 	*/
 	void SetConstantBufferCOR(CBuffer* ConstBuff,
-		unsigned int StartSlot,
-		unsigned int NumBuffer) override;
+		                      unsigned int StartSlot,
+		                      unsigned int NumBuffer) override;
 
 	/**
 	 * @brief      SetConstantBufferCEF function, to set constant buffer
@@ -273,8 +273,8 @@ public:
 	 * @return     Returns nothing
 	*/
 	void SetConstantBufferCEF(CBuffer* ConstBuff,
-		unsigned int StartSlot,
-		unsigned int NumBuffer) override;
+		                      unsigned int StartSlot,
+		                      unsigned int NumBuffer) override;
 
 	/**
 	 * @brief      SetPixelShaders function, to set pixel shader
@@ -309,8 +309,8 @@ public:
 	 * @return     Returns nothing
 	*/
 	void SetSamplerState(CSamplerState* Sam,
-		unsigned int StartSlot,
-		unsigned int NumSamplers) override;
+		                 unsigned int StartSlot,
+		                 unsigned int NumSamplers) override;
 
 	/**
 	 * @brief      SetDepthStencil function, to set depth stencil
@@ -336,8 +336,8 @@ public:
 	 * @return     Returns nothing
 	*/
 	void SetRenderTarget(CTexture* pRTTex,
-		CTexture* pDSTex,
-		unsigned int NumView) override;
+		                 CTexture* pDSTex,
+		                 unsigned int NumView) override;
 
 	/**
 	 * @brief      SetShaderResouerce function, to set shader resource
@@ -348,8 +348,8 @@ public:
 	 * @return     Returns nothing
 	*/
 	void SetShaderResource(CTexture* pRTTex,
-		unsigned int StartSlot,
-		unsigned int NumSamplers) override;
+		                   unsigned int StartSlot,
+		                   unsigned int NumSamplers) override;
 
 	/**
 	 * @brief      SetViewport function, to set viewport
@@ -362,10 +362,10 @@ public:
 	 * @return     Returns nothing
 	*/
 	void SetViewport(unsigned int NumViewport,
-		float Width,
-		float Height,
-		float TopLeftX,
-		float TopLeftY) override;
+		             float Width,
+		             float Height,
+		             float TopLeftX,
+		             float TopLeftY) override;
 
 	//clear
 
@@ -377,7 +377,7 @@ public:
 	 * @return     Returns nothing
 	*/
 	void ClearRendTarView(CTexture* RT,
-		std::vector<float> ClearColor) override;
+		                  std::vector<float> ClearColor) override;
 
 	/**
 	 * @brief      ClearDepthStenView function, to clear the depth stencil view
@@ -389,9 +389,9 @@ public:
 	 * @return     Returns nothing
 	*/
 	void ClearDepthStenView(CTexture* RT,
-		CLEAR_FLAG ClerFlag,
-		float Depth,
-		unsigned int Stencil) override;
+		                    CLEAR_FLAG ClerFlag,
+		                    float Depth,
+		                    unsigned int Stencil) override;
 
 	//draw
 
@@ -402,7 +402,8 @@ public:
 	 * @bug		   No know Bugs
 	 * @return     Returns nothing
 	*/
-	void Drawindex(int SizeIndex, int StartindexLocation) override;
+	void Drawindex(int SizeIndex, 
+		           int StartindexLocation) override;
 
 	//swap
 

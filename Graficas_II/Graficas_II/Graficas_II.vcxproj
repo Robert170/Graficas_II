@@ -153,7 +153,6 @@
     <ClCompile Include="CDepthStencilView.cpp" />
     <ClCompile Include="CDepthStencilViewDX.cpp" />
     <ClCompile Include="CDepthStencilViewOGL.cpp" />
-    <ClCompile Include="CDeviceContextOGL.cpp" />
     <ClCompile Include="CDXGraphiAPI.cpp" />
     <ClCompile Include="CGraphiAPI.cpp" />
     <ClCompile Include="CInputLayout.cpp" />
@@ -172,7 +171,6 @@
     <ClCompile Include="CShaderResourceView.cpp" />
     <ClCompile Include="CShaderResourceViewDX.cpp" />
     <ClCompile Include="CShaderResourceViewOGL.cpp" />
-    <ClCompile Include="CSwapChainOGL.cpp" />
     <ClCompile Include="CTexture.cpp" />
     <ClCompile Include="CTextureDX.cpp" />
     <ClCompile Include="CTextureOGL.cpp" />
@@ -189,7 +187,6 @@
     <ClInclude Include="CDepthStencilView.h" />
     <ClInclude Include="CDepthStencilViewDX.h" />
     <ClInclude Include="CDepthStencilViewOGL.h" />
-    <ClInclude Include="CDeviceContextOGL.h" />
     <ClInclude Include="CDXGraphiAPI.h" />
     <ClInclude Include="CGraphiAPI.h" />
     <ClInclude Include="CInputLayout.h" />
@@ -208,7 +205,6 @@
     <ClInclude Include="CShaderResourceView.h" />
     <ClInclude Include="CShaderResourceViewDX.h" />
     <ClInclude Include="CShaderResourceViewOGL.h" />
-    <ClInclude Include="CSwapChainOGL.h" />
     <ClInclude Include="CTexture.h" />
     <ClInclude Include="CTextureDX.h" />
     <ClInclude Include="CTextureOGL.h" />

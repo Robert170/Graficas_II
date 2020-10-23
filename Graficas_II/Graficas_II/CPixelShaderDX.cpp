@@ -1,6 +1,6 @@
 #include "CPixelShaderDX.h"
 
-bool CPixelShaderDX::CompileVertexShaderFromFile(LPWSTR FileName, 
+bool CPixelShaderDX::CompilePixelShaderFromFile(LPWSTR FileName,
                                                  LPCSTR EntryPoint, 
                                                  LPCSTR ShaderModel, 
                                                  ID3DBlob** ppBlobOut)

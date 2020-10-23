@@ -3,7 +3,7 @@
  *
  * @brief class base for the GraphiApi
  *
- * This class is for the agents do diferents behavior
+ * This class is the base for graphiapi of Directx and opengl
  *
  * @author Roberto Ramírez (idv18c.rramirez@uartesdigitales.edu.mx)
  *
@@ -359,7 +359,7 @@ public:
 	virtual CPixelShader* CreatePixelShaders(std::string FileName,
 		                                    std::string Entry = "",
 		                                    std::string ShaderModel = "",
-		                                    int ID = 1) = 0;
+		                                    int ID = 0) = 0;
 	/**
 	 * @brief      CreateVertexShaders function, to create vertex shader
 	 * @param      FileName parameter one, name of the file of the vertex shader
@@ -372,20 +372,20 @@ public:
 	virtual	CVertexShader* CreateVertexShaders(std::string FileName,
 		                                       std::string Entry = "",
 		                                       std::string ShaderModel = "",
-		                                       int ID = 1) = 0;
+		                                       int ID = 0) = 0;
 	/**
 	 * @brief      CreateInputLayout function, to create the input layaout
 	 * @bug		   No know Bugs
 	 * @return     Returns a pointer of CInputLayout
 	*/
-	virtual CInputLayout* CreateInputLayout() = 0;
+	virtual CInputLayout* CreateInputLayout(unsigned int ID = 0) = 0;
 
 	/**
 	 * @brief      CreateSamplerState function, to create the sampler state
 	 * @bug		   No know Bugs
 	 * @return     Returns a pointer of CSamplerState
 	*/
-	virtual CSamplerState* CreateSamplerState() = 0;
+	virtual CSamplerState* CreateSamplerState(unsigned int ID = 0) = 0;
 
 	/**
 	 * @brief      CreateRasterizerState function, to create the sampler state
