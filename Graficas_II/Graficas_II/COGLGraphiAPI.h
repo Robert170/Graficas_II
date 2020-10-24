@@ -35,7 +35,9 @@ protected:
 	 * @return     Returns nothing
 	*/
 	void InitWindow(unsigned int width,
-		            unsigned int height) override;
+		            unsigned int height,
+		            HINSTANCE hInstance,
+		            int nCmdShow) override;
 
 	/**
 	 * @brief      CreateDeviceandSwap function, to create device and swapchain
@@ -50,6 +52,7 @@ protected:
 	 * @return     Returns nothing
 	*/
 	void CreateDeferredContext() override;
+
 
 public:
 	/// Default Constructor
@@ -71,7 +74,9 @@ public:
 	 * @return     Returns nothing
 	*/
 	void Init(unsigned int width,
-		      unsigned int height) override;
+		      unsigned int height,
+		      int nCmdShow,
+		      HINSTANCE hInstance) override;
 
 	//create
 

@@ -7,7 +7,10 @@
 #include "CSamplerStateOGL.h"
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 
-void COGLGraphiAPI::InitWindow(unsigned int width, unsigned int height)
+void COGLGraphiAPI::InitWindow(unsigned int width, 
+	                           unsigned int height, 
+	                           HINSTANCE hInstance,
+	                           int nCmdShow)
 {
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
@@ -25,13 +28,19 @@ void COGLGraphiAPI::InitWindow(unsigned int width, unsigned int height)
 
 }
 
-void COGLGraphiAPI::Init(unsigned int width, unsigned int height)
+void COGLGraphiAPI::Init(unsigned int width, 
+	                     unsigned int height,
+	                     int nCmdShow,
+	                     HINSTANCE hInstance)
 {
 	m_AttachShaderID = glCreateProgram();
 	
 	glfwInit();
 	
-	InitWindow(width, height);
+	InitWindow(width,
+		       height, 
+		       hInstance, 
+		       nCmdShow);
 }
 
 

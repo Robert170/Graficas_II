@@ -105,15 +105,6 @@
     <ClCompile Include="CBufferOGL.cpp">
       <Filter>Archivos de origen\ClasesOGL</Filter>
     </ClCompile>
-    <ClCompile Include="CShaderResourceView.cpp">
-      <Filter>Archivos de origen\Clase Base</Filter>
-    </ClCompile>
-    <ClCompile Include="CShaderResourceViewDX.cpp">
-      <Filter>Archivos de origen\ClasesDX</Filter>
-    </ClCompile>
-    <ClCompile Include="CShaderResourceViewOGL.cpp">
-      <Filter>Archivos de origen\ClasesOGL</Filter>
-    </ClCompile>
     <ClCompile Include="CSamplerState.cpp">
       <Filter>Archivos de origen\Clase Base</Filter>
     </ClCompile>
@@ -198,15 +189,6 @@
       <Filter>Archivos de encabezado\ClasesDX</Filter>
     </ClInclude>
     <ClInclude Include="CBufferOGL.h">
-      <Filter>Archivos de encabezado\ClasesOGL</Filter>
-    </ClInclude>
-    <ClInclude Include="CShaderResourceView.h">
-      <Filter>Archivos de encabezado\Clase Base</Filter>
-    </ClInclude>
-    <ClInclude Include="CShaderResourceViewDX.h">
-      <Filter>Archivos de encabezado\ClasesDX</Filter>
-    </ClInclude>
-    <ClInclude Include="CShaderResourceViewOGL.h">
       <Filter>Archivos de encabezado\ClasesOGL</Filter>
     </ClInclude>
     <ClInclude Include="CSamplerState.h">

@@ -17,7 +17,6 @@
 
 #include <d3d11.h>
 #include <d3dcompiler.h>
-#include <vector>
 #include "CGraphiAPI.h"
 #include "CTextureDX.h"
 
@@ -35,6 +34,11 @@ private:
 	  * @Variable m_hWnd, a variable for a window
 	*/
 	HWND m_hWnd;
+
+	/**
+	  * @Variable m_hInst, a variable for a instance for the window
+	*/
+	HINSTANCE m_hInst;
 
 	/**
 	  * @Variable m_pd3dDevice, pointer for the device
@@ -78,7 +82,9 @@ protected:
 	 * @return     Returns nothing
 	*/
 	void InitWindow(unsigned int width, 
-		            unsigned int height) override;
+		            unsigned int height,
+		            HINSTANCE hInstance,
+		            int nCmdShow) override;
 
 	/**
 	 * @brief      CreateDeviceandSwap function, to create device and swapchain
@@ -114,7 +120,9 @@ public:
 	 * @return     Returns nothing
 	*/
 	void Init(unsigned int width, 
-		      unsigned int height) override;
+		      unsigned int height,
+		      int nCmdShow,
+		      HINSTANCE hInstance) override;
 
 	//create
 

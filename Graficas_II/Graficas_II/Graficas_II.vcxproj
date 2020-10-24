@@ -168,9 +168,6 @@
     <ClCompile Include="CSamplerState.cpp" />
     <ClCompile Include="CSamplerStateDX.cpp" />
     <ClCompile Include="CSamplerStateOGL.cpp" />
-    <ClCompile Include="CShaderResourceView.cpp" />
-    <ClCompile Include="CShaderResourceViewDX.cpp" />
-    <ClCompile Include="CShaderResourceViewOGL.cpp" />
     <ClCompile Include="CTexture.cpp" />
     <ClCompile Include="CTextureDX.cpp" />
     <ClCompile Include="CTextureOGL.cpp" />
@@ -202,9 +199,6 @@
     <ClInclude Include="CSamplerState.h" />
     <ClInclude Include="CSamplerStateDX.h" />
     <ClInclude Include="CSamplerStateOGL.h" />
-    <ClInclude Include="CShaderResourceView.h" />
-    <ClInclude Include="CShaderResourceViewDX.h" />
-    <ClInclude Include="CShaderResourceViewOGL.h" />
     <ClInclude Include="CTexture.h" />
     <ClInclude Include="CTextureDX.h" />
     <ClInclude Include="CTextureOGL.h" />

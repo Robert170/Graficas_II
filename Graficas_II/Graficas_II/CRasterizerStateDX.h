@@ -19,9 +19,24 @@
 class CRasterizerStateDX : public CRasterizerState
 {
 protected:
+
+	/**
+	  * @brief protected functions
+	*/
+
+	/// Default Constructor
 	CRasterizerStateDX() = default;
+
+	/// Destructor
 	~CRasterizerStateDX() = default;
 
+	/**
+	  * @brief protected variables member
+	*/
+
+	/**
+	  * @Variable m_pRasterizerState, pointer for the rasterizer state
+	*/
 	ID3D11RasterizerState* m_pRasterizerState = nullptr;
 
 

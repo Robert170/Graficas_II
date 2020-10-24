@@ -13,6 +13,8 @@
  * @bug	No know Bugs
  */
 #pragma once
+
+#include <windows.h>
 #include <iostream>
 #include <vector>
 #include <glm/glm.hpp>
@@ -218,7 +220,9 @@ protected:
 	 * @return     Returns nothing
 	*/
 	virtual void InitWindow(unsigned int width, 
-		                    unsigned int height) = 0;
+		                    unsigned int height,
+		                    HINSTANCE hInstance,
+		                    int nCmdShow) = 0;
 
 	/**
 	 * @brief      CreateDeviceandSwap function, to create device and swapchain
@@ -255,7 +259,9 @@ public:
 	 * @return     Returns nothing
 	*/
 	virtual void Init(unsigned int width, 
-		              unsigned int height) = 0;
+		              unsigned int height,
+		              int nCmdShow,
+		              HINSTANCE hInstance) = 0;
 
 	//create
 	
