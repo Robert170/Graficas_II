@@ -36,11 +36,6 @@ private:
 	HWND m_hWnd;
 
 	/**
-	  * @Variable m_hInst, a variable for a instance for the window
-	*/
-	HINSTANCE m_hInst;
-
-	/**
 	  * @Variable m_pd3dDevice, pointer for the device
 	*/
 	ID3D11Device* m_pd3dDevice;
@@ -56,17 +51,10 @@ private:
 	*/
 	IDXGISwapChain* m_pSwapChain;
 
-	/**
-	  * @Variable m_VSBlob, pointer for the vertex shader blob
-	*/
-	ID3DBlob* m_VSBlob;
+	CTexture* m_BackBuffer;
 
-	/**
-	  * @Variable m_PSBlob, pointer for the pixel shader blob
-	*/
-	ID3DBlob* m_PSBlob;
+	CTexture* m_DepthStencil;
 
-	CTextureDX m_BackBuffer;
 
 protected:
 	/**
@@ -83,8 +71,8 @@ protected:
 	*/
 	void InitWindow(unsigned int width, 
 		            unsigned int height,
-		            HINSTANCE hInstance,
-		            int nCmdShow) override;
+		            HINSTANCE hInstance, //no usar
+		            int nCmdShow) override; //no usar
 
 	/**
 	 * @brief      CreateDeviceandSwap function, to create device and swapchain
@@ -112,18 +100,6 @@ public:
 	*/
 
 
-	/**
-	 * @brief      Init function, to init the api
-	 * @param      width parameter one, width of the window
-	 * @param      height parameter two, height of the window
-	 * @bug		   No know Bugs
-	 * @return     Returns nothing
-	*/
-	void Init(unsigned int width, 
-		      unsigned int height,
-		      int nCmdShow,
-		      HINSTANCE hInstance) override;
-
 	//create
 
 	/**
@@ -134,9 +110,9 @@ public:
 	 * @bug		   No know Bugs
 	 * @return     Returns a pointer of CBuffer
 	*/
-	CBuffer* CreateVertexBuffer(unsigned int bindFlags, 
-		                        std::vector <SimpleVertex> Ver,
-		                        unsigned int ID) override;
+	CVertexBuffer* CreateVertexBuffer(std::vector <SimpleVertex> Ver,
+		                              unsigned int BufferSize,
+		                              unsigned int NumBuffer) override;
 
 	/**
 	 * @brief      CreateIndexBuffer function, to create index buffer
@@ -146,9 +122,9 @@ public:
 	 * @bug		   No know Bugs
 	 * @return     Returns a pointer of CBuffer
 	*/
-	CBuffer* CreateIndexBuffer(unsigned int bindFlags,
-		                       std::vector<unsigned int> Ind,
-		                       unsigned int ID ) override;
+	CIndexBuffer* CreateIndexBuffer(const std::vector<unsigned int>& Ind,
+		                            unsigned int BufferSize,
+		                            unsigned int NumBuffer) override; //Numberos de index buffer, deberia estar en la clase buffer
 
 	/**
 	 * @brief      CreateConstantBufferNC function, to create constant buffer
@@ -157,25 +133,9 @@ public:
 	 * @bug		   No know Bugs
 	 * @return     Returns a pointer of CBuffer
 	*/
-	CBuffer* CreateConstantBufferNC(unsigned int bindFlags) override;
+	CConstantBuffer* CreateConstantBuffer(unsigned int BufferSize,
+		                                  unsigned int NumBuffer) override;
 
-	/**
-	 * @brief      CreateConstantBufferCOR function, to create constant buffer
-	 *             Change on Resize
-	 * @param      bindFlags parameter one, bind Flags for the desc of constant buffer
-	 * @bug		   No know Bugs
-	 * @return     Returns a pointer of CBuffer
-	*/
-	CBuffer* CreateConstantBufferCOR(unsigned int bindFlags) override;
-
-	/**
-	 * @brief      CreateConstantBufferCEF function, to create constant buffer
-	 *             Change Every Frame
-	 * @param      bindFlags parameter one, bind Flags for the desc of constant buffer
-	 * @bug		   No know Bugs
-	 * @return     Returns a pointer of CBuffer
-	*/
-	CBuffer* CreateConstantBufferCEF(unsigned int bindFlags) override;
     
 	/**
 	 * @brief      CreateTexture1D function, to create a texture
@@ -214,42 +174,43 @@ public:
 	 * @param      FileName parameter one, name of the file of the pixel shader
 	 * @param      Entry parameter two, point of entry in the file
 	 * @param      ShaderModel parameter three, shader model of pixel shader
-	 * @param      ID parameter fourth, id of the pixel shader
+	 * @param      NumPixelShader parameter fourth, number of the pixel shader
 	 * @bug		   No know Bugs
 	 * @return     Returns a pointer of CPixelShader
 	*/
 	CPixelShader* CreatePixelShaders(std::string FileName,
 		                             std::string Entry,
 		                             std::string ShaderModel ,
-		                             int ID) override;     
+		                             int NumPixelShader) override;
 
 	/**
 	 * @brief      CreateVertexShaders function, to create vertex shader
 	 * @param      FileName parameter one, name of the file of the vertex shader
 	 * @param      Entry parameter two, point of entry in the file
 	 * @param      ShaderModel parameter three, shader model of vertex shader
-	 * @param      ID parameter fourth, id of the vertex shader
+	 * @param      ID parameter fourth, number of the vertex shader
 	 * @bug		   No know Bugs
 	 * @return     Returns a pointer of CVertexShader
 	*/
 	CVertexShader* CreateVertexShaders(std::string FileName,                                  
 		                               std::string Entry,
 		                               std::string ShaderModel,
-		                               int ID) override;
+		                               int NumVertexShader) override;
 
 	/**
 	 * @brief      CreateInputLayout function, to create the input layaout
 	 * @bug		   No know Bugs
 	 * @return     Returns a pointer of CInputLayout
 	*/
-	CInputLayout* CreateInputLayout(unsigned int ID) override;
+	CInputLayout* CreateInputLayout(CVertexShader* Vertex, 
+		                            unsigned int NumInputLayout) override;
 
 	/**
 	 * @brief      CreateSamplerState function, to create the sampler state
 	 * @bug		   No know Bugs
 	 * @return     Returns a pointer of CSamplerState
 	*/
-	CSamplerState* CreateSamplerState(unsigned int ID) override;
+	CSamplerState* CreateSamplerState(unsigned int NumSamplerState) override;
 
 	/**
 	 * @brief      CreateRasterizerState function, to create the sampler state
@@ -271,7 +232,7 @@ public:
 	 * @bug		   No know Bugs
 	 * @return     Returns nothing
 	*/
-	void SetVertexBuffer(CBuffer* VerBuff,
+	void SetVertexBuffer(CVertexBuffer* VerBuff,
 		                 unsigned int StartSlot,
 		                 unsigned int NumBuffer,
 		                 unsigned int stride,
@@ -285,7 +246,7 @@ public:
 	 * @bug		   No know Bugs
 	 * @return     Returns nothing
 	*/
-	void SetIndexBuffer(CBuffer* IndBuff,
+	void SetIndexBuffer(CIndexBuffer* IndBuff,
 		                unsigned int offset)override;
 
 
@@ -297,35 +258,9 @@ public:
 	 * @bug		   No know Bugs
 	 * @return     Returns nothing
 	*/
-	void SetConstantBufferNC(CBuffer* ConstBuff,
-		                     unsigned int StartSlot,
-		                     unsigned int NumBuffer) override;
-
-	/**
-	 * @brief      SetConstantBufferCOR function, to set constant buffer
-	 *              Changes on resize
-	 * @param      ConstBuff parameter one, a pointer of CBuffer
-	 * @param      StartSlot parameter two, start slot for set constant buffer
-	 * @param      NumBuffer parameter three, number of buffer
-	 * @bug		   No know Bugs
-	 * @return     Returns nothing
-	*/
-	void SetConstantBufferCOR(CBuffer* ConstBuff,
-		                      unsigned int StartSlot,
-		                      unsigned int NumBuffer) override;
-
-	/**
-	 * @brief      SetConstantBufferCEF function, to set constant buffer
-	 *             Changes every frame
-	 * @param      ConstBuff parameter one, a pointer of CBuffer
-	 * @param      StartSlot parameter two, start slot for set constant buffer
-	 * @param      NumBuffer parameter three, number of buffer
-	 * @bug		   No know Bugs
-	 * @return     Returns nothing
-	*/
-	void SetConstantBufferCEF(CBuffer* ConstBuff,
-		                      unsigned int StartSlot,
-		                      unsigned int NumBuffer) override;
+	void SetConstantBuffer(CConstantBuffer* ConstBuff,
+		                   unsigned int StartSlot,
+		                   unsigned int NumBuffer) override;
 
 	/**
 	 * @brief      SetPixelShaders function, to set pixel shader
@@ -359,9 +294,8 @@ public:
 	 * @bug		   No know Bugs
 	 * @return     Returns nothing
 	*/
-	void SetSamplerState(CSamplerState* Sam, 
-		                 unsigned int StartSlot,
-		                 unsigned int NumSamplers) override;
+	void SetSamplerState(const std::vector<CSamplerState*>& Sam,
+		                 unsigned int StartSlot) override;
 
 	/**
 	 * @brief      SetDepthStencil function, to set depth stencil
@@ -386,9 +320,8 @@ public:
 	 * @bug		   No know Bugs
 	 * @return     Returns nothing
 	*/
-	void SetRenderTarget(CTexture* pRTTex, 
-		                 CTexture* pDSTex,
-		                 unsigned int NumView) override;
+	void SetRenderTarget(const std::vector<CTexture*>& pRTTex,
+		                 CTexture* pDSTex) override;
 
 	/**
 	 * @brief      SetShaderResouerce function, to set shader resource
@@ -398,9 +331,8 @@ public:
 	 * @bug		   No know Bugs
 	 * @return     Returns nothing
 	*/
-	void SetShaderResource(CTexture* pRTTex,
-		                    unsigned int StartSlot,
-		                    unsigned int NumSamplers) override;
+	void SetShaderResource(const std::vector<CTexture*>& pRTTex,
+		                   unsigned int StartSlot) override;
 
 	/**
 	 * @brief      SetViewport function, to set viewport
@@ -427,7 +359,7 @@ public:
 	 * @bug		   No know Bugs
 	 * @return     Returns nothing
 	*/
-	void ClearRendTarView(CTexture* RT,
+	void ClearRenderTarget(CTexture* RT,
 		                  std::vector<float> ClearColor) override;
 
 	/**
@@ -439,10 +371,10 @@ public:
 	 * @bug		   No know Bugs
 	 * @return     Returns nothing
 	*/
-	void ClearDepthStenView(CTexture* RT,
-		                       CLEAR_FLAG ClerFlag,
-		                       float Depth,
-		                       unsigned int Stencil) override;
+	void ClearDepthStencil(CTexture* RT,
+		                   CLEAR_FLAG ClerFlag,
+		                   float Depth,
+		                   unsigned int Stencil) override;
 
 	//draw
 
@@ -453,7 +385,7 @@ public:
 	 * @bug		   No know Bugs
 	 * @return     Returns nothing
 	*/
-	void Drawindex(int SizeIndex, int StartindexLocation) override;
+	void Drawindexed(int NumIndex, int StartindexLocation) override;
 
 	//swap
 

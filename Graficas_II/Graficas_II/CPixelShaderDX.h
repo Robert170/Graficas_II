@@ -54,6 +54,11 @@ protected:
 	*/
 	ID3D11PixelShader* m_PixelShader = nullptr;
 
+	/**
+	  * @Variable m_pPSBlob, pointer for the blob of pixel shader
+	*/
+	ID3DBlob* m_pPSBlob = nullptr;
+
 
 	friend class CDXGraphiAPI;
 };

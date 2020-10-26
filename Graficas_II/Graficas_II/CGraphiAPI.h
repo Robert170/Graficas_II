@@ -22,7 +22,9 @@
 #include <glm/gtc/type_ptr.hpp>
 
 class CTexture;
-class CBuffer;
+class CIndexBuffer;
+class CVertexBuffer;
+class CConstantBuffer;
 class CPixelShader;
 class CVertexShader;
 class CSamplerState;
@@ -258,10 +260,14 @@ public:
 	 * @bug		   No know Bugs
 	 * @return     Returns nothing
 	*/
-	virtual void Init(unsigned int width, 
+	virtual void Init(unsigned int width,
 		              unsigned int height,
 		              int nCmdShow,
-		              HINSTANCE hInstance) = 0;
+		              HINSTANCE hInstance) 
+	{
+		InitWindow(width, height, hInstance, nCmdShow);
+		CreateDeviceandSwap();
+	}
 
 	//create
 	
@@ -274,11 +280,11 @@ public:
 	 * @bug		   No know Bugs
 	 * @return     Returns a pointer of CBuffer
 	*/
-	virtual CBuffer* CreateVertexBuffer(unsigned int bindFlags, 
-		                                std::vector <SimpleVertex> Ver = 
-		                                { {glm::vec3(0.0f, 0.0f, 0.0f), 
-		                                 glm::vec2(0.0f, 0.0f)} },
-		                                unsigned int ID = 0) = 0;
+
+	//preguntar tamaño del buffer, puntero del inicio del buffer y tamaño del buffer
+	virtual CVertexBuffer* CreateVertexBuffer(std::vector <SimpleVertex> Ver, 
+		                                      unsigned int BufferSize,
+		                                      unsigned int NumBuffer = 0) = 0;
 
 	/**
 	 * @brief      CreateIndexBuffer function, to create index buffer
@@ -288,37 +294,21 @@ public:
 	 * @bug		   No know Bugs
 	 * @return     Returns a pointer of CBuffer
 	*/
-	virtual CBuffer* CreateIndexBuffer(unsigned int bindFlags,
-		                               std::vector<unsigned int> Ind = { 0 },
-		                               unsigned int ID = 0) = 0;
+	virtual CIndexBuffer* CreateIndexBuffer(const std::vector<unsigned int> & Ind,
+		                                    unsigned int BufferSize,
+		                                    unsigned int NumBuffer = 0) = 0;
 
 	/**
-	 * @brief      CreateConstantBufferNC function, to create constant buffer
+	 * @brief      CreateConstantBuffer function, to create constant buffer
 	 *             Never Change
 	 * @param      bindFlags parameter one, bind Flags for the desc of constant buffer
 	 * @bug		   No know Bugs
 	 * @return     Returns a pointer of CBuffer
 	*/
-	virtual CBuffer* CreateConstantBufferNC(unsigned int bindFlags) = 0;
+	virtual CConstantBuffer* CreateConstantBuffer(unsigned int BufferSize,
+		                                          unsigned int NumBuffer = 0) = 0;
 
 
-	/**
-	 * @brief      CreateConstantBufferCOR function, to create constant buffer
-	 *             Change on Resize
-	 * @param      bindFlags parameter one, bind Flags for the desc of constant buffer
-	 * @bug		   No know Bugs
-	 * @return     Returns a pointer of CBuffer
-	*/
-	virtual CBuffer* CreateConstantBufferCOR(unsigned int bindFlags) = 0;
-
-	/**
-	 * @brief      CreateConstantBufferCEF function, to create constant buffer
-	 *             Change Every Frame
-	 * @param      bindFlags parameter one, bind Flags for the desc of constant buffer
-	 * @bug		   No know Bugs
-	 * @return     Returns a pointer of CBuffer
-	*/
-	virtual CBuffer* CreateConstantBufferCEF(unsigned int bindFlags) = 0;
 
 	/**
 	 * @brief      CreateTexture1D function, to create a texture
@@ -340,7 +330,7 @@ public:
 	*/
 	virtual CTexture* CreateTexture2D(unsigned int width,
 		                              unsigned int height,
-		                              unsigned int numberTexture,
+		                              unsigned int numberTexture, //deberia estar en la clase texture
 		                              TEXTURE_FORMAT format = TF_R8G8B8A8_UNORM,
 		                              unsigned int bindFlags = TEXTURE_BIND_SHADER_RESOURCE,
 		                              TYPE_USAGE Usage = TYPE_USAGE_DEFAULT) = 0;
@@ -358,54 +348,55 @@ public:
 	 * @param      FileName parameter one, name of the file of the pixel shader
 	 * @param      Entry parameter two, point of entry in the file
 	 * @param      ShaderModel parameter three, shader model of pixel shader
-	 * @param      ID parameter fourth, id of the pixel shader
+	 * @param      NumPixelShader parameter fourth, number of the pixel shader
 	 * @bug		   No know Bugs
 	 * @return     Returns a pointer of CPixelShader
 	*/
 	virtual CPixelShader* CreatePixelShaders(std::string FileName,
 		                                    std::string Entry = "",
 		                                    std::string ShaderModel = "",
-		                                    int ID = 0) = 0;
+		                                    int NumPixelShader = 0) = 0; //no va
 	/**
 	 * @brief      CreateVertexShaders function, to create vertex shader
 	 * @param      FileName parameter one, name of the file of the vertex shader
 	 * @param      Entry parameter two, point of entry in the file
 	 * @param      ShaderModel parameter three, shader model of vertex shader
-	 * @param      ID parameter fourth, id of the vertex shader
+	 * @param      NumVertexShader parameter fourth, number of the vertex shader
 	 * @bug		   No know Bugs
 	 * @return     Returns a pointer of CVertexShader
 	*/
 	virtual	CVertexShader* CreateVertexShaders(std::string FileName,
 		                                       std::string Entry = "",
 		                                       std::string ShaderModel = "",
-		                                       int ID = 0) = 0;
+		                                       int NumVertexShader = 0) = 0; //no va
 	/**
 	 * @brief      CreateInputLayout function, to create the input layaout
 	 * @bug		   No know Bugs
 	 * @return     Returns a pointer of CInputLayout
 	*/
-	virtual CInputLayout* CreateInputLayout(unsigned int ID = 0) = 0;
+	virtual CInputLayout* CreateInputLayout(CVertexShader* Vertex,
+		                                    unsigned int NumInputLayout = 0) = 0; //no va
 
 	/**
 	 * @brief      CreateSamplerState function, to create the sampler state
 	 * @bug		   No know Bugs
 	 * @return     Returns a pointer of CSamplerState
 	*/
-	virtual CSamplerState* CreateSamplerState(unsigned int ID = 0) = 0;
+	virtual CSamplerState* CreateSamplerState(unsigned int NumSamplerState = 0) = 0; //no va
 
 	/**
 	 * @brief      CreateRasterizerState function, to create the sampler state
 	 * @bug		   No know Bugs
 	 * @return     Returns a pointer of CRasterizerState
 	*/
-	virtual CRasterizerState* CreateRasterizerState() = 0;
+	virtual CRasterizerState* CreateRasterizerState() = 0; //falta parametros
 	
 
 	//set
 
 	/**
 	 * @brief      SetVertexBuffer function, to set vertex buffer
-	 * @param      VerBuff parameter one, a pointer of CBuffer
+	 * @param      VerBuff parameter one, a pointer of CVertexBuffer
 	 * @param      StartSlot parameter two, start slot for set vertex buffer
 	 * @param      NumBuffer parameter three, number of buffer
 	 * @param      stride parameter fourth, stride for set vertex buffer
@@ -413,59 +404,35 @@ public:
 	 * @bug		   No know Bugs
 	 * @return     Returns nothing
 	*/
-	virtual void SetVertexBuffer(CBuffer* VerBuff,
+	virtual void SetVertexBuffer(CVertexBuffer* VerBuff,
 		                         unsigned int StartSlot,
-		                         unsigned int NumBuffer,
-		                         unsigned int stride,
-		                         unsigned int offset) = 0;
+		                         unsigned int NumBuffers,
+		                         unsigned int stride, //deben estar en la clase buffer
+		                         unsigned int offset) = 0; //deben estar en la clase buffer
 
 	/**
 	 * @brief      SetIndexBuffer function, to set index buffer
-	 * @param      IndBuff parameter one, a pointer of CBuffer
+	 * @param      IndBuff parameter one, a pointer of CIndexBuffer
 	 * @param      offset parameter two, offset for set index buffer
 	 * @bug		   No know Bugs
 	 * @return     Returns nothing
 	*/
-	virtual void SetIndexBuffer(CBuffer* IndBuff, 
-		                        unsigned int offset) = 0;
+	virtual void SetIndexBuffer(CIndexBuffer* IndBuff, 
+		                        unsigned int offset) = 0; //deben estar en la clase buffer
 
 	/**
-	 * @brief      SetConstantBufferNC function, to set constant buffer Never changes
-	 * @param      ConstBuff parameter one, a pointer of CBuffer
+	 * @brief      SetConstantBuffer function, to set constant buffer Never changes
+	 * @param      ConstBuff parameter one, a pointer of CConstantBuffer
 	 * @param      StartSlot parameter two, start slot for set constant buffer
 	 * @param      NumBuffer parameter three, number of buffer
 	 * @bug		   No know Bugs
 	 * @return     Returns nothing
 	*/
-	virtual void SetConstantBufferNC(CBuffer* ConstBuff,
-		                             unsigned int StartSlot,
-		                             unsigned int NumBuffer) = 0;
+	virtual void SetConstantBuffer(CConstantBuffer* ConstBuff,
+		                           unsigned int StartSlot,
+		                           unsigned int NumBuffers) = 0;
 
-	/**
-	 * @brief      SetConstantBufferCOR function, to set constant buffer 
-	 *              Changes on resize
-	 * @param      ConstBuff parameter one, a pointer of CBuffer
-	 * @param      StartSlot parameter two, start slot for set constant buffer
-	 * @param      NumBuffer parameter three, number of buffer
-	 * @bug		   No know Bugs
-	 * @return     Returns nothing
-	*/
-	virtual void SetConstantBufferCOR(CBuffer* ConstBuff,
-		                              unsigned int StartSlot,
-		                              unsigned int NumBuffer) = 0;
-
-	/**
-	 * @brief      SetConstantBufferCEF function, to set constant buffer 
-	 *             Changes every frame
-	 * @param      ConstBuff parameter one, a pointer of CBuffer
-	 * @param      StartSlot parameter two, start slot for set constant buffer
-	 * @param      NumBuffer parameter three, number of buffer
-	 * @bug		   No know Bugs
-	 * @return     Returns nothing
-	*/
-	virtual void SetConstantBufferCEF(CBuffer* ConstBuff,
-		                              unsigned int StartSlot,
-		                              unsigned int NumBuffer) = 0;
+	
 
 
 	/**
@@ -500,16 +467,15 @@ public:
 	 * @bug		   No know Bugs
 	 * @return     Returns nothing
 	*/
-	virtual void SetSamplerState(CSamplerState* Sam,
-		                         unsigned int StartSlot,
-		                         unsigned int NumSamplers) = 0;
+	virtual void SetSamplerState(const std::vector<CSamplerState*>& Sam,
+		                         unsigned int StartSlot) = 0; //
 
 	/**
 	 * @brief      SetDepthStencil function, to set depth stencil
 	 * @bug		   No know Bugs
 	 * @return     Returns nothing
 	*/
-	virtual void SetDepthStencil() = 0;
+	virtual void SetDepthStencil() = 0; ///necesita recibir una textura
 
 	/**
 	 * @brief      SetRasterizerState function, to set rasteraizer state
@@ -527,9 +493,9 @@ public:
 	 * @bug		   No know Bugs
 	 * @return     Returns nothing
 	*/
-	virtual void SetRenderTarget(CTexture* pRTTex, 
-		                         CTexture* pDSTex = nullptr,
-		                         unsigned int NumView=0) = 0;
+	virtual void SetRenderTarget(const std::vector<CTexture*>& pRTTex, //pasar un vector de samplers
+		                         CTexture* pDSTex = nullptr) = 0;
+
 	/**
 	 * @brief      SetShaderResouerce function, to set shader resource
 	 * @param      pRTTex parameter one, a pointer of CTexture
@@ -537,10 +503,9 @@ public:
 	 * @param      NumView parameter three, number of render target view
 	 * @bug		   No know Bugs
 	 * @return     Returns nothing
-	*/
-	virtual void SetShaderResource(CTexture* pRTTex, 
-		                            unsigned int StartSlot = 0,
-		                            unsigned int NumSamplers = 0) = 0;
+	*/ 
+	virtual void SetShaderResource(const std::vector<CTexture*>& pRTTex, //pasar un vector de samplers
+		                           unsigned int StartSlot = 0) = 0;
 	
 	/**
 	 * @brief      SetViewport function, to set viewport
@@ -556,7 +521,7 @@ public:
 		                     float Width,
 		                     float Height,
 		                     float TopLeftX = 0,
-		                     float TopLeftY = 0 ) = 0;
+		                     float TopLeftY = 0 ) = 0; //falta checar eje z
 	//clear
 
 	/**
@@ -566,9 +531,8 @@ public:
 	 * @bug		   No know Bugs
 	 * @return     Returns nothing
 	*/
-	virtual void ClearRendTarView(CTexture* RT,
-		                          std::vector<float> ClearColor = 
-		                          { 0.0f, 0.0f, 0.0f, 0.0f }) = 0;
+	virtual void ClearRenderTarget(CTexture* RT,
+		                          std::vector<float> ClearColor ) = 0; //structura de color con 4 flotantes
 
 	/**
 	 * @brief      ClearDepthStenView function, to clear the depth stencil view
@@ -579,7 +543,7 @@ public:
 	 * @bug		   No know Bugs
 	 * @return     Returns nothing
 	*/
-	virtual void ClearDepthStenView(CTexture* RT,
+	virtual void ClearDepthStencil(CTexture* RT,
 		                            CLEAR_FLAG ClerFlag = CLEAR_DEPTH,
 		                            float Depth = 1.0f,
 		                            unsigned int Stencil = 0) = 0;
@@ -594,8 +558,10 @@ public:
 	 * @bug		   No know Bugs
 	 * @return     Returns nothing
 	*/
-	virtual void Drawindex(int SizeIndex, 
-		                   int StartindexLocation) = 0;
+	virtual void Drawindexed(int NumIndex, 
+		                    int StartindexLocation) = 0; //falta parametro, base vertex entre otros
+
+	//falta funcion de draw, drawinstanced
 
 	//swap
 

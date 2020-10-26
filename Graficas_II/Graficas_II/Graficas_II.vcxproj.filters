@@ -96,15 +96,6 @@
     <ClCompile Include="CInputLayoutOGL.cpp">
       <Filter>Archivos de origen\ClasesOGL</Filter>
     </ClCompile>
-    <ClCompile Include="CBuffer.cpp">
-      <Filter>Archivos de origen\Clase Base</Filter>
-    </ClCompile>
-    <ClCompile Include="CBufferDX.cpp">
-      <Filter>Archivos de origen\ClasesDX</Filter>
-    </ClCompile>
-    <ClCompile Include="CBufferOGL.cpp">
-      <Filter>Archivos de origen\ClasesOGL</Filter>
-    </ClCompile>
     <ClCompile Include="CSamplerState.cpp">
       <Filter>Archivos de origen\Clase Base</Filter>
     </ClCompile>
@@ -121,6 +112,33 @@
       <Filter>Archivos de origen\ClasesDX</Filter>
     </ClCompile>
     <ClCompile Include="CRasterizerStateOGL.cpp">
+      <Filter>Archivos de origen\ClasesOGL</Filter>
+    </ClCompile>
+    <ClCompile Include="CIndexBuffer.cpp">
+      <Filter>Archivos de origen\Clase Base</Filter>
+    </ClCompile>
+    <ClCompile Include="CIndexBufferDX.cpp">
+      <Filter>Archivos de origen\ClasesDX</Filter>
+    </ClCompile>
+    <ClCompile Include="CIndexBufferOGL.cpp">
+      <Filter>Archivos de origen\ClasesOGL</Filter>
+    </ClCompile>
+    <ClCompile Include="CVertexBuffer.cpp">
+      <Filter>Archivos de origen\Clase Base</Filter>
+    </ClCompile>
+    <ClCompile Include="CVertexBufferDX.cpp">
+      <Filter>Archivos de origen\ClasesDX</Filter>
+    </ClCompile>
+    <ClCompile Include="CVertexBufferOGL.cpp">
+      <Filter>Archivos de origen\ClasesOGL</Filter>
+    </ClCompile>
+    <ClCompile Include="CConstantBuffer.cpp">
+      <Filter>Archivos de origen\Clase Base</Filter>
+    </ClCompile>
+    <ClCompile Include="CConstantBufferDX.cpp">
+      <Filter>Archivos de origen\ClasesDX</Filter>
+    </ClCompile>
+    <ClCompile Include="CConstantBufferOGL.cpp">
       <Filter>Archivos de origen\ClasesOGL</Filter>
     </ClCompile>
   </ItemGroup>
@@ -152,9 +170,6 @@
     <ClInclude Include="CDepthStencilViewDX.h">
       <Filter>Archivos de encabezado\ClasesDX</Filter>
     </ClInclude>
-    <ClInclude Include="CDepthStencilViewOGL.h">
-      <Filter>Archivos de encabezado\ClasesOGL</Filter>
-    </ClInclude>
     <ClInclude Include="CVertexShader.h">
       <Filter>Archivos de encabezado\Clase Base</Filter>
     </ClInclude>
@@ -182,15 +197,6 @@
     <ClInclude Include="CInputLayoutOGL.h">
       <Filter>Archivos de encabezado\ClasesOGL</Filter>
     </ClInclude>
-    <ClInclude Include="CBuffer.h">
-      <Filter>Archivos de encabezado\Clase Base</Filter>
-    </ClInclude>
-    <ClInclude Include="CBufferDX.h">
-      <Filter>Archivos de encabezado\ClasesDX</Filter>
-    </ClInclude>
-    <ClInclude Include="CBufferOGL.h">
-      <Filter>Archivos de encabezado\ClasesOGL</Filter>
-    </ClInclude>
     <ClInclude Include="CSamplerState.h">
       <Filter>Archivos de encabezado\Clase Base</Filter>
     </ClInclude>
@@ -207,6 +213,36 @@
       <Filter>Archivos de encabezado\ClasesDX</Filter>
     </ClInclude>
     <ClInclude Include="CRasterizerStateOGL.h">
+      <Filter>Archivos de encabezado\ClasesOGL</Filter>
+    </ClInclude>
+    <ClInclude Include="CDepthStencilViewOGL.h">
+      <Filter>Archivos de encabezado\ClasesDX</Filter>
+    </ClInclude>
+    <ClInclude Include="CIndexBuffer.h">
+      <Filter>Archivos de encabezado\Clase Base</Filter>
+    </ClInclude>
+    <ClInclude Include="CIndexBufferDX.h">
+      <Filter>Archivos de encabezado\ClasesDX</Filter>
+    </ClInclude>
+    <ClInclude Include="CIndexBufferOGL.h">
+      <Filter>Archivos de encabezado\ClasesOGL</Filter>
+    </ClInclude>
+    <ClInclude Include="CVertexBuffer.h">
+      <Filter>Archivos de encabezado\Clase Base</Filter>
+    </ClInclude>
+    <ClInclude Include="CVertexBufferDX.h">
+      <Filter>Archivos de encabezado\ClasesDX</Filter>
+    </ClInclude>
+    <ClInclude Include="CVertexBufferOGL.h">
+      <Filter>Archivos de encabezado\ClasesOGL</Filter>
+    </ClInclude>
+    <ClInclude Include="CConstantBuffer.h">
+      <Filter>Archivos de encabezado\Clase Base</Filter>
+    </ClInclude>
+    <ClInclude Include="CConstantBufferDX.h">
+      <Filter>Archivos de encabezado\ClasesDX</Filter>
+    </ClInclude>
+    <ClInclude Include="CConstantBufferOGL.h">
       <Filter>Archivos de encabezado\ClasesOGL</Filter>
     </ClInclude>
   </ItemGroup>

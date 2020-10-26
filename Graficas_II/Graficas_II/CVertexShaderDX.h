@@ -57,6 +57,11 @@ protected:
 	*/
 	ID3D11VertexShader* m_VertexShader = nullptr;
 
+	/**
+	  * @Variable m_pVSBlob, pointer for the blob of vertex shader
+	*/
+	ID3DBlob* m_pVSBlob = nullptr;
+
 
 	friend class CDXGraphiAPI;
 };

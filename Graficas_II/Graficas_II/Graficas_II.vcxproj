@@ -147,14 +147,17 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="CBuffer.cpp" />
-    <ClCompile Include="CBufferDX.cpp" />
-    <ClCompile Include="CBufferOGL.cpp" />
+    <ClCompile Include="CConstantBuffer.cpp" />
+    <ClCompile Include="CConstantBufferDX.cpp" />
+    <ClCompile Include="CConstantBufferOGL.cpp" />
     <ClCompile Include="CDepthStencilView.cpp" />
     <ClCompile Include="CDepthStencilViewDX.cpp" />
     <ClCompile Include="CDepthStencilViewOGL.cpp" />
     <ClCompile Include="CDXGraphiAPI.cpp" />
     <ClCompile Include="CGraphiAPI.cpp" />
+    <ClCompile Include="CIndexBuffer.cpp" />
+    <ClCompile Include="CIndexBufferDX.cpp" />
+    <ClCompile Include="CIndexBufferOGL.cpp" />
     <ClCompile Include="CInputLayout.cpp" />
     <ClCompile Include="CInputLayoutDX.cpp" />
     <ClCompile Include="CInputLayoutOGL.cpp" />
@@ -171,6 +174,9 @@
     <ClCompile Include="CTexture.cpp" />
     <ClCompile Include="CTextureDX.cpp" />
     <ClCompile Include="CTextureOGL.cpp" />
+    <ClCompile Include="CVertexBuffer.cpp" />
+    <ClCompile Include="CVertexBufferDX.cpp" />
+    <ClCompile Include="CVertexBufferOGL.cpp" />
     <ClCompile Include="CVertexShader.cpp" />
     <ClCompile Include="CVertexShaderDX.cpp" />
     <ClCompile Include="CVertexShaderOGL.cpp" />
@@ -178,14 +184,17 @@
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="CBuffer.h" />
-    <ClInclude Include="CBufferDX.h" />
-    <ClInclude Include="CBufferOGL.h" />
+    <ClInclude Include="CConstantBuffer.h" />
+    <ClInclude Include="CConstantBufferDX.h" />
+    <ClInclude Include="CConstantBufferOGL.h" />
     <ClInclude Include="CDepthStencilView.h" />
     <ClInclude Include="CDepthStencilViewDX.h" />
     <ClInclude Include="CDepthStencilViewOGL.h" />
     <ClInclude Include="CDXGraphiAPI.h" />
     <ClInclude Include="CGraphiAPI.h" />
+    <ClInclude Include="CIndexBuffer.h" />
+    <ClInclude Include="CIndexBufferDX.h" />
+    <ClInclude Include="CIndexBufferOGL.h" />
     <ClInclude Include="CInputLayout.h" />
     <ClInclude Include="CInputLayoutDX.h" />
     <ClInclude Include="CInputLayoutOGL.h" />
@@ -202,6 +211,9 @@
     <ClInclude Include="CTexture.h" />
     <ClInclude Include="CTextureDX.h" />
     <ClInclude Include="CTextureOGL.h" />
+    <ClInclude Include="CVertexBuffer.h" />
+    <ClInclude Include="CVertexBufferDX.h" />
+    <ClInclude Include="CVertexBufferOGL.h" />
     <ClInclude Include="CVertexShader.h" />
     <ClInclude Include="CVertexShaderDX.h" />
     <ClInclude Include="CVertexShaderOGL.h" />

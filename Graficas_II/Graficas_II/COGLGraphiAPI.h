@@ -1,6 +1,5 @@
 #pragma once
 #include "glad.h"
-#include "GL/glew.h"
 #include "GLFW/glfw3.h"
 #include "CGraphiAPI.h"
 class COGLGraphiAPI : public CGraphiAPI
@@ -65,18 +64,6 @@ public:
 	  * @brief public functions
 	*/
 
-
-	/**
-	 * @brief      Init function, to init the api
-	 * @param      width parameter one, width of the window
-	 * @param      height parameter two, height of the window
-	 * @bug		   No know Bugs
-	 * @return     Returns nothing
-	*/
-	void Init(unsigned int width,
-		      unsigned int height,
-		      int nCmdShow,
-		      HINSTANCE hInstance) override;
 
 	//create
 
@@ -225,7 +212,7 @@ public:
 	 * @bug		   No know Bugs
 	 * @return     Returns nothing
 	*/
-	void SetVertexBuffer(CBuffer* VerBuff,
+	void SetVertexBuffer(CVertexBuffer* VerBuff,
 		                 unsigned int StartSlot,
 		                 unsigned int NumBuffer,
 		                 unsigned int stride,
@@ -239,8 +226,8 @@ public:
 	 * @bug		   No know Bugs
 	 * @return     Returns nothing
 	*/
-	void SetIndexBuffer(CBuffer* IndBuff,
-		unsigned int offset)override;
+	void SetIndexBuffer(CIndexBuffer* IndBuff,
+		                unsigned int offset)override;
 
 
 	/**
@@ -254,32 +241,6 @@ public:
 	void SetConstantBufferNC(CBuffer* ConstBuff,
 		                     unsigned int StartSlot,
 		                     unsigned int NumBuffer) override;
-
-	/**
-	 * @brief      SetConstantBufferCOR function, to set constant buffer
-	 *              Changes on resize
-	 * @param      ConstBuff parameter one, a pointer of CBuffer
-	 * @param      StartSlot parameter two, start slot for set constant buffer
-	 * @param      NumBuffer parameter three, number of buffer
-	 * @bug		   No know Bugs
-	 * @return     Returns nothing
-	*/
-	void SetConstantBufferCOR(CBuffer* ConstBuff,
-		                      unsigned int StartSlot,
-		                      unsigned int NumBuffer) override;
-
-	/**
-	 * @brief      SetConstantBufferCEF function, to set constant buffer
-	 *             Changes every frame
-	 * @param      ConstBuff parameter one, a pointer of CBuffer
-	 * @param      StartSlot parameter two, start slot for set constant buffer
-	 * @param      NumBuffer parameter three, number of buffer
-	 * @bug		   No know Bugs
-	 * @return     Returns nothing
-	*/
-	void SetConstantBufferCEF(CBuffer* ConstBuff,
-		                      unsigned int StartSlot,
-		                      unsigned int NumBuffer) override;
 
 	/**
 	 * @brief      SetPixelShaders function, to set pixel shader
@@ -407,8 +368,8 @@ public:
 	 * @bug		   No know Bugs
 	 * @return     Returns nothing
 	*/
-	void Drawindex(int SizeIndex, 
-		           int StartindexLocation) override;
+	void Drawindexed(int NumIndex,
+		             int StartindexLocation) override;
 
 	//swap
 

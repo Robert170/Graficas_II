@@ -2,9 +2,11 @@
 #include "CPixelShaderOGL.h"
 #include "CVertexShaderOGL.h"
 #include "CTextureOGL.h"
-#include "CBufferOGL.h"
-#include "CInputLayoutOGL.h"
-#include "CSamplerStateOGL.h"
+#include "CIndexBufferOGL.h"
+#include "CVertexBufferOGL.h"
+#include "CConstantBufferOGL.h"
+#include "CInputLayoutOGLOGL.h"
+#include "CSamplerStateOGLOGL.h"
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 
 void COGLGraphiAPI::InitWindow(unsigned int width, 
@@ -28,24 +30,10 @@ void COGLGraphiAPI::InitWindow(unsigned int width,
 
 }
 
-void COGLGraphiAPI::Init(unsigned int width, 
-	                     unsigned int height,
-	                     int nCmdShow,
-	                     HINSTANCE hInstance)
-{
-	m_AttachShaderID = glCreateProgram();
-	
-	glfwInit();
-	
-	InitWindow(width,
-		       height, 
-		       hInstance, 
-		       nCmdShow);
-}
-
 
 void COGLGraphiAPI::CreateDeviceandSwap()
 {
+	glfwInit();
 }
 
 void COGLGraphiAPI::CreateDeferredContext()
@@ -324,9 +312,10 @@ void COGLGraphiAPI::SetRenderTarget(CTexture* pRTTex,
 }
 
 
-void COGLGraphiAPI::Drawindex(int SizeIndex, int StartindexLocation)
+void COGLGraphiAPI::Drawindexed(int NumIndex, 
+	                            int StartindexLocation)
 {
-	glDrawArrays(GL_TRIANGLES, StartindexLocation, SizeIndex);
+	glDrawArrays(GL_TRIANGLES, StartindexLocation, NumIndex);
 }
 
 void COGLGraphiAPI::Present()
