@@ -104,34 +104,34 @@ public:
 
 	/**
 	 * @brief      CreateVertexBuffer function, to create vertex buffer
-	 * @param      bindFlags parameter one, bind Flags for the desc of vertex buffer
-	 * @param      Ver parameter two, a vector whit positions and tex of vertices
-	 * @param      ID parameter three, id for the vertex buffer
+	 * @param      Ver parameter one, a vector whit positions and tex of vertices
+	 * @param      BufferSize parameter two, size of the buffer
+	 * @param      NumBuffer parameter three, number of the vertex buffer
 	 * @bug		   No know Bugs
-	 * @return     Returns a pointer of CBuffer
+	 * @return     Returns a pointer of CVertexBuffer
 	*/
 	CVertexBuffer* CreateVertexBuffer(std::vector <SimpleVertex> Ver,
 		                              unsigned int BufferSize,
 		                              unsigned int NumBuffer) override;
 
 	/**
-	 * @brief      CreateIndexBuffer function, to create index buffer
-	 * @param      bindFlags parameter one, bind Flags for the desc of index buffer
-	 * @param      Ind parameter two, a vector unsigned ints of indices
-	 * @param      ID parameter three, id for the index buffer
+	 * @brief      CreateIndexBuffer function, to create vertex buffer
+	 * @param      Ind parameter one, a vector whit index 
+	 * @param      BufferSize parameter two, size of the buffer
+	 * @param      NumBuffer parameter three, number of the index buffer
 	 * @bug		   No know Bugs
-	 * @return     Returns a pointer of CBuffer
+	 * @return     Returns a pointer of CIndexBuffer
 	*/
 	CIndexBuffer* CreateIndexBuffer(const std::vector<unsigned int>& Ind,
 		                            unsigned int BufferSize,
 		                            unsigned int NumBuffer) override; //Numberos de index buffer, deberia estar en la clase buffer
 
 	/**
-	 * @brief      CreateConstantBufferNC function, to create constant buffer
-	 *             Never Change
-	 * @param      bindFlags parameter one, bind Flags for the desc of constant buffer
+	 * @brief      CreateConstantBuffer function, to create vertex buffer
+	 * @param      BufferSize parameter one, size of the buffer
+	 * @param      NumBuffer parameter two, number of the constant buffer
 	 * @bug		   No know Bugs
-	 * @return     Returns a pointer of CBuffer
+	 * @return     Returns a pointer of CConstantBuffer
 	*/
 	CConstantBuffer* CreateConstantBuffer(unsigned int BufferSize,
 		                                  unsigned int NumBuffer) override;
@@ -174,7 +174,7 @@ public:
 	 * @param      FileName parameter one, name of the file of the pixel shader
 	 * @param      Entry parameter two, point of entry in the file
 	 * @param      ShaderModel parameter three, shader model of pixel shader
-	 * @param      NumPixelShader parameter fourth, number of the pixel shader
+	 * @param      NumPixelShader parameter fourth, number of pixel shader
 	 * @bug		   No know Bugs
 	 * @return     Returns a pointer of CPixelShader
 	*/
@@ -188,7 +188,7 @@ public:
 	 * @param      FileName parameter one, name of the file of the vertex shader
 	 * @param      Entry parameter two, point of entry in the file
 	 * @param      ShaderModel parameter three, shader model of vertex shader
-	 * @param      ID parameter fourth, number of the vertex shader
+	 * @param      NumVertexShader parameter fourth, number of vertex shader
 	 * @bug		   No know Bugs
 	 * @return     Returns a pointer of CVertexShader
 	*/
@@ -199,6 +199,8 @@ public:
 
 	/**
 	 * @brief      CreateInputLayout function, to create the input layaout
+	 * @param      Vertex parameter one, a pointer of vertex shader for use his blop
+	 * @param      NumInputLayout parameter two, number of input layout
 	 * @bug		   No know Bugs
 	 * @return     Returns a pointer of CInputLayout
 	*/
@@ -207,6 +209,7 @@ public:
 
 	/**
 	 * @brief      CreateSamplerState function, to create the sampler state
+	 * @param      NumSamplerState parameter two, number of sampler state
 	 * @bug		   No know Bugs
 	 * @return     Returns a pointer of CSamplerState
 	*/
@@ -360,7 +363,7 @@ public:
 	 * @return     Returns nothing
 	*/
 	void ClearRenderTarget(CTexture* RT,
-		                  std::vector<float> ClearColor) override;
+		                   ColorStruct Color) override;
 
 	/**
 	 * @brief      ClearDepthStenView function, to clear the depth stencil view

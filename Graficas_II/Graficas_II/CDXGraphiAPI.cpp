@@ -131,7 +131,7 @@ void CDXGraphiAPI::CreateDeviceandSwap()
 
 void CDXGraphiAPI::CreateDeferredContext()
 {
-    //m_pd3dDevice->CreateDeferredContext()
+    m_pd3dDevice->CreateDeferredContext(0, &m_pImmediateContext);
 }
 
 
@@ -535,9 +535,16 @@ void CDXGraphiAPI::SetRasterizerState(CRasterizerState * RasState)
 
 //fuction to clear render target view
 void CDXGraphiAPI::ClearRenderTarget(CTexture* RT,
-                                    vector<float> ClearColor)
+                                     ColorStruct Color)
 {
     auto pRTDX = reinterpret_cast<CTextureDX*>(RT);
+
+    std::vector<float> ClearColor;
+    ClearColor.push_back(Color.R);
+    ClearColor.push_back(Color.G);
+    ClearColor.push_back(Color.B);
+    ClearColor.push_back(Color.A);
+
     m_pImmediateContext->ClearRenderTargetView(pRTDX->m_RTV, ClearColor.data());
 }
 

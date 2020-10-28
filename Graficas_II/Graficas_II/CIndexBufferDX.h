@@ -18,6 +18,7 @@
 #include <d3dcompiler.h>
 class CIndexBufferDX : public CIndexBuffer
 {
+protected:
     /// Default Constructor
     CIndexBufferDX() = default;
 

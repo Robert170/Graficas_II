@@ -205,6 +205,14 @@ struct CBChangesEveryFrame
 	glm::vec4 vMeshColor;
 };
 
+struct ColorStruct
+{
+	float R;
+	float G;
+	float B;
+	float A;
+};
+
 
 class CGraphiAPI
 {
@@ -493,7 +501,7 @@ public:
 	 * @bug		   No know Bugs
 	 * @return     Returns nothing
 	*/
-	virtual void SetRenderTarget(const std::vector<CTexture*>& pRTTex, //pasar un vector de samplers
+	virtual void SetRenderTarget(const std::vector<CTexture*>& pRTTex, 
 		                         CTexture* pDSTex = nullptr) = 0;
 
 	/**
@@ -504,7 +512,7 @@ public:
 	 * @bug		   No know Bugs
 	 * @return     Returns nothing
 	*/ 
-	virtual void SetShaderResource(const std::vector<CTexture*>& pRTTex, //pasar un vector de samplers
+	virtual void SetShaderResource(const std::vector<CTexture*>& pRTTex, 
 		                           unsigned int StartSlot = 0) = 0;
 	
 	/**
@@ -532,7 +540,7 @@ public:
 	 * @return     Returns nothing
 	*/
 	virtual void ClearRenderTarget(CTexture* RT,
-		                          std::vector<float> ClearColor ) = 0; //structura de color con 4 flotantes
+		                           ColorStruct Color) = 0; //structura de color con 4 flotantes
 
 	/**
 	 * @brief      ClearDepthStenView function, to clear the depth stencil view
