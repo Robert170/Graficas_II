@@ -142,7 +142,7 @@ CVertexBuffer* CDXGraphiAPI::CreateVertexBuffer(vector <SimpleVertex> Ver,
 {
     auto VertexBuffer = new CVertexBufferDX();
     CD3D11_BUFFER_DESC BufferDesc(sizeof(SimpleVertex)* BufferSize,
-                                  D3D11_BIND_INDEX_BUFFER);
+                                  D3D11_BIND_VERTEX_BUFFER);
 
     D3D11_SUBRESOURCE_DATA InitData;
     ZeroMemory(&InitData, sizeof(InitData));
@@ -197,7 +197,7 @@ CConstantBuffer* CDXGraphiAPI::CreateConstantBuffer(unsigned int BufferSize,
                                             &ConsBuffer->m_pConstantBuffer);
     if (FAILED(hr))
     {
-        std::cout << "//error fallo la creacion del Constant buffer Never Change" <<std::endl;
+        std::cout << "//error fallo la creacion del Constant buffer Never" <<std::endl;
         return nullptr;
     }
     return ConsBuffer;
@@ -339,18 +339,70 @@ CVertexShader* CDXGraphiAPI::CreateVertexShaders(std::string FileName,
 }
 
 //fuction to create an input layout,
-CInputLayout* CDXGraphiAPI::CreateInputLayout(CVertexShader* Vertex, 
+CInputLayout* CDXGraphiAPI::CreateInputLayout(CVertexShader* Vertex,
+                                              std::vector<std::string> SemanticName,
                                               unsigned int NumInputLayout)
 {
     auto InputLayout = new CInputLayoutDX();
     auto VertexShaderBlob = reinterpret_cast<CVertexShaderDX*>(Vertex);
+    
 
-    //pasar como parametro, descriptores de elementos
-   vector<D3D11_INPUT_ELEMENT_DESC> layout =
+    vector<D3D11_INPUT_ELEMENT_DESC> layout;
+
+    unsigned int SemanticIndexPosition = 0;
+    unsigned int SemanticIndexTexcoord = 0;
+    unsigned int SemanticIndexColor = 0;
+    unsigned int SemanticIndexNormal = 0;
+    
+
+    for (int i = 0; i < SemanticName.size(); i++)
     {
-        { "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-        { "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-    };
+        if ("POSITION" == SemanticName.at(i))
+        {
+            layout.push_back({ "POSITION", 
+                               SemanticIndexPosition,
+                               DXGI_FORMAT_R32G32B32_FLOAT, 
+                               0, 
+                               D3D11_APPEND_ALIGNED_ELEMENT, 
+                               D3D11_INPUT_PER_VERTEX_DATA, 
+                               0 });
+            SemanticIndexPosition++;
+        }
+        else if ("TEXCOORD" == SemanticName.at(i))
+        {
+            layout.push_back({ "TEXCOORD",
+                               SemanticIndexTexcoord,
+                               DXGI_FORMAT_R32G32_FLOAT,
+                               0,
+                               D3D11_APPEND_ALIGNED_ELEMENT,
+                               D3D11_INPUT_PER_VERTEX_DATA,
+                               0 });
+            SemanticIndexTexcoord++;
+        }
+        else if ("COLOR" == SemanticName.at(i))
+        {
+            layout.push_back({ "COLOR",
+                               SemanticIndexColor,
+                               DXGI_FORMAT_R32G32B32_FLOAT,
+                               0,
+                               D3D11_APPEND_ALIGNED_ELEMENT,
+                               D3D11_INPUT_PER_VERTEX_DATA,
+                               0 });
+            SemanticIndexColor++;
+        }
+        else if ("NORMAL" == SemanticName.at(i))
+        {
+            layout.push_back({ "NORMAL",
+                               SemanticIndexNormal,
+                               DXGI_FORMAT_R32G32B32_FLOAT,
+                               0,
+                               D3D11_APPEND_ALIGNED_ELEMENT,
+                               D3D11_INPUT_PER_VERTEX_DATA,
+                               0 });
+            SemanticIndexNormal++;
+        }
+    }
+   
     HRESULT  hr = m_pd3dDevice->CreateInputLayout(layout.data(), 
                                                   layout.size(),
                                                   VertexShaderBlob->m_pVSBlob->GetBufferPointer(),
@@ -565,10 +617,31 @@ void CDXGraphiAPI::ClearDepthStencil(CTexture* DS,
 }
 
 //fuction to draw
-void CDXGraphiAPI::Drawindexed(int NumIndex,
-                               int StartindexLocation)
+void CDXGraphiAPI::DrawIndexed(unsigned int NumIndex,
+                               unsigned int StartindexLocation,
+                               unsigned int BaseVertexLocation)
 {
-    m_pImmediateContext->Draw(NumIndex, StartindexLocation);
+    m_pImmediateContext->DrawIndexed(NumIndex, 
+                                     StartindexLocation,
+                                     BaseVertexLocation);
+}
+
+void CDXGraphiAPI::DrawInstanced(unsigned int VertexCountPerInstance, 
+                                 unsigned int InstanceCount, 
+                                 unsigned int StartVertexLocation, 
+                                 unsigned int StartInstanceLocation)
+{
+    m_pImmediateContext->DrawInstanced(VertexCountPerInstance,
+                                       InstanceCount,
+                                       StartVertexLocation,
+                                       StartInstanceLocation);
+}
+
+void CDXGraphiAPI::Draw(unsigned int VertexCount, 
+                        unsigned int StartVertexLocation)
+{
+    m_pImmediateContext->Draw(VertexCount,
+                              StartVertexLocation);
 }
 
 //fuction to present the swap chain

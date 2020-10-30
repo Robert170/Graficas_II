@@ -223,11 +223,11 @@ protected:
 
 
 	/**
-	 * @brief      InitWindow function, to create window for the api
-	 * @param      width parameter one, width of the window
-	 * @param      height parameter two, height of the window
-	 * @bug		   No know Bugs
-	 * @return     Returns nothing
+	  * @brief      InitWindow function, to create window for the api
+	  * @param      width parameter one, width of the window
+	  * @param      height parameter two, height of the window
+	  * @bug		   No know Bugs
+	  * @return     Returns nothing
 	*/
 	virtual void InitWindow(unsigned int width, 
 		                    unsigned int height,
@@ -235,16 +235,16 @@ protected:
 		                    int nCmdShow) = 0;
 
 	/**
-	 * @brief      CreateDeviceandSwap function, to create device and swapchain
-	 * @bug		   No know Bugs
-	 * @return     Returns nothing
+	  * @brief      CreateDeviceandSwap function, to create device and swapchain
+	  * @bug		   No know Bugs
+	  * @return     Returns nothing
     */
 	virtual void CreateDeviceandSwap() = 0;
 
 	/**
-	 * @brief      CreateDeferredContext function, to create Deferred Context
-	 * @bug		   No know Bugs
-	 * @return     Returns nothing
+	  * @brief      CreateDeferredContext function, to create Deferred Context
+	  * @bug		   No know Bugs
+	  * @return     Returns nothing
 	*/
 	virtual void CreateDeferredContext() = 0;
 public:
@@ -262,11 +262,11 @@ public:
 
 
 	/**
-	 * @brief      Init function, to init the api
-	 * @param      width parameter one, width of the window
-	 * @param      height parameter two, height of the window
-	 * @bug		   No know Bugs
-	 * @return     Returns nothing
+	  * @brief      Init function, to init the api
+	  * @param      width parameter one, width of the window
+	  * @param      height parameter two, height of the window
+	  * @bug		   No know Bugs
+	  * @return     Returns nothing
 	*/
 	virtual void Init(unsigned int width,
 		              unsigned int height,
@@ -281,37 +281,39 @@ public:
 	
 
 	/**
-	 * @brief      CreateVertexBuffer function, to create vertex buffer
-	 * @param      bindFlags parameter one, bind Flags for the desc of vertex buffer
-	 * @param      Ver parameter two, a vector whit positions and tex of vertices
-	 * @param      ID parameter three, id for the vertex buffer
-	 * @bug		   No know Bugs
-	 * @return     Returns a pointer of CBuffer
+	  * @brief      CreateVertexBuffer function, to create vertex buffer
+	  * @param      bindFlags parameter one, bind Flags for the desc of vertex buffer
+	  * @param      Ver parameter two, a vector whit positions and tex of vertices
+	  * @param      ID parameter three, id for the vertex buffer
+	  * @bug		   No know Bugs
+	  * @return     Returns a pointer of CBuffer
 	*/
 
 	//preguntar tamaño del buffer, puntero del inicio del buffer y tamaño del buffer
+	//offset
+	//puntero bufferdata
 	virtual CVertexBuffer* CreateVertexBuffer(std::vector <SimpleVertex> Ver, 
 		                                      unsigned int BufferSize,
 		                                      unsigned int NumBuffer = 0) = 0;
 
 	/**
-	 * @brief      CreateIndexBuffer function, to create index buffer
-	 * @param      bindFlags parameter one, bind Flags for the desc of index buffer
-	 * @param      Ind parameter two, a vector unsigned ints of indices
-	 * @param      ID parameter three, id for the index buffer
-	 * @bug		   No know Bugs
-	 * @return     Returns a pointer of CBuffer
+	  * @brief      CreateIndexBuffer function, to create index buffer
+	  * @param      bindFlags parameter one, bind Flags for the desc of index buffer
+	  * @param      Ind parameter two, a vector unsigned ints of indices
+	  * @param      ID parameter three, id for the index buffer
+	  * @bug		   No know Bugs
+	  * @return     Returns a pointer of CBuffer
 	*/
 	virtual CIndexBuffer* CreateIndexBuffer(const std::vector<unsigned int> & Ind,
 		                                    unsigned int BufferSize,
 		                                    unsigned int NumBuffer = 0) = 0;
 
 	/**
-	 * @brief      CreateConstantBuffer function, to create constant buffer
-	 *             Never Change
-	 * @param      bindFlags parameter one, bind Flags for the desc of constant buffer
-	 * @bug		   No know Bugs
-	 * @return     Returns a pointer of CBuffer
+	  * @brief      CreateConstantBuffer function, to create constant buffer
+	  *             Never Change
+	  * @param      bindFlags parameter one, bind Flags for the desc of constant buffer
+	  * @bug		   No know Bugs
+	  * @return     Returns a pointer of CBuffer
 	*/
 	virtual CConstantBuffer* CreateConstantBuffer(unsigned int BufferSize,
 		                                          unsigned int NumBuffer = 0) = 0;
@@ -319,22 +321,22 @@ public:
 
 
 	/**
-	 * @brief      CreateTexture1D function, to create a texture
-	 * @bug		   No know Bugs
-	 * @return     Returns nothing
+	  * @brief      CreateTexture1D function, to create a texture
+	  * @bug		   No know Bugs
+	  * @return     Returns nothing
 	*/
 	virtual void CreateTexture1D() = 0;
 
 	/**
-	 * @brief      CreateTexture2D function, to create a texture 2D
-	 * @param      width parameter one, width of the texture
-	 * @param      height parameter two, height of the texture
-	 * @param      numberTexture parameter three, Number of the texture we are create
-	 * @param      format parameter fourth, format for the desc of the txture
-	 * @param      bindFlags parameter five, bind Flags for the desc of the txture
-	 * @param      Usage parameter six, Usage for the desc of the txture
-	 * @bug		   No know Bugs
-	 * @return     Returns a pointer of CTexture
+	  * @brief      CreateTexture2D function, to create a texture 2D
+	  * @param      width parameter one, width of the texture
+	  * @param      height parameter two, height of the texture
+	  * @param      numberTexture parameter three, Number of the texture we are create
+	  * @param      format parameter fourth, format for the desc of the txture
+	  * @param      bindFlags parameter five, bind Flags for the desc of the txture
+	  * @param      Usage parameter six, Usage for the desc of the txture
+	  * @bug		   No know Bugs
+	  * @return     Returns a pointer of CTexture
 	*/
 	virtual CTexture* CreateTexture2D(unsigned int width,
 		                              unsigned int height,
@@ -344,58 +346,63 @@ public:
 		                              TYPE_USAGE Usage = TYPE_USAGE_DEFAULT) = 0;
 
 	/**
-	 * @brief      CreateTexture3D function, to create a texture 3D
-	 * @bug		   No know Bugs
-	 * @return     Returns nothing
+	  * @brief      CreateTexture3D function, to create a texture 3D
+	  * @bug		   No know Bugs
+	  * @return     Returns nothing
 	*/
 	virtual void CreateTexture3D() = 0;
 
 
 	/**
-	 * @brief      CreatePixelShaders function, to create pixel shader
-	 * @param      FileName parameter one, name of the file of the pixel shader
-	 * @param      Entry parameter two, point of entry in the file
-	 * @param      ShaderModel parameter three, shader model of pixel shader
-	 * @param      NumPixelShader parameter fourth, number of the pixel shader
-	 * @bug		   No know Bugs
-	 * @return     Returns a pointer of CPixelShader
+	  * @brief      CreatePixelShaders function, to create pixel shader
+	  * @param      FileName parameter one, name of the file of the pixel shader
+	  * @param      Entry parameter two, point of entry in the file
+	  * @param      ShaderModel parameter three, shader model of pixel shader
+	  * @param      NumPixelShader parameter fourth, number of the pixel shader
+	  * @bug		   No know Bugs
+	  * @return     Returns a pointer of CPixelShader
 	*/
 	virtual CPixelShader* CreatePixelShaders(std::string FileName,
 		                                    std::string Entry = "",
 		                                    std::string ShaderModel = "",
 		                                    int NumPixelShader = 0) = 0; //no va
 	/**
-	 * @brief      CreateVertexShaders function, to create vertex shader
-	 * @param      FileName parameter one, name of the file of the vertex shader
-	 * @param      Entry parameter two, point of entry in the file
-	 * @param      ShaderModel parameter three, shader model of vertex shader
-	 * @param      NumVertexShader parameter fourth, number of the vertex shader
-	 * @bug		   No know Bugs
-	 * @return     Returns a pointer of CVertexShader
+	  * @brief      CreateVertexShaders function, to create vertex shader
+	  * @param      FileName parameter one, name of the file of the vertex shader
+	  * @param      Entry parameter two, point of entry in the file
+	  * @param      ShaderModel parameter three, shader model of vertex shader
+	  * @param      NumVertexShader parameter fourth, number of the vertex shader
+	  * @bug		   No know Bugs
+	  * @return     Returns a pointer of CVertexShader
 	*/
 	virtual	CVertexShader* CreateVertexShaders(std::string FileName,
 		                                       std::string Entry = "",
 		                                       std::string ShaderModel = "",
 		                                       int NumVertexShader = 0) = 0; //no va
 	/**
-	 * @brief      CreateInputLayout function, to create the input layaout
-	 * @bug		   No know Bugs
-	 * @return     Returns a pointer of CInputLayout
+	  * @brief      CreateInputLayout function, to create the input layaout
+	  * @param      Vertex parameter one, a pointer of vertex shader for use his blop
+	  * @param      SemanticName parameter two, a vector of strign with semanticname
+	  * @param      NumInputLayout parameter three, number of input layout
+	  * @bug		   No know Bugs
+	  * @return     Returns a pointer of CInputLayout
 	*/
 	virtual CInputLayout* CreateInputLayout(CVertexShader* Vertex,
+		                                    std::vector<std::string> SemanticName,
 		                                    unsigned int NumInputLayout = 0) = 0; //no va
 
 	/**
 	 * @brief      CreateSamplerState function, to create the sampler state
+	 * @param      NumSamplerState parameter two, number of sampler state
 	 * @bug		   No know Bugs
 	 * @return     Returns a pointer of CSamplerState
 	*/
 	virtual CSamplerState* CreateSamplerState(unsigned int NumSamplerState = 0) = 0; //no va
 
 	/**
-	 * @brief      CreateRasterizerState function, to create the sampler state
-	 * @bug		   No know Bugs
-	 * @return     Returns a pointer of CRasterizerState
+	  * @brief      CreateRasterizerState function, to create the sampler state
+	  * @bug		   No know Bugs
+	  * @return     Returns a pointer of CRasterizerState
 	*/
 	virtual CRasterizerState* CreateRasterizerState() = 0; //falta parametros
 	
@@ -403,14 +410,14 @@ public:
 	//set
 
 	/**
-	 * @brief      SetVertexBuffer function, to set vertex buffer
-	 * @param      VerBuff parameter one, a pointer of CVertexBuffer
-	 * @param      StartSlot parameter two, start slot for set vertex buffer
-	 * @param      NumBuffer parameter three, number of buffer
-	 * @param      stride parameter fourth, stride for set vertex buffer
-	 * @param      offset parameter five, offset for set vertex buffer
-	 * @bug		   No know Bugs
-	 * @return     Returns nothing
+	  * @brief      SetVertexBuffer function, to set vertex buffer
+	  * @param      VerBuff parameter one, a pointer of CVertexBuffer
+	  * @param      StartSlot parameter two, start slot for set vertex buffer
+	  * @param      NumBuffer parameter three, number of buffer
+	  * @param      stride parameter fourth, stride for set vertex buffer
+	  * @param      offset parameter five, offset for set vertex buffer
+	  * @bug		   No know Bugs
+	  * @return     Returns nothing
 	*/
 	virtual void SetVertexBuffer(CVertexBuffer* VerBuff,
 		                         unsigned int StartSlot,
@@ -419,22 +426,22 @@ public:
 		                         unsigned int offset) = 0; //deben estar en la clase buffer
 
 	/**
-	 * @brief      SetIndexBuffer function, to set index buffer
-	 * @param      IndBuff parameter one, a pointer of CIndexBuffer
-	 * @param      offset parameter two, offset for set index buffer
-	 * @bug		   No know Bugs
-	 * @return     Returns nothing
+	  * @brief      SetIndexBuffer function, to set index buffer
+	  * @param      IndBuff parameter one, a pointer of CIndexBuffer
+	  * @param      offset parameter two, offset for set index buffer
+	  * @bug		   No know Bugs
+	  * @return     Returns nothing
 	*/
 	virtual void SetIndexBuffer(CIndexBuffer* IndBuff, 
 		                        unsigned int offset) = 0; //deben estar en la clase buffer
 
 	/**
-	 * @brief      SetConstantBuffer function, to set constant buffer Never changes
-	 * @param      ConstBuff parameter one, a pointer of CConstantBuffer
-	 * @param      StartSlot parameter two, start slot for set constant buffer
-	 * @param      NumBuffer parameter three, number of buffer
-	 * @bug		   No know Bugs
-	 * @return     Returns nothing
+	  * @brief      SetConstantBuffer function, to set constant buffer Never changes
+	  * @param      ConstBuff parameter one, a pointer of CConstantBuffer
+	  * @param      StartSlot parameter two, start slot for set constant buffer
+	  * @param      NumBuffer parameter three, number of buffer
+	  * @bug		   No know Bugs
+	  * @return     Returns nothing
 	*/
 	virtual void SetConstantBuffer(CConstantBuffer* ConstBuff,
 		                           unsigned int StartSlot,
@@ -444,86 +451,86 @@ public:
 
 
 	/**
-	 * @brief      SetPixelShaders function, to set pixel shader
-	 * @param      Pixel parameter one, a pointer of CPixelShader
-	 * @bug		   No know Bugs
-	 * @return     Returns nothing
+	  * @brief      SetPixelShaders function, to set pixel shader
+	  * @param      Pixel parameter one, a pointer of CPixelShader
+	  * @bug		   No know Bugs
+	  * @return     Returns nothing
 	*/
 	virtual void SetPixelShaders(CPixelShader * Pixel) = 0;
 
 	/**
-	 * @brief      SetVertexShaders function, to set vertex shader
-	 * @param      Pixel parameter one, a pointer of CVertexShader
-	 * @bug		   No know Bugs
-	 * @return     Returns nothing
+	  * @brief      SetVertexShaders function, to set vertex shader
+	  * @param      Pixel parameter one, a pointer of CVertexShader
+	  * @bug		   No know Bugs
+	  * @return     Returns nothing
 	*/
 	virtual void SetVertexShaders(CVertexShader* Vertex) = 0;
 
 	/**
-	 * @brief      SetInputLayout function, to set input layout
-	 * @param      Inp parameter one, a pointer of CInputLayout
-	 * @bug		   No know Bugs
-	 * @return     Returns nothing
+	  * @brief      SetInputLayout function, to set input layout
+	  * @param      Inp parameter one, a pointer of CInputLayout
+	  * @bug		   No know Bugs
+	  * @return     Returns nothing
 	*/
 	virtual void SetInputLayout(CInputLayout* Inp) = 0;
 
 	/**
-	 * @brief      SetSamplerState function, to set sampler state
-	 * @param      Sam parameter one, a pointer of CSamplerState
-	 * @param      StartSlot parameter two, start slot for set sampler state
-	 * @param      NumSamplers parameter three, number of sampler
-	 * @bug		   No know Bugs
-	 * @return     Returns nothing
+	  * @brief      SetSamplerState function, to set sampler state
+	  * @param      Sam parameter one, a pointer of CSamplerState
+	  * @param      StartSlot parameter two, start slot for set sampler state
+	  * @param      NumSamplers parameter three, number of sampler
+	  * @bug		   No know Bugs
+	  * @return     Returns nothing
 	*/
 	virtual void SetSamplerState(const std::vector<CSamplerState*>& Sam,
 		                         unsigned int StartSlot) = 0; //
 
 	/**
-	 * @brief      SetDepthStencil function, to set depth stencil
-	 * @bug		   No know Bugs
-	 * @return     Returns nothing
+	  * @brief      SetDepthStencil function, to set depth stencil
+	  * @bug		No know Bugs
+	  * @return     Returns nothing
 	*/
 	virtual void SetDepthStencil() = 0; ///necesita recibir una textura
 
 	/**
-	 * @brief      SetRasterizerState function, to set rasteraizer state
-	 * @param      RasState parameter one, a pointer of CRasterizerState
-	 * @bug		   No know Bugs
-	 * @return     Returns nothing
+	  * @brief      SetRasterizerState function, to set rasteraizer state
+	  * @param      RasState parameter one, a pointer of CRasterizerState
+	  * @bug		   No know Bugs
+	  * @return     Returns nothing
 	*/
 	virtual void SetRasterizerState(CRasterizerState* RasState) = 0;
 
 	/**
-	 * @brief      SetRenderTarget function, to set render target
-	 * @param      pRTTex parameter one, a pointer of CTexture
-	 * @param      pDSTex parameter two, a pointer of CTexture
-	 * @param      NumView parameter three, number of render target view
-	 * @bug		   No know Bugs
-	 * @return     Returns nothing
+	  * @brief      SetRenderTarget function, to set render target
+	  * @param      pRTTex parameter one, a pointer of CTexture
+	  * @param      pDSTex parameter two, a pointer of CTexture
+	  * @param      NumView parameter three, number of render target view
+	  * @bug		   No know Bugs
+	  * @return     Returns nothing
 	*/
 	virtual void SetRenderTarget(const std::vector<CTexture*>& pRTTex, 
 		                         CTexture* pDSTex = nullptr) = 0;
 
 	/**
-	 * @brief      SetShaderResouerce function, to set shader resource
-	 * @param      pRTTex parameter one, a pointer of CTexture
-	 * @param      pDSTex parameter two, a pointer of CTexture
-	 * @param      NumView parameter three, number of render target view
-	 * @bug		   No know Bugs
-	 * @return     Returns nothing
+	  * @brief      SetShaderResouerce function, to set shader resource
+	  * @param      pRTTex parameter one, a pointer of CTexture
+	  * @param      pDSTex parameter two, a pointer of CTexture
+	  * @param      NumView parameter three, number of render target view
+	  * @bug		   No know Bugs
+	  * @return     Returns nothing
 	*/ 
 	virtual void SetShaderResource(const std::vector<CTexture*>& pRTTex, 
 		                           unsigned int StartSlot = 0) = 0;
 	
 	/**
-	 * @brief      SetViewport function, to set viewport
-	 * @param      NumViewport parameter one, number of viewport
-	 * @param      Width parameter two, width for the desc of viewport
-	 * @param      Height parameter three, height for the desc of viewport
-	 * @param      TopLeftX parameter fourth, TopLeftX for the desc of viewport
-	 * @param      TopLeftY parameter five, TopLeftY for the desc of viewport
-	 * @bug		   No know Bugs
-	 * @return     Returns nothing
+	  * @brief      SetViewport function, to set viewport
+	  * @param      NumViewport parameter one, number of viewport
+	  * @param      Width parameter two, width for the desc of viewport
+	  * @param      Height parameter three, height for the desc of viewport
+	  * @param      TopLeftX parameter fourth, TopLeftX for the desc of viewport
+	  * @param      TopLeftY parameter five, TopLeftY for the desc of viewport
+	  * @bug		   No know Bugs
+	  * @return     Returns nothing
 	*/
 	virtual void SetViewport(unsigned int NumViewport,
 		                     float Width,
@@ -533,23 +540,23 @@ public:
 	//clear
 
 	/**
-	 * @brief      ClearRendTarView function, to clear the render target view
-	 * @param      RT parameter one, a pointer of CTexture
-	 * @param      ClearColor parameter two, of for the color of back buffer
-	 * @bug		   No know Bugs
-	 * @return     Returns nothing
+	  * @brief      ClearRendTarView function, to clear the render target view
+	  * @param      RT parameter one, a pointer of CTexture
+	  * @param      ClearColor parameter two, of for the color of back buffer
+	  * @bug		   No know Bugs
+	  * @return     Returns nothing
 	*/
 	virtual void ClearRenderTarget(CTexture* RT,
 		                           ColorStruct Color) = 0; //structura de color con 4 flotantes
 
 	/**
-	 * @brief      ClearDepthStenView function, to clear the depth stencil view
-	 * @param      RT parameter one, a pointer of CTexture
-	 * @param      ClerFlag parameter two, a flag for clear the depth stencil view
-	 * @param      Depth parameter three, a depth for clear the depth stencil view
-	 * @param      Stencil parameter fourt, a stencil for clear the depth stencil view
-	 * @bug		   No know Bugs
-	 * @return     Returns nothing
+	  * @brief      ClearDepthStenView function, to clear the depth stencil view
+	  * @param      RT parameter one, a pointer of CTexture
+	  * @param      ClerFlag parameter two, a flag for clear the depth stencil view
+	  * @param      Depth parameter three, a depth for clear the depth stencil view
+	  * @param      Stencil parameter fourt, a stencil for clear the depth stencil view
+	  * @bug		   No know Bugs
+	  * @return     Returns nothing
 	*/
 	virtual void ClearDepthStencil(CTexture* RT,
 		                            CLEAR_FLAG ClerFlag = CLEAR_DEPTH,
@@ -560,23 +567,49 @@ public:
 	//draw
 
 	/**
-	 * @brief      Drawindex function, to draw
-	 * @param      SizeIndex parameter one, size of index
-	 * @param      StartindexLocation parameter two, index location
-	 * @bug		   No know Bugs
-	 * @return     Returns nothing
+	  * @brief      DrawIndexed function, to draw
+	  * @param      SizeIndex parameter one, num of index
+	  * @param      StartindexLocation parameter two, start index location
+	  * @param      BaseVertexLocation parameter two, base vertex location
+	  * @bug		   No know Bugs
+	  * @return     Returns nothing
 	*/
-	virtual void Drawindexed(int NumIndex, 
-		                    int StartindexLocation) = 0; //falta parametro, base vertex entre otros
+	virtual void DrawIndexed(unsigned int NumIndex,
+		                     unsigned int StartindexLocation,
+		                     unsigned int BaseVertexLocation) = 0; 
 
-	//falta funcion de draw, drawinstanced
+	/**
+	  * @brief      DrawInstanced function, to draw
+	  * @param      VertexCountPerInstance parameter one, Number of vertices to draw
+	  * @param      InstanceCount parameter two, Number of instances to draw
+	  * @param      StartVertexLocation parameter two, Index of the first vertex.
+	  * @param      StartInstanceLocation parameter one, A value added to each index before 
+	  *             reading per-instance data from a vertex buffer
+	  * @bug		   No know Bugs
+	  * @return     Returns nothing
+	*/
+	virtual void DrawInstanced(unsigned int VertexCountPerInstance,
+		                       unsigned int InstanceCount,
+		                       unsigned int StartVertexLocation,
+		                       unsigned int StartInstanceLocation) = 0;
+
+	/**
+	  * @brief      Draw function, to draw
+	  * @param      VertexCount parameter one, Number of vertices to draw
+	  * @param      StartVertexLocation parameter two, Index of the first vertex, which is 
+	                usually an offset in a vertex buffer
+	  * @bug		   No know Bugs
+	  * @return     Returns nothing
+	*/
+	virtual void Draw(unsigned int VertexCount,
+		              unsigned int StartVertexLocation) = 0;
 
 	//swap
 
 	/**
-	 * @brief      Present function, to do swap with swapchain
-	 * @bug		   No know Bugs
-	 * @return     Returns nothing
+	  * @brief      Present function, to do swap with swapchain
+	  * @bug		   No know Bugs
+	  * @return     Returns nothing
 	*/
 	virtual void Present() = 0;
 

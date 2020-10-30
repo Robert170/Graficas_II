@@ -5,8 +5,9 @@
 #include "CIndexBufferOGL.h"
 #include "CVertexBufferOGL.h"
 #include "CConstantBufferOGL.h"
-#include "CInputLayoutOGLOGL.h"
-#include "CSamplerStateOGLOGL.h"
+#include "CInputLayoutOGL.h"
+#include "CSamplerStateOGL.h"
+
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 
 void COGLGraphiAPI::InitWindow(unsigned int width, 
@@ -49,45 +50,45 @@ COGLGraphiAPI::~COGLGraphiAPI()
 }
 
 
-CBuffer* COGLGraphiAPI::CreateVertexBuffer(unsigned int bindFlags,
-	                                       std::vector <SimpleVertex> Ver,
-	                                       unsigned int ID)
+CVertexBuffer* COGLGraphiAPI::CreateVertexBuffer(std::vector <SimpleVertex> Ver,
+	                                             unsigned int BufferSize,
+	                                             unsigned int NumBuffer)
 {
-	auto VertexBuffer = new CBufferOGL();
+	auto VertexBuffer = new CVertexBufferOGL();
 
-	glGenBuffers(ID, &VertexBuffer->m_VBO);
-	glBufferData(GL_ARRAY_BUFFER, Ver.size(), Ver.data(), GL_STATIC_DRAW);
+	glGenBuffers(NumBuffer, 
+		         &VertexBuffer->m_VBO);
+	glBufferData(GL_ARRAY_BUFFER, 
+		         Ver.size()* BufferSize, 
+		         Ver.data(), 
+		         GL_STATIC_DRAW);
 
 	return VertexBuffer;
 }
 
-CBuffer* COGLGraphiAPI::CreateIndexBuffer(unsigned int bindFlags,
-	                                      std::vector<unsigned int> Ind,
-	                                      unsigned int ID)
+CIndexBuffer* COGLGraphiAPI::CreateIndexBuffer(const std::vector<unsigned int>& Ind,
+	                                           unsigned int BufferSize,
+	                                           unsigned int NumBuffer)
 {
-	auto IndexBuffer = new CBufferOGL();
+	auto IndexBuffer = new CIndexBufferOGL();
 
-	glGenBuffers(ID, &IndexBuffer->m_IBO);
+	glGenBuffers(NumBuffer, 
+		         &IndexBuffer->m_IBO);
 	
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, Ind.size(), Ind.data(), GL_STATIC_DRAW);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, 
+		         Ind.size()* BufferSize, 
+		         Ind.data(), 
+		         GL_STATIC_DRAW);
 
 	return IndexBuffer;
 }
 
-CBuffer* COGLGraphiAPI::CreateConstantBufferNC(unsigned int bindFlags)
+CConstantBuffer* COGLGraphiAPI::CreateConstantBuffer(unsigned int BufferSize,
+	                                                 unsigned int NumBuffer)
 {
 	return nullptr;
 }
 
-CBuffer* COGLGraphiAPI::CreateConstantBufferCOR(unsigned int bindFlags)
-{
-	return nullptr;
-}
-
-CBuffer* COGLGraphiAPI::CreateConstantBufferCEF(unsigned int bindFlags)
-{
-	return nullptr;
-}
 
 void COGLGraphiAPI::CreateTexture1D()
 {
@@ -155,11 +156,14 @@ CVertexShader* COGLGraphiAPI::CreateVertexShaders(std::string FileName,
 	return VertexShader;
 }
 
-CInputLayout* COGLGraphiAPI::CreateInputLayout(unsigned int ID)
+CInputLayout* COGLGraphiAPI::CreateInputLayout(CVertexShader* Vertex,
+	                                           std::vector<std::string> SemanticName,
+	                                           unsigned int NumInputLayout)
 {
 	auto InputLa = new CInputLayoutOGL();
 
-	glGenVertexArrays(ID, &InputLa->m_IPLA);
+	glGenVertexArrays(NumInputLayout,
+		              &InputLa->m_IPLA);
 
 	return InputLa;
 }
@@ -192,40 +196,28 @@ CRasterizerState* COGLGraphiAPI::CreateRasterizerState()
 	return nullptr;
 }
 
-void COGLGraphiAPI::SetVertexBuffer(CBuffer* VerBuff, 
-	                                unsigned int StartSlot, 
-	                                unsigned int NumBuffer, 
-	                                unsigned int stride, 
+void COGLGraphiAPI::SetVertexBuffer(CVertexBuffer* VerBuff,
+	                                unsigned int StartSlot,
+	                                unsigned int NumBuffer,
+	                                unsigned int stride,
 	                                unsigned int offset)
 {
-	auto VertBuff = reinterpret_cast<CBufferOGL*>(VerBuff);
+	auto VertBuff = reinterpret_cast<CVertexBufferOGL*>(VerBuff);
 	glBindBuffer(GL_ARRAY_BUFFER, VertBuff->m_VBO);
 
 	
 }
 
-void COGLGraphiAPI::SetIndexBuffer(CBuffer* IndBuff, 
+void COGLGraphiAPI::SetIndexBuffer(CIndexBuffer* IndBuff,
 	                               unsigned int offset)
 {
-	auto IndexBuff = reinterpret_cast<CBufferOGL*>(IndBuff);
+	auto IndexBuff = reinterpret_cast<CIndexBufferOGL*>(IndBuff);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IndexBuff->m_IBO);
 }
 
-void COGLGraphiAPI::SetConstantBufferNC(CBuffer* ConstBuff, 
-	                                    unsigned int StartSlot, 
-	                                    unsigned int NumBuffer)
-{
-}
-
-void COGLGraphiAPI::SetConstantBufferCOR(CBuffer* ConstBuff, 
-	                                     unsigned int StartSlot, 
-	                                     unsigned int NumBuffer)
-{
-}
-
-void COGLGraphiAPI::SetConstantBufferCEF(CBuffer* ConstBuff, 
-	                                     unsigned int StartSlot, 
-	                                     unsigned int NumBuffer)
+void COGLGraphiAPI::SetConstantBuffer(CConstantBuffer* ConstBuff,
+	                                  unsigned int StartSlot,
+	                                  unsigned int NumBuffer)
 {
 }
 
@@ -256,13 +248,15 @@ void COGLGraphiAPI::SetInputLayout(CInputLayout* Inp)
 	glBindVertexArray(InpL->m_IPLA);
 }
 
-void COGLGraphiAPI::SetSamplerState(CSamplerState* Sam, 
-	                                unsigned int StartSlot, 
-	                                unsigned int NumSamplers)
+void COGLGraphiAPI::SetSamplerState(const std::vector<CSamplerState*>& Sam,
+	                                unsigned int StartSlot)
 {
-	auto SamSt = reinterpret_cast<CSamplerStateOGL*>(Sam);
+	for (int i = 0; i < Sam.size(); i++)
+	{
+		auto SamSt = reinterpret_cast<CSamplerStateOGL*>(Sam.at(i));
 
-	glBindSampler(StartSlot, SamSt->m_SamSt);
+		glBindSampler(StartSlot, SamSt->m_SamSt);
+	}
 }
 
 
@@ -270,9 +264,8 @@ void COGLGraphiAPI::SetDepthStencil()
 {
 }
 
-void COGLGraphiAPI::SetShaderResource(CTexture* pRTTex,
-	                                  unsigned int StartSlot,
-	                                  unsigned int NumSamplers)
+void COGLGraphiAPI::SetShaderResource(const std::vector<CTexture*>& pRTTex,
+	                                  unsigned int StartSlot)
 {
 	//glTextureView()
 }
@@ -289,15 +282,15 @@ void COGLGraphiAPI::SetViewport(unsigned int NumViewport,
 		       Height);
 }
 
-void COGLGraphiAPI::ClearRendTarView(CTexture* RT, 
-	                                 std::vector<float> ClearColor)
+void COGLGraphiAPI::ClearRenderTarget(CTexture* RT,
+	                                 ColorStruct Color)
 {
 }
 
-void COGLGraphiAPI::ClearDepthStenView(CTexture* RT, 
-	                                   CLEAR_FLAG ClerFlag, 
-	                                   float Depth, 
-	                                   unsigned int Stencil)
+void COGLGraphiAPI::ClearDepthStencil(CTexture* RT,
+	                                  CLEAR_FLAG ClerFlag, 
+	                                  float Depth, 
+	                                  unsigned int Stencil)
 {
 }
 
@@ -305,17 +298,29 @@ void COGLGraphiAPI::SetRasterizerState(CRasterizerState* RasState)
 {
 }
 
-void COGLGraphiAPI::SetRenderTarget(CTexture* pRTTex,
-	                                CTexture* pDSTex,
-	                                unsigned int NumView)
+void COGLGraphiAPI::SetRenderTarget(const std::vector<CTexture*>& pRTTex,
+	                                CTexture* pDSTex)
 {
 }
 
 
-void COGLGraphiAPI::Drawindexed(int NumIndex, 
-	                            int StartindexLocation)
+void COGLGraphiAPI::DrawIndexed(unsigned int NumIndex,
+	                            unsigned int StartindexLocation,
+	                            unsigned int BaseVertexLocation)
 {
 	glDrawArrays(GL_TRIANGLES, StartindexLocation, NumIndex);
+}
+
+void COGLGraphiAPI::DrawInstanced(unsigned int VertexCountPerInstance, 
+	                              unsigned int InstanceCount, 
+	                              unsigned int StartVertexLocation, 
+	                              unsigned int StartInstanceLocation)
+{
+}
+
+void COGLGraphiAPI::Draw(unsigned int VertexCount, 
+	                     unsigned int StartVertexLocation)
+{
 }
 
 void COGLGraphiAPI::Present()
