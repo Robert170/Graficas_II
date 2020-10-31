@@ -36,6 +36,8 @@ protected:
     */
     ID3D11Buffer* m_pIndexBuffer = nullptr;
 
+    unsigned int m_Offset;
+
 
     friend class CDXGraphiAPI;
 };

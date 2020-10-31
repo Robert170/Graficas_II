@@ -34,7 +34,27 @@ protected:
 	/**
 	  * @Variable m_texture, unsigned int for the texture
 	*/
-	unsigned int m_texture;
+	unsigned int m_Texture = 0;
+
+	/**
+	  * @Variable m_RTV, unsigned int for the render target view
+	*/
+	unsigned int m_RTV = 0;
+
+	/**
+	  * @Variable m_DSV, unsigned int for the depth stencil view
+	*/
+	unsigned int m_DSV = 0;
+
+	/**
+	  * @Variable m_UAV, unsigned int for the unordered access view
+	*/
+	unsigned int m_UAV = 0;
+
+	/**
+	  * @Variable m_SRV, unsigned int for the shader resource view
+	*/
+	unsigned int m_SRV = 0;
 
 	friend class COGLGraphiAPI;
     

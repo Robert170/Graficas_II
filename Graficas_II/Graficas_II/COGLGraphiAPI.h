@@ -272,7 +272,7 @@ public:
 	  * @bug		No know Bugs
 	  * @return     Returns nothing
 	*/
-	void SetDepthStencil() override;
+	void SetDepthStencil(CTexture* pDSTex) override;
 
 	/**
 	  * @brief      SetRasterizerState function, to set rasteraizer state

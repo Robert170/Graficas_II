@@ -184,14 +184,14 @@ CIndexBuffer* CDXGraphiAPI::CreateIndexBuffer(const std::vector<unsigned int>& I
     return IndexBuffer;
 }
 
-//fuction to create a constant buffer never change
+//fuction to create a constant buffer 
 CConstantBuffer* CDXGraphiAPI::CreateConstantBuffer(unsigned int BufferSize,
                                                     unsigned int NumBuffer)
 {
     auto ConsBuffer = new CConstantBufferDX();
     CD3D11_BUFFER_DESC BufferDesc(BufferSize,
                                   D3D11_BIND_CONSTANT_BUFFER);
-    //never change
+
     HRESULT hr = m_pd3dDevice->CreateBuffer(&BufferDesc,
                                             nullptr,
                                             &ConsBuffer->m_pConstantBuffer);
@@ -227,7 +227,7 @@ CTexture* CDXGraphiAPI::CreateTexture2D(unsigned int width,
                                static_cast<D3D11_USAGE>(Usage));
 
     //Crear textura
-    HRESULT hr = m_pd3dDevice->CreateTexture2D(&desc, nullptr, &texture->m_Texture);
+    HRESULT hr = m_pd3dDevice->CreateTexture2D(&desc, nullptr, &texture->m_pTexture);
     if(FAILED(hr))
     {
         std::cout << "//error fallo la creacion de la textura" << std::endl;
@@ -238,35 +238,38 @@ CTexture* CDXGraphiAPI::CreateTexture2D(unsigned int width,
     if(bindFlags & D3D11_BIND_SHADER_RESOURCE)
     {//Crear SRV
       CD3D11_SHADER_RESOURCE_VIEW_DESC srvDesc(D3D11_SRV_DIMENSION_TEXTURE2D);
-      m_pd3dDevice->CreateShaderResourceView(texture->m_Texture,
+      m_pd3dDevice->CreateShaderResourceView(texture->m_pTexture,
                                              &srvDesc,
-                                             &texture->m_SRV);
+                                             &texture->m_pSRV);
     }
     else if(bindFlags & D3D11_BIND_DEPTH_STENCIL)
     {//Crear DSV
         CD3D11_DEPTH_STENCIL_VIEW_DESC dsvDesc(D3D11_DSV_DIMENSION_TEXTURE2D);
-        m_pd3dDevice->CreateDepthStencilView(texture->m_Texture,
+        m_pd3dDevice->CreateDepthStencilView(texture->m_pTexture,
                                              &dsvDesc,
-                                             &texture->m_DSV);
+                                             &texture->m_pDSV);
      
     }
     else if (bindFlags & D3D11_BIND_RENDER_TARGET)
     {//Crear RTV
-        m_pSwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*)&m_BackBuffer.m_Texture);
+
+        auto BackBuffer = reinterpret_cast<CTextureDX*>(m_BackBuffer);
+
+        m_pSwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*)&BackBuffer->m_pTexture);
 
         CD3D11_RENDER_TARGET_VIEW_DESC rtvDesc(D3D11_RTV_DIMENSION_TEXTURE2D);
 
-        m_pd3dDevice->CreateRenderTargetView(m_BackBuffer.m_Texture,
+        m_pd3dDevice->CreateRenderTargetView(BackBuffer->m_pTexture,
                                              &rtvDesc,
-                                             &texture->m_RTV);
+                                             &texture->m_pRTV);
         
-    }
-    else if (bindFlags & D3D11_BIND_RENDER_TARGET)
+    } 
+    else if (bindFlags & D3D11_BIND_UNORDERED_ACCESS)
     {//Crear UAV
         CD3D11_UNORDERED_ACCESS_VIEW_DESC uavDesc(D3D11_UAV_DIMENSION_TEXTURE2D);
-        m_pd3dDevice->CreateUnorderedAccessView(texture->m_Texture,
+        m_pd3dDevice->CreateUnorderedAccessView(texture->m_pTexture,
                                                 &uavDesc,
-                                                &texture->m_UAV);
+                                                &texture->m_pUAV);
 
     }
     return texture;
@@ -425,6 +428,7 @@ CInputLayout* CDXGraphiAPI::CreateInputLayout(CVertexShader* Vertex,
 CSamplerState* CDXGraphiAPI::CreateSamplerState(unsigned int NumSamplerState)
 {
     auto SamplerState = new CSamplerStateDX();
+
     CD3D11_SAMPLER_DESC SamStDesc;
 
     m_pd3dDevice->CreateSamplerState(&SamStDesc,
@@ -447,8 +451,8 @@ CRasterizerState* CDXGraphiAPI::CreateRasterizerState()
 
 //fuction to set a constant buffer never change
 void CDXGraphiAPI::SetConstantBuffer(CConstantBuffer* ConstBuff,
-                                       unsigned int StartSlot, 
-                                       unsigned int NumBuffer)
+                                     unsigned int StartSlot, 
+                                     unsigned int NumBuffer)
 {
     auto Buffer = reinterpret_cast<CConstantBufferDX*>(ConstBuff);
     m_pImmediateContext->VSSetConstantBuffers(StartSlot, 
@@ -464,7 +468,7 @@ void CDXGraphiAPI::SetIndexBuffer(CIndexBuffer* IndBuff,
 
     m_pImmediateContext->IASetIndexBuffer(IndexBuff->m_pIndexBuffer,
                                           DXGI_FORMAT_R16_UINT, 
-                                          offset);
+                                          IndexBuff->m_Offset);
 }
 
 //fuction to set a vertex buffer 
@@ -479,8 +483,8 @@ void CDXGraphiAPI::SetVertexBuffer(CVertexBuffer* VerBuff,
     m_pImmediateContext->IASetVertexBuffers(StartSlot,
         NumBuffer,
         &VertexBuff->m_pVertexBuffer,
-        &stride,
-        &offset);
+        &VertexBuff->m_Stride,
+        &VertexBuff->m_Offset);
 }
 
 //fuction to set a pixel shader 
@@ -515,11 +519,11 @@ void CDXGraphiAPI::SetRenderTarget(const std::vector<CTexture*>& pRTTex,
         if (nullptr != pDSTex)
         {
             auto pDSDX = reinterpret_cast<CTextureDX*>(pDSTex);
-            pDSV = pDSDX->m_DSV;
+            pDSV = pDSDX->m_pDSV;
         }
 
         m_pImmediateContext->OMSetRenderTargets(pRTTex.size(),
-                                                &pRTDX->m_RTV,
+                                                &pRTDX->m_pRTV,
                                                 pDSV);
     }
 }
@@ -546,7 +550,7 @@ void CDXGraphiAPI::SetSamplerState(const std::vector<CSamplerState*>& Sam,
     
 }
 
-void CDXGraphiAPI::SetDepthStencil()
+void CDXGraphiAPI::SetDepthStencil(CTexture* pDSTex)
 {
 }
 
@@ -559,7 +563,7 @@ void CDXGraphiAPI::SetShaderResource(const std::vector<CTexture*>& pRTTex,
         auto pRTDX = reinterpret_cast<CTextureDX*>(pRTTex.at(i));
         m_pImmediateContext->PSSetShaderResources(StartSlot,
                                                   pRTTex.size(), 
-                                                  &pRTDX->m_SRV);
+                                                  &pRTDX->m_pSRV);
     }
 }
 
@@ -597,7 +601,7 @@ void CDXGraphiAPI::ClearRenderTarget(CTexture* RT,
     ClearColor.push_back(Color.B);
     ClearColor.push_back(Color.A);
 
-    m_pImmediateContext->ClearRenderTargetView(pRTDX->m_RTV, ClearColor.data());
+    m_pImmediateContext->ClearRenderTargetView(pRTDX->m_pRTV, ClearColor.data());
 }
 
 //fuction to clear depth stenci view
@@ -610,7 +614,7 @@ void CDXGraphiAPI::ClearDepthStencil(CTexture* DS,
 
      
 
-    m_pImmediateContext->ClearDepthStencilView(pDSDX->m_DSV,
+    m_pImmediateContext->ClearDepthStencilView(pDSDX->m_pDSV,
                                                static_cast<D3D11_CLEAR_FLAG>(ClerFlag),
                                                Depth,
                                                Stencil);

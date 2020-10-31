@@ -86,6 +86,11 @@ CIndexBuffer* COGLGraphiAPI::CreateIndexBuffer(const std::vector<unsigned int>& 
 CConstantBuffer* COGLGraphiAPI::CreateConstantBuffer(unsigned int BufferSize,
 	                                                 unsigned int NumBuffer)
 {
+	auto ConstantBuffer = new CConstantBufferOGL();
+
+	glGenBuffers(NumBuffer, 
+		         &ConstantBuffer->m_CBO);
+	//glBufferData(GL_UNIFORM_BUFFER, BufferSize, &shader_data, GL_DYNAMIC_DRAW);
 	return nullptr;
 }
 
@@ -102,15 +107,59 @@ CTexture* COGLGraphiAPI::CreateTexture2D(unsigned int width,
 	                                     TYPE_USAGE Usage)
 {
 	auto Texture = new CTextureOGL();
-	glGenTextures(numberTexture, &Texture->m_texture);
+	
 
-	glBindTexture(GL_TEXTURE_2D, Texture->m_texture);
-	// set the texture wrapping parameters
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-	// set texture filtering parameters
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	//Checar que interfaces se van a crear
+	if (bindFlags & TEXTURE_BIND_SHADER_RESOURCE)
+	{//Crear SRV
+		//flata arreglar
+		glTextureView(0, 0, 0, 0, 0, 0, 0, 0);
+	}
+	else if (bindFlags & TEXTURE_BIND_DEPTH_STENCIL)
+	{//Crear DSV
+
+		glGenRenderbuffers(numberTexture, 
+			               &Texture->m_DSV);
+		glRenderbufferStorage(GL_RENDERBUFFER, 
+			                  GL_DEPTH_COMPONENT, 
+			                  width,
+			                  height);
+	}
+	else if (bindFlags & TEXTURE_BIND_RENDER_TARGET)
+	{//Crear RTV
+		
+		glGenFramebuffers(numberTexture, &Texture->m_RTV);
+	}
+	else if (bindFlags & TEXTURE_BIND_UNORDERED_ACCESS)
+	{//Crear UAV
+		
+
+	}
+
+	glGenTextures(numberTexture, 
+		          &Texture->m_Texture);
+
+	glBindTexture(GL_TEXTURE_2D, 
+		          Texture->m_Texture);
+
+	glTexImage2D(GL_TEXTURE_2D, 
+		         0, 
+		         GL_RGB, 
+		         width, 
+		         height, 
+		         0, 
+		         GL_RGB, 
+		         GL_UNSIGNED_BYTE, 
+		         0);
+
+	glTexParameteri(GL_TEXTURE_2D, 
+		            GL_TEXTURE_MAG_FILTER, 
+		            GL_NEAREST);
+
+	glTexParameteri(GL_TEXTURE_2D, 
+		            GL_TEXTURE_MIN_FILTER, 
+		            GL_NEAREST);
+
 	return Texture;
 }
 
@@ -130,10 +179,6 @@ CPixelShader* COGLGraphiAPI::CreatePixelShaders(std::string FileName,
 	PixelShader->m_PixelShader = glCreateShader(GL_FRAGMENT_SHADER);
 	glShaderSource(PixelShader->m_PixelShader, ID, &PixelCode, NULL);
 
-	/*glCompileShader(PixelShader->m_PixelShader);
-	glAttachShader(m_AttachShaderID, PixelShader->m_PixelShader);
-
-	glDeleteShader(PixelShader->m_PixelShader);*/
 
 	return PixelShader;
 
@@ -168,11 +213,12 @@ CInputLayout* COGLGraphiAPI::CreateInputLayout(CVertexShader* Vertex,
 	return InputLa;
 }
 
-CSamplerState* COGLGraphiAPI::CreateSamplerState(unsigned int ID)
+CSamplerState* COGLGraphiAPI::CreateSamplerState(unsigned int NumSamplerState)
 {
 	auto SamplerState = new CSamplerStateOGL();
 
-	glGenSamplers(ID, &SamplerState->m_SamSt);
+	glGenSamplers(NumSamplerState, 
+		          &SamplerState->m_SamSt);
 
 	glSamplerParameteri(SamplerState->m_SamSt, 
 		                GL_TEXTURE_WRAP_S, GL_REPEAT);
@@ -187,7 +233,7 @@ CSamplerState* COGLGraphiAPI::CreateSamplerState(unsigned int ID)
 		                GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
 
 	glSamplerParameterf(SamplerState->m_SamSt, 
-		                GL_TEXTURE_MAX_ANISOTROPY_EXT, 16.0f);
+	                	GL_TEXTURE_MAX_ANISOTROPY, 16.0f);
 	return SamplerState;
 }
 
@@ -260,14 +306,29 @@ void COGLGraphiAPI::SetSamplerState(const std::vector<CSamplerState*>& Sam,
 }
 
 
-void COGLGraphiAPI::SetDepthStencil()
+void COGLGraphiAPI::SetDepthStencil(CTexture* pDSTex)
 {
+	auto DepSten = reinterpret_cast<CTextureOGL*>(pDSTex);
+
+	glBindRenderbuffer(GL_RENDERBUFFER, 
+		               DepSten->m_DSV);
+
+	glFramebufferRenderbuffer(GL_FRAMEBUFFER, 
+		                      GL_DEPTH_ATTACHMENT, 
+		                      GL_RENDERBUFFER, 
+		                      DepSten->m_DSV);
 }
 
 void COGLGraphiAPI::SetShaderResource(const std::vector<CTexture*>& pRTTex,
 	                                  unsigned int StartSlot)
 {
-	//glTextureView()
+	for (int i = 0; i < pRTTex.size(); i++)
+	{
+		auto SamSt = reinterpret_cast<CTextureOGL*>(pRTTex.at(i));
+
+		//glTextureView()
+	}
+	
 }
 
 void COGLGraphiAPI::SetViewport(unsigned int NumViewport, 
@@ -301,16 +362,36 @@ void COGLGraphiAPI::SetRasterizerState(CRasterizerState* RasState)
 void COGLGraphiAPI::SetRenderTarget(const std::vector<CTexture*>& pRTTex,
 	                                CTexture* pDSTex)
 {
+	for (int i = 0; i < pRTTex.size(); i++)
+	{
+		auto pRTDX = reinterpret_cast<CTextureOGL*>(pRTTex.at(i));
+
+		/*ID3D11DepthStencilView* pDSV = nullptr;
+
+		if (nullptr != pDSTex)
+		{
+			auto pDSDX = reinterpret_cast<CTextureOGL*>(pDSTex);
+			pDSV = pDSDX->m_DSV;
+		}*/
+
+		glBindFramebuffer(GL_FRAMEBUFFER, 
+			              pRTDX->m_RTV);
+
+		glFramebufferTexture(GL_FRAMEBUFFER, 
+			                 GL_COLOR_ATTACHMENT0, 
+			                 pRTDX->m_Texture, 
+			                 i);
+	}
 }
 
+//glDrawBuffers donde usar?
 
 void COGLGraphiAPI::DrawIndexed(unsigned int NumIndex,
 	                            unsigned int StartindexLocation,
 	                            unsigned int BaseVertexLocation)
 {
-	glDrawArrays(GL_TRIANGLES, StartindexLocation, NumIndex);
+	//glDrawElements(GL_TRIANGLES, NumIndex, GL_UNSIGNED_BYTE, GL_ELEMENT_ARRAY_BUFFER)
 }
-
 void COGLGraphiAPI::DrawInstanced(unsigned int VertexCountPerInstance, 
 	                              unsigned int InstanceCount, 
 	                              unsigned int StartVertexLocation, 
@@ -321,6 +402,7 @@ void COGLGraphiAPI::DrawInstanced(unsigned int VertexCountPerInstance,
 void COGLGraphiAPI::Draw(unsigned int VertexCount, 
 	                     unsigned int StartVertexLocation)
 {
+	glDrawArrays(GL_TRIANGLES, StartVertexLocation, VertexCount);
 }
 
 void COGLGraphiAPI::Present()

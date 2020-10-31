@@ -290,8 +290,6 @@ public:
 	*/
 
 	//preguntar tamaño del buffer, puntero del inicio del buffer y tamaño del buffer
-	//offset
-	//puntero bufferdata
 	virtual CVertexBuffer* CreateVertexBuffer(std::vector <SimpleVertex> Ver, 
 		                                      unsigned int BufferSize,
 		                                      unsigned int NumBuffer = 0) = 0;
@@ -490,7 +488,7 @@ public:
 	  * @bug		No know Bugs
 	  * @return     Returns nothing
 	*/
-	virtual void SetDepthStencil() = 0; ///necesita recibir una textura
+	virtual void SetDepthStencil(CTexture* pDSTex) = 0; ///necesita recibir una textura
 
 	/**
 	  * @brief      SetRasterizerState function, to set rasteraizer state
