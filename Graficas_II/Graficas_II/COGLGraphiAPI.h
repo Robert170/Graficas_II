@@ -34,9 +34,7 @@ protected:
 	 * @return     Returns nothing
 	*/
 	void InitWindow(unsigned int width,
-		            unsigned int height,
-		            HINSTANCE hInstance,
-		            int nCmdShow) override;
+		            unsigned int height) override;
 
 	/**
 	 * @brief      CreateDeviceandSwap function, to create device and swapchain
@@ -75,7 +73,7 @@ public:
 	  * @bug		No know Bugs
 	  * @return     Returns a pointer of CBuffer
 	*/
-	CVertexBuffer* CreateVertexBuffer(std::vector <SimpleVertex> Ver,
+	CVertexBuffer* CreateVertexBuffer(const std::vector <SimpleVertex>& Ver,
 		                              unsigned int BufferSize,
 		                              unsigned int NumBuffer) override;
 
@@ -143,9 +141,9 @@ public:
 	  * @bug		No know Bugs
 	  * @return     Returns a pointer of CPixelShader
 	*/
-	CPixelShader* CreatePixelShaders(std::string FileName,
-		                             std::string Entry,
-		                             std::string ShaderModel,
+	CPixelShader* CreatePixelShaders(const std::string & FileName,
+		                             const std::string & Entry,
+		                             const std::string & ShaderModel,
 		                             int NumPixelShader) override;
 
 	/**
@@ -157,9 +155,9 @@ public:
 	  * @bug		No know Bugs
 	  * @return     Returns a pointer of CVertexShader
 	*/
-	CVertexShader* CreateVertexShaders(std::string FileName,
-		                               std::string Entry,
-		                               std::string ShaderModel,
+	CVertexShader* CreateVertexShaders(const std::string &FileName,
+		                               const std::string &Entry,
+		                               const std::string &ShaderModel,
 		                               int NumVertexShader) override;
 
 	/**
@@ -170,8 +168,8 @@ public:
 	  * @bug		No know Bugs
 	  * @return     Returns a pointer of CInputLayout
 	*/
-	CInputLayout* CreateInputLayout(CVertexShader* Vertex,
-		                            std::vector<std::string> SemanticName,
+	CInputLayout* CreateInputLayout(CVertexShader* &Vertex,
+		                            const std::vector<std::string> &SemanticName,
 		                            unsigned int NumInputLayout) override;
 
 	/**
@@ -202,7 +200,7 @@ public:
 	  * @bug		No know Bugs
 	  * @return     Returns nothing
 	*/
-	void SetVertexBuffer(CVertexBuffer* VerBuff,
+	void SetVertexBuffer(CVertexBuffer* &VerBuff,
 		                 unsigned int StartSlot,
 		                 unsigned int NumBuffer,
 		                 unsigned int stride,
@@ -216,7 +214,7 @@ public:
 	  * @bug		No know Bugs
 	  * @return     Returns nothing
 	*/
-	void SetIndexBuffer(CIndexBuffer* IndBuff,
+	void SetIndexBuffer(CIndexBuffer* &IndBuff,
 		                unsigned int offset)override;
 
 
@@ -228,7 +226,7 @@ public:
 	  * @bug		No know Bugs
 	  * @return     Returns nothing
 	*/
-	void SetConstantBuffer(CConstantBuffer* ConstBuff,
+	void SetConstantBuffer(CConstantBuffer* &ConstBuff,
 		                   unsigned int StartSlot,
 		                   unsigned int NumBuffer) override;
 
@@ -238,7 +236,7 @@ public:
 	  * @bug		No know Bugs
 	  * @return     Returns nothing
 	*/
-	void SetPixelShaders(CPixelShader* Pixel) override;
+	void SetPixelShaders(CPixelShader* &Pixel) override;
 
 	/**
 	  * @brief      SetVertexShaders function, to set vertex shader
@@ -246,7 +244,7 @@ public:
 	  * @bug		No know Bugs
 	  * @return     Returns nothing
 	*/
-	void SetVertexShaders(CVertexShader* Vertex)override;
+	void SetVertexShaders(CVertexShader* &Vertex)override;
 
 	/**
 	  * @brief      SetInputLayout function, to set input layout
@@ -254,7 +252,7 @@ public:
 	  * @bug		No know Bugs
 	  * @return     Returns nothing
 	*/
-	void SetInputLayout(CInputLayout* Inp) override;
+	void SetInputLayout(CInputLayout* &Inp) override;
 
 	/**
 	  * @brief      SetSamplerState function, to set sampler state
@@ -272,7 +270,7 @@ public:
 	  * @bug		No know Bugs
 	  * @return     Returns nothing
 	*/
-	void SetDepthStencil(CTexture* pDSTex) override;
+	void SetDepthStencil(CTexture* &pDSTex) override;
 
 	/**
 	  * @brief      SetRasterizerState function, to set rasteraizer state
@@ -280,7 +278,7 @@ public:
 	  * @bug		No know Bugs
 	  * @return     Returns nothing
 	*/
-	void SetRasterizerState(CRasterizerState* RasState) override;
+	void SetRasterizerState(CRasterizerState* &RasState) override;
 
 	/**
 	  * @brief      SetRenderTarget function, to set render target
@@ -329,7 +327,7 @@ public:
 	  * @bug		No know Bugs
 	  * @return     Returns nothing
 	*/
-	void ClearRenderTarget(CTexture* RT,
+	void ClearRenderTarget(CTexture* &RT,
 		                   ColorStruct Color) override;
 
 	/**
@@ -341,8 +339,8 @@ public:
 	  * @bug		No know Bugs
 	  * @return     Returns nothing
 	*/
-	void ClearDepthStencil(CTexture* RT,
-		                   CLEAR_FLAG ClerFlag,
+	void ClearDepthStencil(CTexture* &RT,
+		                   unsigned int ClerFlag,
 		                   float Depth,
 		                   unsigned int Stencil) override;
 

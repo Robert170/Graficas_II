@@ -41,9 +41,9 @@ protected:
 	 * @bug		   No know Bugs
 	 * @return     Returns nothing
 	*/
-	bool CompilePixelShaderFromFile(LPWSTR FileName,
-		                            LPCSTR EntryPoint,
-		                            LPCSTR ShaderModel,
+	bool CompilePixelShaderFromFile(const std::wstring& FileName,
+		                            const std::string& EntryPoint,
+		                            const std::string& ShaderModel,
 		                            ID3DBlob * *ppBlobOut);
 	/**
 	  * @brief protected variables member

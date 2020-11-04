@@ -223,7 +223,16 @@
     <ResourceCompile Include="Graficas_II.rc" />
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="..\Tutorial02.fx" />
+    <FxCompile Include="..\Tutorial02.fx">
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">VS</EntryPointName>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">VS</EntryPointName>
+    </FxCompile>
+    <FxCompile Include="..\Tutorial070.fx">
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">VS</EntryPointName>
+    </FxCompile>
+    <FxCompile Include="Tutorial07.fx">
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">VS</EntryPointName>
+    </FxCompile>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

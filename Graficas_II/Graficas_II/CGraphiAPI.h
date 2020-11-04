@@ -230,9 +230,7 @@ protected:
 	  * @return     Returns nothing
 	*/
 	virtual void InitWindow(unsigned int width, 
-		                    unsigned int height,
-		                    HINSTANCE hInstance,
-		                    int nCmdShow) = 0;
+		                    unsigned int height) = 0;
 
 	/**
 	  * @brief      CreateDeviceandSwap function, to create device and swapchain
@@ -269,11 +267,9 @@ public:
 	  * @return     Returns nothing
 	*/
 	virtual void Init(unsigned int width,
-		              unsigned int height,
-		              int nCmdShow,
-		              HINSTANCE hInstance) 
+		              unsigned int height) 
 	{
-		InitWindow(width, height, hInstance, nCmdShow);
+		InitWindow(width, height);
 		CreateDeviceandSwap();
 	}
 
@@ -290,7 +286,8 @@ public:
 	*/
 
 	//preguntar tamaño del buffer, puntero del inicio del buffer y tamaño del buffer
-	virtual CVertexBuffer* CreateVertexBuffer(std::vector <SimpleVertex> Ver, 
+	
+	virtual CVertexBuffer* CreateVertexBuffer(const std::vector <SimpleVertex>& Ver,
 		                                      unsigned int BufferSize,
 		                                      unsigned int NumBuffer = 0) = 0;
 
@@ -360,10 +357,10 @@ public:
 	  * @bug		   No know Bugs
 	  * @return     Returns a pointer of CPixelShader
 	*/
-	virtual CPixelShader* CreatePixelShaders(std::string FileName,
-		                                    std::string Entry = "",
-		                                    std::string ShaderModel = "",
-		                                    int NumPixelShader = 0) = 0; //no va
+	virtual CPixelShader* CreatePixelShaders(const std::string & FileName,
+		                                     const std::string & Entry = "",
+		                                     const std::string & ShaderModel = "",
+		                                     int NumPixelShader = 0) = 0; //no va
 	/**
 	  * @brief      CreateVertexShaders function, to create vertex shader
 	  * @param      FileName parameter one, name of the file of the vertex shader
@@ -373,9 +370,9 @@ public:
 	  * @bug		   No know Bugs
 	  * @return     Returns a pointer of CVertexShader
 	*/
-	virtual	CVertexShader* CreateVertexShaders(std::string FileName,
-		                                       std::string Entry = "",
-		                                       std::string ShaderModel = "",
+	virtual	CVertexShader* CreateVertexShaders(const std::string & FileName,
+		                                       const std::string & Entry = "",
+		                                       const std::string & ShaderModel = "",
 		                                       int NumVertexShader = 0) = 0; //no va
 	/**
 	  * @brief      CreateInputLayout function, to create the input layaout
@@ -385,8 +382,8 @@ public:
 	  * @bug		   No know Bugs
 	  * @return     Returns a pointer of CInputLayout
 	*/
-	virtual CInputLayout* CreateInputLayout(CVertexShader* Vertex,
-		                                    std::vector<std::string> SemanticName,
+	virtual CInputLayout* CreateInputLayout(CVertexShader* & Vertex,
+		                                    const std::vector<std::string> &SemanticName,
 		                                    unsigned int NumInputLayout = 0) = 0; //no va
 
 	/**
@@ -417,7 +414,7 @@ public:
 	  * @bug		   No know Bugs
 	  * @return     Returns nothing
 	*/
-	virtual void SetVertexBuffer(CVertexBuffer* VerBuff,
+	virtual void SetVertexBuffer(CVertexBuffer* & VerBuff,
 		                         unsigned int StartSlot,
 		                         unsigned int NumBuffers,
 		                         unsigned int stride, //deben estar en la clase buffer
@@ -430,7 +427,7 @@ public:
 	  * @bug		   No know Bugs
 	  * @return     Returns nothing
 	*/
-	virtual void SetIndexBuffer(CIndexBuffer* IndBuff, 
+	virtual void SetIndexBuffer(CIndexBuffer* & IndBuff, 
 		                        unsigned int offset) = 0; //deben estar en la clase buffer
 
 	/**
@@ -441,7 +438,7 @@ public:
 	  * @bug		   No know Bugs
 	  * @return     Returns nothing
 	*/
-	virtual void SetConstantBuffer(CConstantBuffer* ConstBuff,
+	virtual void SetConstantBuffer(CConstantBuffer* &ConstBuff,
 		                           unsigned int StartSlot,
 		                           unsigned int NumBuffers) = 0;
 
@@ -454,7 +451,7 @@ public:
 	  * @bug		   No know Bugs
 	  * @return     Returns nothing
 	*/
-	virtual void SetPixelShaders(CPixelShader * Pixel) = 0;
+	virtual void SetPixelShaders(CPixelShader* & Pixel) = 0;
 
 	/**
 	  * @brief      SetVertexShaders function, to set vertex shader
@@ -462,7 +459,7 @@ public:
 	  * @bug		   No know Bugs
 	  * @return     Returns nothing
 	*/
-	virtual void SetVertexShaders(CVertexShader* Vertex) = 0;
+	virtual void SetVertexShaders(CVertexShader* & Vertex) = 0;
 
 	/**
 	  * @brief      SetInputLayout function, to set input layout
@@ -470,7 +467,7 @@ public:
 	  * @bug		   No know Bugs
 	  * @return     Returns nothing
 	*/
-	virtual void SetInputLayout(CInputLayout* Inp) = 0;
+	virtual void SetInputLayout(CInputLayout* & Inp) = 0;
 
 	/**
 	  * @brief      SetSamplerState function, to set sampler state
@@ -488,7 +485,7 @@ public:
 	  * @bug		No know Bugs
 	  * @return     Returns nothing
 	*/
-	virtual void SetDepthStencil(CTexture* pDSTex) = 0; ///necesita recibir una textura
+	virtual void SetDepthStencil(CTexture* & pDSTex) = 0; ///necesita recibir una textura
 
 	/**
 	  * @brief      SetRasterizerState function, to set rasteraizer state
@@ -496,7 +493,7 @@ public:
 	  * @bug		   No know Bugs
 	  * @return     Returns nothing
 	*/
-	virtual void SetRasterizerState(CRasterizerState* RasState) = 0;
+	virtual void SetRasterizerState(CRasterizerState* & RasState) = 0;
 
 	/**
 	  * @brief      SetRenderTarget function, to set render target
@@ -544,7 +541,7 @@ public:
 	  * @bug		   No know Bugs
 	  * @return     Returns nothing
 	*/
-	virtual void ClearRenderTarget(CTexture* RT,
+	virtual void ClearRenderTarget(CTexture* & RT,
 		                           ColorStruct Color) = 0; //structura de color con 4 flotantes
 
 	/**
@@ -556,10 +553,10 @@ public:
 	  * @bug		   No know Bugs
 	  * @return     Returns nothing
 	*/
-	virtual void ClearDepthStencil(CTexture* RT,
-		                            CLEAR_FLAG ClerFlag = CLEAR_DEPTH,
-		                            float Depth = 1.0f,
-		                            unsigned int Stencil = 0) = 0;
+	virtual void ClearDepthStencil(CTexture* & RT,
+		                           unsigned int ClerFlag = CLEAR_DEPTH,
+		                           float Depth = 1.0f,
+		                           unsigned int Stencil = 0) = 0;
 		
 
 	//draw

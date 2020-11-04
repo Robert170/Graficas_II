@@ -11,16 +11,14 @@
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 
 void COGLGraphiAPI::InitWindow(unsigned int width, 
-	                           unsigned int height, 
-	                           HINSTANCE hInstance,
-	                           int nCmdShow)
+	                           unsigned int height)
 {
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-	m_window = glfwCreateWindow(width, height, "LearnOpenGL", NULL, NULL);
-	if (m_window == NULL)
+	m_window = glfwCreateWindow(width, height, "LearnOpenGL", nullptr, nullptr);
+	if (m_window == nullptr)
 	{
 		std::cout << "Failed to create GLFW window" << std::endl;
 		glfwTerminate();
@@ -50,7 +48,7 @@ COGLGraphiAPI::~COGLGraphiAPI()
 }
 
 
-CVertexBuffer* COGLGraphiAPI::CreateVertexBuffer(std::vector <SimpleVertex> Ver,
+CVertexBuffer* COGLGraphiAPI::CreateVertexBuffer(const std::vector <SimpleVertex>& Ver,
 	                                             unsigned int BufferSize,
 	                                             unsigned int NumBuffer)
 {
@@ -88,7 +86,7 @@ CConstantBuffer* COGLGraphiAPI::CreateConstantBuffer(unsigned int BufferSize,
 {
 	auto ConstantBuffer = new CConstantBufferOGL();
 
-	glGenBuffers(NumBuffer, 
+	glGenBuffers(BufferSize,
 		         &ConstantBuffer->m_CBO);
 	//glBufferData(GL_UNIFORM_BUFFER, BufferSize, &shader_data, GL_DYNAMIC_DRAW);
 	return nullptr;
@@ -115,22 +113,22 @@ CTexture* COGLGraphiAPI::CreateTexture2D(unsigned int width,
 		//flata arreglar
 		glTextureView(0, 0, 0, 0, 0, 0, 0, 0);
 	}
-	else if (bindFlags & TEXTURE_BIND_DEPTH_STENCIL)
+	if (bindFlags & TEXTURE_BIND_DEPTH_STENCIL)
 	{//Crear DSV
 
-		glGenRenderbuffers(numberTexture, 
+		glGenRenderbuffers(bindFlags,
 			               &Texture->m_DSV);
 		glRenderbufferStorage(GL_RENDERBUFFER, 
 			                  GL_DEPTH_COMPONENT, 
 			                  width,
 			                  height);
 	}
-	else if (bindFlags & TEXTURE_BIND_RENDER_TARGET)
+	if (bindFlags & TEXTURE_BIND_RENDER_TARGET)
 	{//Crear RTV
 		
 		glGenFramebuffers(numberTexture, &Texture->m_RTV);
 	}
-	else if (bindFlags & TEXTURE_BIND_UNORDERED_ACCESS)
+	if (bindFlags & TEXTURE_BIND_UNORDERED_ACCESS)
 	{//Crear UAV
 		
 
@@ -168,9 +166,9 @@ void COGLGraphiAPI::CreateTexture3D()
 {
 }
 
-CPixelShader* COGLGraphiAPI::CreatePixelShaders(std::string FileName,
-	                                            std::string Entry,
-	                                            std::string ShaderModel,
+CPixelShader* COGLGraphiAPI::CreatePixelShaders(const std::string &FileName,
+	                                            const std::string &Entry,
+	                                            const std::string &ShaderModel,
 	                                            int ID)
 {
 	// Pixel Shader
@@ -184,9 +182,9 @@ CPixelShader* COGLGraphiAPI::CreatePixelShaders(std::string FileName,
 
 }
 
-CVertexShader* COGLGraphiAPI::CreateVertexShaders(std::string FileName,
-	                                              std::string Entry,
-	                                              std::string ShaderModel,
+CVertexShader* COGLGraphiAPI::CreateVertexShaders(const std::string &FileName,
+	                                              const std::string &Entry,
+	                                              const std::string &ShaderModel,
 	                                              int ID)
 {
 	// vertex Shader
@@ -201,8 +199,8 @@ CVertexShader* COGLGraphiAPI::CreateVertexShaders(std::string FileName,
 	return VertexShader;
 }
 
-CInputLayout* COGLGraphiAPI::CreateInputLayout(CVertexShader* Vertex,
-	                                           std::vector<std::string> SemanticName,
+CInputLayout* COGLGraphiAPI::CreateInputLayout(CVertexShader* &Vertex,
+	                                           const std::vector<std::string> &SemanticName,
 	                                           unsigned int NumInputLayout)
 {
 	auto InputLa = new CInputLayoutOGL();
@@ -242,7 +240,7 @@ CRasterizerState* COGLGraphiAPI::CreateRasterizerState()
 	return nullptr;
 }
 
-void COGLGraphiAPI::SetVertexBuffer(CVertexBuffer* VerBuff,
+void COGLGraphiAPI::SetVertexBuffer(CVertexBuffer* &VerBuff,
 	                                unsigned int StartSlot,
 	                                unsigned int NumBuffer,
 	                                unsigned int stride,
@@ -254,20 +252,20 @@ void COGLGraphiAPI::SetVertexBuffer(CVertexBuffer* VerBuff,
 	
 }
 
-void COGLGraphiAPI::SetIndexBuffer(CIndexBuffer* IndBuff,
+void COGLGraphiAPI::SetIndexBuffer(CIndexBuffer* &IndBuff,
 	                               unsigned int offset)
 {
 	auto IndexBuff = reinterpret_cast<CIndexBufferOGL*>(IndBuff);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IndexBuff->m_IBO);
 }
 
-void COGLGraphiAPI::SetConstantBuffer(CConstantBuffer* ConstBuff,
+void COGLGraphiAPI::SetConstantBuffer(CConstantBuffer* &ConstBuff,
 	                                  unsigned int StartSlot,
 	                                  unsigned int NumBuffer)
 {
 }
 
-void COGLGraphiAPI::SetPixelShaders(CPixelShader* Pixel)
+void COGLGraphiAPI::SetPixelShaders(CPixelShader* &Pixel)
 {
 	auto PixelSh = reinterpret_cast<CPixelShaderOGL*>(Pixel);
 	glCompileShader(PixelSh->m_PixelShader);
@@ -277,7 +275,7 @@ void COGLGraphiAPI::SetPixelShaders(CPixelShader* Pixel)
 	glDeleteShader(PixelSh->m_PixelShader);
 }
 
-void COGLGraphiAPI::SetVertexShaders(CVertexShader* Vertex)
+void COGLGraphiAPI::SetVertexShaders(CVertexShader* &Vertex)
 {
 	auto VertexSh = reinterpret_cast<CVertexShaderOGL*>(Vertex);
 
@@ -288,7 +286,7 @@ void COGLGraphiAPI::SetVertexShaders(CVertexShader* Vertex)
 	glDeleteShader(VertexSh->m_VertexShader);
 }
 
-void COGLGraphiAPI::SetInputLayout(CInputLayout* Inp)
+void COGLGraphiAPI::SetInputLayout(CInputLayout* &Inp)
 {
 	auto InpL = reinterpret_cast<CInputLayoutOGL*>(Inp);
 	glBindVertexArray(InpL->m_IPLA);
@@ -306,7 +304,7 @@ void COGLGraphiAPI::SetSamplerState(const std::vector<CSamplerState*>& Sam,
 }
 
 
-void COGLGraphiAPI::SetDepthStencil(CTexture* pDSTex)
+void COGLGraphiAPI::SetDepthStencil(CTexture* &pDSTex)
 {
 	auto DepSten = reinterpret_cast<CTextureOGL*>(pDSTex);
 
@@ -343,19 +341,19 @@ void COGLGraphiAPI::SetViewport(unsigned int NumViewport,
 		       Height);
 }
 
-void COGLGraphiAPI::ClearRenderTarget(CTexture* RT,
+void COGLGraphiAPI::ClearRenderTarget(CTexture* &RT,
 	                                 ColorStruct Color)
 {
 }
 
-void COGLGraphiAPI::ClearDepthStencil(CTexture* RT,
-	                                  CLEAR_FLAG ClerFlag, 
+void COGLGraphiAPI::ClearDepthStencil(CTexture* &RT,
+	                                  unsigned int ClerFlag,
 	                                  float Depth, 
 	                                  unsigned int Stencil)
 {
 }
 
-void COGLGraphiAPI::SetRasterizerState(CRasterizerState* RasState)
+void COGLGraphiAPI::SetRasterizerState(CRasterizerState* &RasState)
 {
 }
 

@@ -43,9 +43,9 @@ protected:
 	 * @bug		   No know Bugs
 	 * @return     Returns nothing
 	*/
-	bool CompileVertexShaderFromFile(LPWSTR FileName,
-		                             LPCSTR EntryPoint,
-		                             LPCSTR ShaderModel,
+	bool CompileVertexShaderFromFile(const std::wstring &FileName,
+		                             const std::string &EntryPoint,
+		                             const std::string &ShaderModel,
 		                             ID3DBlob** ppBlobOut);
 
 	/**
