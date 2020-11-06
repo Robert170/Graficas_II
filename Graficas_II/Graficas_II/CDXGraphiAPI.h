@@ -378,12 +378,19 @@ public:
 	*/
 	void SetPrimitiveTopology(PRIMITIVE_TOPOLOGY Topology) override;
 
+	/**
+	  * @brief      SetDefaultRenderTarget function, to set default render taret
+	  * @bug		No know Bugs
+	  * @return     Returns nothing
+	*/
+	void SetDefaultRenderTarget() override;
+
 	//clear
 
 	/**
 	  * @brief      ClearRendTarView function, to clear the render target view
 	  * @param      RT parameter one, a pointer of CTexture
-	  * @param      ClearColor parameter two, of for the color of back buffer
+	  * @param      Color parameter two, of for the color of back buffer
 	  * @bug		   No know Bugs
 	  * @return     Returns nothing
 	*/
@@ -403,6 +410,15 @@ public:
 		                   unsigned int ClerFlag,
 		                   float Depth,
 		                   unsigned int Stencil) override;
+
+	/**
+	  * @brief      ClearDefaultRenderTargetAndDepthStencil function, to
+	  *             clear default render target and depth stencil
+	  * @param      Color parameter two, of for the color of back buffer
+	  * @bug		No know Bugs
+	  * @return     Returns nothing
+	*/
+	void ClearDefaultRenderTargetAndDepthStencil(ColorStruct Color) override;
 
 
 	void UpdateSubresource(const void* Data,

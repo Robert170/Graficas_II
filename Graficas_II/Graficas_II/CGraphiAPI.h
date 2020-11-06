@@ -604,6 +604,14 @@ public:
 	*/
 	virtual void SetPrimitiveTopology(PRIMITIVE_TOPOLOGY Topology = 
 		                              PRIMITIVE_TOPOLOGY_TRIANGLELIST) = 0;
+
+	/**
+	  * @brief      SetDefaultRenderTarget function, to set default render taret
+	  * @bug		No know Bugs
+	  * @return     Returns nothing
+	*/
+	virtual void SetDefaultRenderTarget() = 0;
+
 	//clear
 
 	/**
@@ -630,8 +638,17 @@ public:
 		                           float Depth = 1.0f,
 		                           unsigned int Stencil = 0) = 0;
 
-		
+	/**
+	  * @brief      ClearDefaultRenderTargetAndDepthStencil function, to
+	  *             clear default render target and depth stencil
+	  * @param      Color parameter two, of for the color of back buffer
+	  * @bug		No know Bugs
+	  * @return     Returns nothing
+	*/
+	virtual void ClearDefaultRenderTargetAndDepthStencil(ColorStruct Color) = 0;
 
+		
+	
 	virtual void UpdateSubresource(const void* Data,
 		                           CConstantBuffer& ConstantBufffer) = 0;
 

@@ -2,7 +2,7 @@
 #include "COGLGraphiAPI.h"
 #include "CDXGraphiAPI.h"
 
-CDXGraphiAPI* API = new CDXGraphiAPI();
+CGraphiAPI* API = new CDXGraphiAPI();
 //CGraphiAPI* API = new COGLGraphiAPI();
 
 //Textures
@@ -136,15 +136,15 @@ void Init()
 		                                   TF_R8G8B8A8_UNORM,
 		                                   TEXTURE_BIND_RENDER_TARGET);*/
 
-	g_vRenderTargets.push_back(API->m_BackBuffer);
+	//g_vRenderTargets.push_back(g_pRenderTarget);
 
 	//// Create the depth stencil 
-	g_pDepthStencil = API->CreateTexture2D(800,
+	/*g_pDepthStencil = API->CreateTexture2D(800,
 		                                   600,
 		                                   1,
 		                                   TF_D24_UNORM_S8_UINT,
 		                                   TEXTURE_BIND_DEPTH_STENCIL,
-		                                   TYPE_USAGE_DEFAULT);
+		                                   TYPE_USAGE_DEFAULT);*/
 
 	////create shader resource
 	/*g_pShaderResource = API->CreateTexture2D(800,
@@ -241,8 +241,12 @@ void Render()
 	Color.A = 1.0f;
 
 
-	API->SetRenderTarget(g_vRenderTargets,
-		                 g_pDepthStencil);
+	/*API->SetRenderTarget(g_vRenderTargets,
+		                 g_pDepthStencil);*/
+
+	API->SetDefaultRenderTarget();
+
+
 
 	// Setup the viewport
 	API->SetViewport(1,
@@ -267,12 +271,14 @@ void Render()
 	API->SetPrimitiveTopology(PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
 
-	// Clear the render target
-	API->ClearRenderTarget(API->m_BackBuffer,
-		                   Color);
+	//// Clear the render target
+	//API->ClearRenderTarget(g_pRenderTarget,
+	//	                     Color);
 
-	// Clear the depth stencil
-	API->ClearDepthStencil(g_pDepthStencil, CLEAR_DEPTH,1.0f,0);
+	//// Clear the depth stencil
+	//API->ClearDepthStencil(g_pDepthStencil, CLEAR_DEPTH,1.0f,0);
+
+	API->ClearDefaultRenderTargetAndDepthStencil(Color);
 
 	
 

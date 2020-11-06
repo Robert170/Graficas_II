@@ -182,39 +182,39 @@ void CDXGraphiAPI::CreateDeviceandSwap()
     m_BackBuffer = BackBuffer;
 
 
-    //// Create depth stencil texture
+    // Create default depth stencil texture
 
 
-    //auto DepthStencil = new CTextureDX();
+    auto DepthStencil = new CTextureDX();
 
-    //D3D11_TEXTURE2D_DESC descDepth;
-    //ZeroMemory(&descDepth, sizeof(descDepth));
-    //descDepth.Width = m_Width;
-    //descDepth.Height = m_Height;
-    //descDepth.MipLevels = 1;
-    //descDepth.ArraySize = 1;
-    //descDepth.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
-    //descDepth.SampleDesc.Count = 1;
-    //descDepth.SampleDesc.Quality = 0;
-    //descDepth.Usage = D3D11_USAGE_DEFAULT;
-    //descDepth.BindFlags = D3D11_BIND_DEPTH_STENCIL;
-    //descDepth.CPUAccessFlags = 0;
-    //descDepth.MiscFlags = 0;
-    //hr = m_pd3dDevice->CreateTexture2D(&descDepth, NULL, &DepthStencil->m_pTexture);
-    //if (FAILED(hr))
-    //    return;
+    D3D11_TEXTURE2D_DESC descDepth;
+    ZeroMemory(&descDepth, sizeof(descDepth));
+    descDepth.Width = m_Width;
+    descDepth.Height = m_Height;
+    descDepth.MipLevels = 1;
+    descDepth.ArraySize = 1;
+    descDepth.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
+    descDepth.SampleDesc.Count = 1;
+    descDepth.SampleDesc.Quality = 0;
+    descDepth.Usage = D3D11_USAGE_DEFAULT;
+    descDepth.BindFlags = D3D11_BIND_DEPTH_STENCIL;
+    descDepth.CPUAccessFlags = 0;
+    descDepth.MiscFlags = 0;
+    hr = m_pd3dDevice->CreateTexture2D(&descDepth, NULL, &DepthStencil->m_pTexture);
+    if (FAILED(hr))
+        return;
 
-    //// Create the depth stencil view
-    //D3D11_DEPTH_STENCIL_VIEW_DESC descDSV;
-    //ZeroMemory(&descDSV, sizeof(descDSV));
-    //descDSV.Format = descDepth.Format;
-    //descDSV.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
-    //descDSV.Texture2D.MipSlice = 0;
-    //hr = m_pd3dDevice->CreateDepthStencilView(DepthStencil->m_pTexture, &descDSV, &DepthStencil->m_pDSV);
-    //if (FAILED(hr))
-    //    return;
+    // Create the depth stencil view
+    D3D11_DEPTH_STENCIL_VIEW_DESC descDSV;
+    ZeroMemory(&descDSV, sizeof(descDSV));
+    descDSV.Format = descDepth.Format;
+    descDSV.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
+    descDSV.Texture2D.MipSlice = 0;
+    hr = m_pd3dDevice->CreateDepthStencilView(DepthStencil->m_pTexture, &descDSV, &DepthStencil->m_pDSV);
+    if (FAILED(hr))
+        return;
 
-    //m_DepthStencil = DepthStencil;
+    m_DepthStencil = DepthStencil;
 
 }
 
@@ -734,6 +734,16 @@ void CDXGraphiAPI::SetPrimitiveTopology(PRIMITIVE_TOPOLOGY Topology)
     m_pImmediateContext->IASetPrimitiveTopology(static_cast<D3D_PRIMITIVE_TOPOLOGY>(Topology));
 }
 
+void CDXGraphiAPI::SetDefaultRenderTarget()
+{
+    auto pRTDX = reinterpret_cast<CTextureDX*>(m_BackBuffer);
+    auto pDSDX = reinterpret_cast<CTextureDX*>(m_DepthStencil);
+
+    m_pImmediateContext->OMSetRenderTargets(1,
+                                            &pRTDX->m_pRTV,
+                                            pDSDX->m_pDSV);
+}
+
 //fuction to set a rasterizer state
 void CDXGraphiAPI::SetRasterizerState(CRasterizerState * &RasState)
 {
@@ -765,6 +775,20 @@ void CDXGraphiAPI::ClearDepthStencil(CTexture* &DS,
                                                static_cast<D3D11_CLEAR_FLAG>(ClerFlag),
                                                Depth,
                                                Stencil);
+}
+
+void CDXGraphiAPI::ClearDefaultRenderTargetAndDepthStencil(ColorStruct Color)
+{
+
+    auto pRTDX = reinterpret_cast<CTextureDX*>(m_BackBuffer);
+    auto pDSDX = reinterpret_cast<CTextureDX*>(m_DepthStencil);
+
+    m_pImmediateContext->ClearRenderTargetView(pRTDX->m_pRTV, &Color.R);
+
+    m_pImmediateContext->ClearDepthStencilView(pDSDX->m_pDSV,
+                                               D3D11_CLEAR_DEPTH,
+                                               1.0f, 
+                                               0);
 }
 
 void CDXGraphiAPI::UpdateSubresource(const void* Data,
