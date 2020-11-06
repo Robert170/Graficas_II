@@ -12,14 +12,6 @@
 #include "resource.h"
 
 
-//LPWSTR ConvertToLPWSTR(const std::string& s) {
-//    LPWSTR ws = new wchar_t[s.size() + 1]; // +1 for zero at the end copy( s.begin(), s.end(), ws );
-//    ws[s.size()] = 0; // zero at the end return ws; 
-//} 
-//void f() { 
-//    std::string s = "SOME_STRING"; 
-//    LPWSTR ws = ConvertToLPWSTR(s); // some actions delete[] ws; // caller responsible for deletion 
-//} 
 
 //TODO: Chequeo de errores
 using std::vector;
@@ -241,7 +233,7 @@ CConstantBuffer* CDXGraphiAPI::CreateConstantBuffer(unsigned int BufferSize,
                                             &ConsBuffer->m_pConstantBuffer);
     if (FAILED(hr))
     {
-        std::cout << "//error fallo la creacion del Constant buffer Never" <<std::endl;
+        std::cout << "//Error fallo la creacion del Constant buffer Never" <<std::endl;
         return nullptr;
     }
     return ConsBuffer;
@@ -266,7 +258,7 @@ CTexture* CDXGraphiAPI::CreateTexture2D(unsigned int width,
     CD3D11_TEXTURE2D_DESC desc(static_cast<DXGI_FORMAT>(format),
                                width,
                                height,
-                               1,
+                               numberTexture,
                                0,
                                bindFlags,
                                static_cast<D3D11_USAGE>(Usage));
@@ -275,7 +267,7 @@ CTexture* CDXGraphiAPI::CreateTexture2D(unsigned int width,
     hr = m_pd3dDevice->CreateTexture2D(&desc, nullptr, &texture->m_pTexture);
     if(FAILED(hr))
     {
-        std::cout << "//error fallo la creacion de la textura" << std::endl;
+        std::cout << "//Error fallo la creacion de la textura" << std::endl;
         return nullptr;
     }
 
@@ -289,13 +281,17 @@ CTexture* CDXGraphiAPI::CreateTexture2D(unsigned int width,
                                                   &texture->m_pSRV);
       if (FAILED(hr))
       {
-          std::cout << "//error fallo la creacion del shader resource" << std::endl;
+          std::cout << "//Error fallo la creacion del shader resource" << std::endl;
           return nullptr;
       }
       
     }
     if(bindFlags & D3D11_BIND_DEPTH_STENCIL)
     {//Crear DSV
+
+        auto DepthStencil = reinterpret_cast<CTextureDX*>(m_DepthStencil);
+
+        DepthStencil = texture;
         CD3D11_DEPTH_STENCIL_VIEW_DESC dsvDesc(D3D11_DSV_DIMENSION_TEXTURE2D);
 
         hr = m_pd3dDevice->CreateDepthStencilView(texture->m_pTexture,
@@ -304,7 +300,7 @@ CTexture* CDXGraphiAPI::CreateTexture2D(unsigned int width,
 
         if (FAILED(hr))
         {
-            std::cout << "//error fallo la creacion del depth stencil" << std::endl;
+            std::cout << "//Error fallo la creacion del depth stencil" << std::endl;
             return nullptr;
         }
      
@@ -317,22 +313,22 @@ CTexture* CDXGraphiAPI::CreateTexture2D(unsigned int width,
         BackBuffer = texture;
         hr = m_pSwapChain->GetBuffer(0,
                                      __uuidof(ID3D11Texture2D),
-                                     (LPVOID*)&BackBuffer->m_pTexture);
+                                     (LPVOID*)&texture->m_pTexture);
         if (FAILED(hr))
         {
-            std::cout << "//error fallo al obtener el buffer para el back buffer" << std::endl;
+            std::cout << "//Error fallo al obtener el buffer para el back buffer" << std::endl;
             return nullptr;
         }
 
         CD3D11_RENDER_TARGET_VIEW_DESC rtvDesc(D3D11_RTV_DIMENSION_TEXTURE2D);
 
-        hr = m_pd3dDevice->CreateRenderTargetView(BackBuffer->m_pTexture,
+        hr = m_pd3dDevice->CreateRenderTargetView(texture->m_pTexture,
                                                   &rtvDesc,
                                                   &texture->m_pRTV);
 
         if (FAILED(hr))
         {
-            std::cout << "//error fallo la creacion del render target" << std::endl;
+            std::cout << "//Error fallo la creacion del render target" << std::endl;
             return nullptr;
         }
         
@@ -364,10 +360,10 @@ CPixelShader* CDXGraphiAPI::CreatePixelShaders(const std::string & FileName,
     std::wstring File(FileName.length(), L' ');
     std::copy(FileName.begin(), FileName.end(), File.begin());
 
-    if (PixelShader->CompilePixelShaderFromFile(File,
+    if (!PixelShader->CompilePixelShaderFromFile(File,
                                                 Entry,
                                                 ShaderModel,
-                                                &PixelShader->m_pPSBlob));
+                                                &PixelShader->m_pPSBlob))
     {
         std::cout << " //error fallo la compilacion del shader" << std::endl;
         return nullptr;
@@ -403,7 +399,7 @@ CVertexShader* CDXGraphiAPI::CreateVertexShaders(const std::string &FileName,
                                                     ShaderModel,
                                                     &VertexShaders->m_pVSBlob))
     {
-        std::cout << "//error fallo la compilacion del shader" << std::endl;
+        std::cout << "//Error fallo la compilacion del shader" << std::endl;
         return nullptr;
     }
 
@@ -414,7 +410,7 @@ CVertexShader* CDXGraphiAPI::CreateVertexShaders(const std::string &FileName,
     if (FAILED(hr))
     {
         VertexShaders->m_pVSBlob->Release();
-        std::cout << "//error fallo la creacion del vertex shader" << std::endl;
+        std::cout << "//Error fallo la creacion del vertex shader" << std::endl;
         ///error
         return nullptr;
     }
@@ -422,12 +418,12 @@ CVertexShader* CDXGraphiAPI::CreateVertexShaders(const std::string &FileName,
 }
 
 //fuction to create an input layout,
-CInputLayout* CDXGraphiAPI::CreateInputLayout(CVertexShader* &Vertex,
+CInputLayout* CDXGraphiAPI::CreateInputLayout(CVertexShader &Vertex,
                                               const std::vector<std::string> &SemanticName,
                                               unsigned int NumInputLayout)
 {
     auto InputLayout = new CInputLayoutDX();
-    auto VertexShaderBlob = reinterpret_cast<CVertexShaderDX*>(Vertex);
+    auto VertexShaderBlob = reinterpret_cast<CVertexShaderDX&>(Vertex);
     
 
     vector<D3D11_INPUT_ELEMENT_DESC> layout;
@@ -443,7 +439,7 @@ CInputLayout* CDXGraphiAPI::CreateInputLayout(CVertexShader* &Vertex,
         LPCSTR Temp= SemanticName.at(i).c_str();
         if ("POSITION" == SemanticName.at(i))
         {
-            layout.push_back({ Temp,
+            layout.push_back({ "POSITION",
                                SemanticIndexPosition,
                                DXGI_FORMAT_R32G32B32_FLOAT, 
                                0, 
@@ -489,10 +485,10 @@ CInputLayout* CDXGraphiAPI::CreateInputLayout(CVertexShader* &Vertex,
    
     HRESULT  hr = m_pd3dDevice->CreateInputLayout(layout.data(), 
                                                   layout.size(),
-                                                  VertexShaderBlob->m_pVSBlob->GetBufferPointer(),
-                                                  VertexShaderBlob->m_pVSBlob->GetBufferSize(),
+                                                  VertexShaderBlob.m_pVSBlob->GetBufferPointer(),
+                                                  VertexShaderBlob.m_pVSBlob->GetBufferSize(),
                                                   &InputLayout->m_pInputLayout);
-    VertexShaderBlob->m_pVSBlob->Release();
+    VertexShaderBlob.m_pVSBlob->Release();
 
     if (FAILED(hr))
     {
@@ -534,14 +530,26 @@ CRasterizerState* CDXGraphiAPI::CreateRasterizerState()
     return RasState;
 }
 
-//fuction to set a constant buffer never change
-void CDXGraphiAPI::SetConstantBuffer(CConstantBuffer* &ConstBuff,
-                                     unsigned int StartSlot, 
-                                     unsigned int NumBuffer)
+//fuction to set a constant buffer of vertex shader
+void CDXGraphiAPI::SetVertexShaderConstantBuffer(CConstantBuffer* &ConstBuff,
+                                                 unsigned int StartSlot, 
+                                                 unsigned int NumBuffer)
 {
     auto Buffer = reinterpret_cast<CConstantBufferDX*>(ConstBuff);
     m_pImmediateContext->VSSetConstantBuffers(StartSlot, 
                                               NumBuffer, 
+                                              &Buffer->m_pConstantBuffer);
+}
+
+//fuction to set a constant buffer of pixel shader
+void CDXGraphiAPI::SetPixelShaderConstantBuffer(CConstantBuffer*& ConstBuff, 
+                                                unsigned int StartSlot, 
+                                                unsigned int NumBuffer)
+{
+    auto Buffer = reinterpret_cast<CConstantBufferDX*>(ConstBuff);
+
+    m_pImmediateContext->PSSetConstantBuffers(StartSlot,
+                                              NumBuffer,
                                               &Buffer->m_pConstantBuffer);
 }
 
@@ -550,6 +558,7 @@ void CDXGraphiAPI::SetIndexBuffer(CIndexBuffer* &IndBuff,
                                   unsigned int offset)
 {
     auto IndexBuff = reinterpret_cast<CIndexBufferDX*>(IndBuff);
+    IndexBuff->m_Offset = offset;
 
     m_pImmediateContext->IASetIndexBuffer(IndexBuff->m_pIndexBuffer,
                                           DXGI_FORMAT_R16_UINT, 
@@ -565,12 +574,16 @@ void CDXGraphiAPI::SetVertexBuffer(CVertexBuffer* &VerBuff,
 {
 
     auto VertexBuff = reinterpret_cast<CVertexBufferDX*>(VerBuff);
+
+    VertexBuff->m_Stride = stride;
+    VertexBuff->m_Offset = offset;
     m_pImmediateContext->IASetVertexBuffers(StartSlot,
                                             NumBuffer,
                                             &VertexBuff->m_pVertexBuffer,
                                             &VertexBuff->m_Stride,
                                             &VertexBuff->m_Offset);
 }
+
 
 //fuction to set a pixel shader 
 void CDXGraphiAPI::SetPixelShaders(CPixelShader* &Pixel)
@@ -672,6 +685,11 @@ void CDXGraphiAPI::SetViewport(unsigned int NumViewport,
     m_pImmediateContext->RSSetViewports(NumViewport, &Vp);
 }
 
+void CDXGraphiAPI::SetPrimitiveTopology(PRIMITIVE_TOPOLOGY Topology)
+{
+    m_pImmediateContext->IASetPrimitiveTopology(static_cast<D3D_PRIMITIVE_TOPOLOGY>(Topology));
+}
+
 //fuction to set a rasterizer state
 void CDXGraphiAPI::SetRasterizerState(CRasterizerState * &RasState)
 {
@@ -705,6 +723,53 @@ void CDXGraphiAPI::ClearDepthStencil(CTexture* &DS,
                                                Stencil);
 }
 
+void CDXGraphiAPI::InitViewMatrix(glm::mat4& View, CConstantBuffer*& ConstantBufffer)
+{
+    auto ConstantBufferView = reinterpret_cast<CConstantBufferDX*>(ConstantBufffer);
+
+    CBNeverChanges cbNeverChanges;
+    cbNeverChanges.mView = glm::transpose(View);
+    m_pImmediateContext->UpdateSubresource(ConstantBufferView->m_pConstantBuffer, 
+                                           0, 
+                                           nullptr, 
+                                           &cbNeverChanges, 
+                                           0, 
+                                           0);
+}
+
+void CDXGraphiAPI::InitProjectionMatrix(glm::mat4& Projection, 
+                                        CConstantBuffer*& ConstantBufffer)
+{
+    auto ConstantBufferProjection = reinterpret_cast<CConstantBufferDX*>(ConstantBufffer);
+
+    CBChangeOnResize cbChangesOnResize;
+    cbChangesOnResize.mProjection = glm::transpose(Projection);
+    m_pImmediateContext->UpdateSubresource(ConstantBufferProjection->m_pConstantBuffer, 
+                                           0, 
+                                           nullptr, 
+                                           &cbChangesOnResize, 
+                                           0, 
+                                           0);
+}
+
+void CDXGraphiAPI::UpdateSubresource(glm::mat4& World, 
+                                     CConstantBuffer*& ConstantBufffer, 
+                                     glm::vec4& MeshColor)
+{
+    auto ConstantBufferChangeEvery = reinterpret_cast<CConstantBufferDX*>(ConstantBufffer);
+
+    CBChangesEveryFrame cb;
+    cb.mWorld = glm::transpose(World);
+    cb.vMeshColor = MeshColor;
+    m_pImmediateContext->UpdateSubresource(ConstantBufferChangeEvery->m_pConstantBuffer,
+                                           0,
+                                           nullptr,
+                                           &cb,
+                                           0,
+                                           0);
+}
+
+
 //fuction to draw
 void CDXGraphiAPI::DrawIndexed(unsigned int NumIndex,
                                unsigned int StartindexLocation,
@@ -737,4 +802,133 @@ void CDXGraphiAPI::Draw(unsigned int VertexCount,
 void CDXGraphiAPI::Present()
 {
     m_pSwapChain->Present(0, 0);
+}
+
+void CDXGraphiAPI::ClearMemory(const std::vector<CTexture*>& RenderTargets,
+                               const std::vector<CConstantBuffer*>& ConstantBuffers,
+                               const std::vector<CSamplerState*>& SamplerStates,
+                               const std::vector<CTexture*>& ShaderResource,
+                               CInputLayout*& InputLayout,
+                               CVertexShader*& VertexShader,
+                               CPixelShader*& PixelShader,
+                               CVertexBuffer* VertexBuffer,
+                               CIndexBuffer* IndexBuffer,
+                               CTexture*& DeptStencil)
+{
+    //Device Context
+    if (m_pImmediateContext)
+    {
+        m_pImmediateContext->ClearState();
+    }
+
+    //sampler state
+    for (int i = 0; i < SamplerStates.size(); i++)
+    {
+        auto Sampler = reinterpret_cast<CSamplerStateDX*>(SamplerStates.at(i));
+
+        if (nullptr != Sampler->m_pSamplerLinear)
+        {
+            Sampler->m_pSamplerLinear->Release();
+        }
+    }
+
+    //ShaderResource
+    for (int i = 0; i < ShaderResource.size(); i++)
+    {
+        auto ShaderRes = reinterpret_cast<CTextureDX*>(ShaderResource.at(i));
+
+        if (nullptr != ShaderRes->m_pSRV)
+        {
+            ShaderRes->m_pSRV->Release();
+        }
+    }
+    
+
+    //constant Buffers
+    for (int i = 0; i < ConstantBuffers.size(); i++)
+    {
+        auto ConstBuff = reinterpret_cast<CConstantBufferDX*>(ConstantBuffers.at(i));
+
+        if (nullptr != ConstBuff->m_pConstantBuffer)
+        {
+            ConstBuff->m_pConstantBuffer->Release();
+        }
+
+    }
+
+    //vertex buffer
+    auto VerBuff = reinterpret_cast<CVertexBufferDX*>(VertexBuffer);
+    if (nullptr != VerBuff->m_pVertexBuffer)
+    {
+        VerBuff->m_pVertexBuffer->Release();
+    }
+
+    //index buffer
+    auto IndBuff = reinterpret_cast<CIndexBufferDX*>(IndexBuffer);
+    if (nullptr != IndBuff->m_pIndexBuffer)
+    {
+        IndBuff->m_pIndexBuffer->Release();
+    }
+       
+    //input layout
+    auto InpLay = reinterpret_cast<CInputLayoutDX*>(InputLayout);
+    if (nullptr != InpLay->m_pInputLayout)
+    {
+        InpLay->m_pInputLayout->Release();
+    }
+
+    //vertex shader
+    auto VerShad = reinterpret_cast<CVertexShaderDX*>(VertexShader);
+    if (nullptr != VerShad->m_VertexShader)
+    {
+        VerShad->m_VertexShader->Release();
+    }
+
+    //pixel shader
+    auto PixShad = reinterpret_cast<CPixelShaderDX*>(PixelShader);
+    if (nullptr != PixShad->m_PixelShader)
+    {
+        PixShad->m_PixelShader->Release();
+    }
+
+    //depthstencil
+    auto DepthStencil = reinterpret_cast<CTextureDX*>(m_DepthStencil);
+    if (nullptr != DepthStencil)
+    {
+        DepthStencil->m_pTexture->Release();
+    }
+
+    //depth stencil view
+    auto DepthStencilView = reinterpret_cast<CTextureDX*>(DeptStencil);
+    if (nullptr != DepthStencilView->m_pDSV)
+    {
+        DepthStencilView->m_pDSV->Release();
+    }
+
+    //render target 
+    for (int i = 0; i < RenderTargets.size(); i++)
+    {
+        auto RendTarg = reinterpret_cast<CTextureDX*>(RenderTargets.at(i));
+
+        if (nullptr != RendTarg->m_pRTV)
+        {
+            RendTarg->m_pRTV->Release();
+        }
+    }
+    
+
+    if (m_pSwapChain)
+    {
+        m_pSwapChain->Release();
+    }
+
+    if (m_pImmediateContext)
+    {
+        m_pImmediateContext->Release();
+    }
+
+    if (m_pd3dDevice)
+    {
+        m_pd3dDevice->Release();
+    }
 }

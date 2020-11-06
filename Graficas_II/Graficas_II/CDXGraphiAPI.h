@@ -203,7 +203,7 @@ public:
 	  * @bug		   No know Bugs
 	  * @return     Returns a pointer of CInputLayout
 	*/
-	CInputLayout* CreateInputLayout(CVertexShader* & Vertex, 
+	CInputLayout* CreateInputLayout(CVertexShader & Vertex, 
 		                            const std::vector<std::string> & SemanticName,
 		                            unsigned int NumInputLayout) override;
 
@@ -254,16 +254,30 @@ public:
 
 
 	/**
-	  * @brief      SetConstantBuffer function, to set constant buffer Never changes
+	  * @brief      SetVertexShaderConstantBuffer function, to set constant
+	  *             buffer of the vertex shader
 	  * @param      ConstBuff parameter one, a pointer of CConstantBuffer
 	  * @param      StartSlot parameter two, start slot for set constant buffer
 	  * @param      NumBuffer parameter three, number of buffer
-	  * @bug		   No know Bugs
+	  * @bug		No know Bugs
 	  * @return     Returns nothing
 	*/
-	void SetConstantBuffer(CConstantBuffer* &ConstBuff,
-		                   unsigned int StartSlot,
-		                   unsigned int NumBuffer) override;
+	void SetVertexShaderConstantBuffer(CConstantBuffer* &ConstBuff,
+		                               unsigned int StartSlot,
+		                               unsigned int NumBuffer) override;
+
+	/**
+	  * @brief      SetPixelShaderConstantBuffer function, to set constant
+	  *             buffer of the pixel shader
+	  * @param      ConstBuff parameter one, a pointer of CConstantBuffer
+	  * @param      StartSlot parameter two, start slot for set constant buffer
+	  * @param      NumBuffer parameter three, number of buffer
+	  * @bug		No know Bugs
+	  * @return     Returns nothing
+	*/
+	void SetPixelShaderConstantBuffer(CConstantBuffer*& ConstBuff,
+		                              unsigned int StartSlot,
+		                              unsigned int NumBuffer) override;
 
 	/**
 	  * @brief      SetPixelShaders function, to set pixel shader
@@ -353,6 +367,14 @@ public:
 		             float TopLeftX,
 		             float TopLeftY) override;
 
+	/**
+	  * @brief      SetPrimitiveTopology function, to set primitive topology
+	  * @param      PRIMITIVE_TOPOLOGY parameter one, topology to set
+	  * @bug		No know Bugs
+	  * @return     Returns nothing
+	*/
+	void SetPrimitiveTopology(PRIMITIVE_TOPOLOGY Topology) override;
+
 	//clear
 
 	/**
@@ -378,6 +400,30 @@ public:
 		                   unsigned int ClerFlag,
 		                   float Depth,
 		                   unsigned int Stencil) override;
+
+	/**
+	  * @brief      InitViewMatrix function, to init view matrix
+	  * @param      View parameter one, a view matrix
+	  * @param      ConstantBufffer parameter two, a constant buffer
+	  * @bug		No know Bugs
+	  * @return     Returns nothing
+	*/
+	void InitViewMatrix(glm::mat4& View,
+		                CConstantBuffer*& ConstantBufffer) override;
+
+	/**
+	  * @brief      InitProjectionMatrix function, to init projection matrix
+	  * @param      Projection parameter one, a projection matrix
+	  * @param      ConstantBufffer parameter two, a constant buffer
+	  * @bug		No know Bugs
+	  * @return     Returns nothing
+	*/
+	void InitProjectionMatrix(glm::mat4& Projection,
+		                      CConstantBuffer*& ConstantBufffer) override;
+
+	void UpdateSubresource(glm::mat4& World,
+		                   CConstantBuffer*& ConstantBufffer,
+		                   glm::vec4& MeshColor);
 
 	//draw
 
@@ -427,5 +473,17 @@ public:
 	 * @return     Returns nothing
 	*/
 	void Present() override;
+
+	//clear
+	void ClearMemory(const std::vector<CTexture*>& RenderTargets,
+		             const std::vector<CConstantBuffer*>& ConstantBuffers,
+		             const std::vector<CSamplerState*>& SamplerStates,
+		             const std::vector<CTexture*>& ShaderResource,
+		             CInputLayout*& InputLayout,
+		             CVertexShader*& VertexShader,
+		             CPixelShader*& PixelShader,
+		             CVertexBuffer* VertexBuffer,
+		             CIndexBuffer* IndexBuffer,
+		             CTexture*& DeptStencil) override;
 };
 

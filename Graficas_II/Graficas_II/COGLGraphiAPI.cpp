@@ -259,9 +259,15 @@ void COGLGraphiAPI::SetIndexBuffer(CIndexBuffer* &IndBuff,
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IndexBuff->m_IBO);
 }
 
-void COGLGraphiAPI::SetConstantBuffer(CConstantBuffer* &ConstBuff,
-	                                  unsigned int StartSlot,
-	                                  unsigned int NumBuffer)
+void COGLGraphiAPI::SetVertexShaderConstantBuffer(CConstantBuffer* &ConstBuff,
+	                                              unsigned int StartSlot,
+	                                              unsigned int NumBuffer)
+{
+}
+
+void COGLGraphiAPI::SetPixelShaderConstantBuffer(CConstantBuffer*& ConstBuff, 
+	                                             unsigned int StartSlot, 
+	                                             unsigned int NumBuffer)
 {
 }
 
@@ -339,6 +345,10 @@ void COGLGraphiAPI::SetViewport(unsigned int NumViewport,
 		       TopLeftY,
 		       Width,
 		       Height);
+}
+
+void COGLGraphiAPI::SetPrimitiveTopology(PRIMITIVE_TOPOLOGY Topology)
+{
 }
 
 void COGLGraphiAPI::ClearRenderTarget(CTexture* &RT,

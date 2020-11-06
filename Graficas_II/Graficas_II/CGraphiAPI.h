@@ -184,6 +184,53 @@ using CLEAR_FLAG = enum
 	CLEAR_STENCIL = 0x2L
 };
 
+using PRIMITIVE_TOPOLOGY = enum
+{
+	PRIMITIVE_TOPOLOGY_UNDEFINED = 0,
+	PRIMITIVE_TOPOLOGY_POINTLIST = 1,
+	PRIMITIVE_TOPOLOGY_LINELIST = 2,
+	PRIMITIVE_TOPOLOGY_LINESTRIP = 3,
+	PRIMITIVE_TOPOLOGY_TRIANGLELIST = 4,
+	PRIMITIVE_TOPOLOGY_TRIANGLESTRIP = 5,
+	PRIMITIVE_TOPOLOGY_LINELIST_ADJ = 10,
+	PRIMITIVE_TOPOLOGY_LINESTRIP_ADJ = 11,
+	PRIMITIVE_TOPOLOGY_TRIANGLELIST_ADJ = 12,
+	PRIMITIVE_TOPOLOGY_TRIANGLESTRIP_ADJ = 13,
+	PRIMITIVE_TOPOLOGY_1_CONTROL_POINT_PATCHLIST = 33,
+	PRIMITIVE_TOPOLOGY_2_CONTROL_POINT_PATCHLIST = 34,
+	PRIMITIVE_TOPOLOGY_3_CONTROL_POINT_PATCHLIST = 35,
+	PRIMITIVE_TOPOLOGY_4_CONTROL_POINT_PATCHLIST = 36,
+	PRIMITIVE_TOPOLOGY_5_CONTROL_POINT_PATCHLIST = 37,
+	PRIMITIVE_TOPOLOGY_6_CONTROL_POINT_PATCHLIST = 38,
+	PRIMITIVE_TOPOLOGY_7_CONTROL_POINT_PATCHLIST = 39,
+	PRIMITIVE_TOPOLOGY_8_CONTROL_POINT_PATCHLIST = 40,
+	PRIMITIVE_TOPOLOGY_9_CONTROL_POINT_PATCHLIST = 41,
+	PRIMITIVE_TOPOLOGY_10_CONTROL_POINT_PATCHLIST = 42,
+	PRIMITIVE_TOPOLOGY_11_CONTROL_POINT_PATCHLIST = 43,
+	PRIMITIVE_TOPOLOGY_12_CONTROL_POINT_PATCHLIST = 44,
+	PRIMITIVE_TOPOLOGY_13_CONTROL_POINT_PATCHLIST = 45,
+	PRIMITIVE_TOPOLOGY_14_CONTROL_POINT_PATCHLIST = 46,
+	PRIMITIVE_TOPOLOGY_15_CONTROL_POINT_PATCHLIST = 47,
+	PRIMITIVE_TOPOLOGY_16_CONTROL_POINT_PATCHLIST = 48,
+	PRIMITIVE_TOPOLOGY_17_CONTROL_POINT_PATCHLIST = 49,
+	PRIMITIVE_TOPOLOGY_18_CONTROL_POINT_PATCHLIST = 50,
+	PRIMITIVE_TOPOLOGY_19_CONTROL_POINT_PATCHLIST = 51,
+	PRIMITIVE_TOPOLOGY_20_CONTROL_POINT_PATCHLIST = 52,
+	PRIMITIVE_TOPOLOGY_21_CONTROL_POINT_PATCHLIST = 53,
+	PRIMITIVE_TOPOLOGY_22_CONTROL_POINT_PATCHLIST = 54,
+	PRIMITIVE_TOPOLOGY_23_CONTROL_POINT_PATCHLIST = 55,
+	PRIMITIVE_TOPOLOGY_24_CONTROL_POINT_PATCHLIST = 56,
+	PRIMITIVE_TOPOLOGY_25_CONTROL_POINT_PATCHLIST = 57,
+	PRIMITIVE_TOPOLOGY_26_CONTROL_POINT_PATCHLIST = 58,
+	PRIMITIVE_TOPOLOGY_27_CONTROL_POINT_PATCHLIST = 59,
+	PRIMITIVE_TOPOLOGY_28_CONTROL_POINT_PATCHLIST = 60,
+	PRIMITIVE_TOPOLOGY_29_CONTROL_POINT_PATCHLIST = 61,
+	PRIMITIVE_TOPOLOGY_30_CONTROL_POINT_PATCHLIST = 62,
+	PRIMITIVE_TOPOLOGY_31_CONTROL_POINT_PATCHLIST = 63,
+	PRIMITIVE_TOPOLOGY_32_CONTROL_POINT_PATCHLIST = 64,
+
+};
+
 struct SimpleVertex
 {
 	glm::vec3 Pos;
@@ -207,12 +254,29 @@ struct CBChangesEveryFrame
 
 struct ColorStruct
 {
-	float R;
-	float G;
-	float B;
-	float A;
+	float R = 0;
+	float G = 0;
+	float B = 0;
+	float A = 0;
 };
 
+struct CCameraDatas
+{
+	/**< struct float W. */
+	float W;
+
+	/**< struct float H. */
+	float H;
+
+	/**< struct float Near. */
+	float Near;
+
+	/**< struct float Far. */
+	float Far;
+
+	/**< struct float Fov. */
+	float Fov;
+};
 
 class CGraphiAPI
 {
@@ -382,7 +446,7 @@ public:
 	  * @bug		   No know Bugs
 	  * @return     Returns a pointer of CInputLayout
 	*/
-	virtual CInputLayout* CreateInputLayout(CVertexShader* & Vertex,
+	virtual CInputLayout* CreateInputLayout(CVertexShader & Vertex,
 		                                    const std::vector<std::string> &SemanticName,
 		                                    unsigned int NumInputLayout = 0) = 0; //no va
 
@@ -431,16 +495,30 @@ public:
 		                        unsigned int offset) = 0; //deben estar en la clase buffer
 
 	/**
-	  * @brief      SetConstantBuffer function, to set constant buffer Never changes
+	  * @brief      SetVertexShaderConstantBuffer function, to set constant 
+	  *             buffer of the vertex shader
 	  * @param      ConstBuff parameter one, a pointer of CConstantBuffer
 	  * @param      StartSlot parameter two, start slot for set constant buffer
 	  * @param      NumBuffer parameter three, number of buffer
-	  * @bug		   No know Bugs
+	  * @bug		No know Bugs
 	  * @return     Returns nothing
 	*/
-	virtual void SetConstantBuffer(CConstantBuffer* &ConstBuff,
-		                           unsigned int StartSlot,
-		                           unsigned int NumBuffers) = 0;
+	virtual void SetVertexShaderConstantBuffer(CConstantBuffer* &ConstBuff,
+		                                       unsigned int StartSlot,
+		                                       unsigned int NumBuffers) = 0;
+
+	/**
+	  * @brief      SetPixelShaderConstantBuffer function, to set constant
+	  *             buffer of the pixel shader
+	  * @param      ConstBuff parameter one, a pointer of CConstantBuffer
+	  * @param      StartSlot parameter two, start slot for set constant buffer
+	  * @param      NumBuffer parameter three, number of buffer
+	  * @bug		No know Bugs
+	  * @return     Returns nothing
+	*/
+	virtual void SetPixelShaderConstantBuffer(CConstantBuffer*& ConstBuff,
+		                                      unsigned int StartSlot,
+		                                      unsigned int NumBuffers) = 0;
 
 	
 
@@ -532,13 +610,22 @@ public:
 		                     float Height,
 		                     float TopLeftX = 0,
 		                     float TopLeftY = 0 ) = 0; //falta checar eje z
+
+	/**
+	  * @brief      SetPrimitiveTopology function, to set primitive topology
+	  * @param      PRIMITIVE_TOPOLOGY parameter one, topology to set
+	  * @bug		No know Bugs
+	  * @return     Returns nothing
+	*/
+	virtual void SetPrimitiveTopology(PRIMITIVE_TOPOLOGY Topology = 
+		                              PRIMITIVE_TOPOLOGY_TRIANGLELIST) = 0;
 	//clear
 
 	/**
 	  * @brief      ClearRendTarView function, to clear the render target view
 	  * @param      RT parameter one, a pointer of CTexture
 	  * @param      ClearColor parameter two, of for the color of back buffer
-	  * @bug		   No know Bugs
+	  * @bug		No know Bugs
 	  * @return     Returns nothing
 	*/
 	virtual void ClearRenderTarget(CTexture* & RT,
@@ -550,14 +637,42 @@ public:
 	  * @param      ClerFlag parameter two, a flag for clear the depth stencil view
 	  * @param      Depth parameter three, a depth for clear the depth stencil view
 	  * @param      Stencil parameter fourt, a stencil for clear the depth stencil view
-	  * @bug		   No know Bugs
+	  * @bug		No know Bugs
 	  * @return     Returns nothing
 	*/
 	virtual void ClearDepthStencil(CTexture* & RT,
 		                           unsigned int ClerFlag = CLEAR_DEPTH,
 		                           float Depth = 1.0f,
 		                           unsigned int Stencil = 0) = 0;
+
+
+	//virtual glm::mat4 InitWorldMatrix(glm::mat4 &World) = 0;
+
+	/**
+	  * @brief      InitViewMatrix function, to init view matrix
+	  * @param      View parameter one, a view matrix
+	  * @param      ConstantBufffer parameter two, a constant buffer
+	  * @bug		No know Bugs
+	  * @return     Returns nothing
+	*/
+	virtual void InitViewMatrix(glm::mat4& View, 
+		                        CConstantBuffer*& ConstantBufffer) = 0;
+
+	/**
+	  * @brief      InitProjectionMatrix function, to init projection matrix
+	  * @param      Projection parameter one, a projection matrix
+	  * @param      ConstantBufffer parameter two, a constant buffer
+	  * @bug		No know Bugs
+	  * @return     Returns nothing
+	*/
+	virtual void InitProjectionMatrix(glm::mat4& Projection,
+		                              CConstantBuffer*& ConstantBufffer) = 0;
 		
+
+	virtual void UpdateSubresource(glm::mat4& World,
+		                           CConstantBuffer*& ConstantBufffer,
+		                           glm::vec4& MeshColor) = 0;
+
 
 	//draw
 
@@ -607,6 +722,19 @@ public:
 	  * @return     Returns nothing
 	*/
 	virtual void Present() = 0;
+
+
+	//Clear
+	virtual void ClearMemory(const std::vector<CTexture*>& RenderTargets,
+		                     const std::vector<CConstantBuffer*>& ConstantBuffers,
+		                     const std::vector<CSamplerState*>& SamplerStates,
+		                     const std::vector<CTexture*>& ShaderResource,
+		                     CInputLayout*& InputLayout,
+		                     CVertexShader*& VertexShader,
+		                     CPixelShader*& PixelShader,
+		                     CVertexBuffer* VertexBuffer,
+		                     CIndexBuffer* IndexBuffer,
+		                     CTexture*& DeptStencil) = 0;
 
 protected:
 

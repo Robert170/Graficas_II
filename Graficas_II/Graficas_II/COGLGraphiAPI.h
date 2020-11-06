@@ -219,16 +219,30 @@ public:
 
 
 	/**
-	  * @brief      SetConstantBuffer function, to set constant buffer Never changes
+	  * @brief      SetVertexShaderConstantBuffer function, to set constant
+	  *             buffer of the vertex shader
 	  * @param      ConstBuff parameter one, a pointer of CConstantBuffer
 	  * @param      StartSlot parameter two, start slot for set constant buffer
 	  * @param      NumBuffer parameter three, number of buffer
 	  * @bug		No know Bugs
 	  * @return     Returns nothing
 	*/
-	void SetConstantBuffer(CConstantBuffer* &ConstBuff,
-		                   unsigned int StartSlot,
-		                   unsigned int NumBuffer) override;
+	void SetVertexShaderConstantBuffer(CConstantBuffer* &ConstBuff,
+		                               unsigned int StartSlot,
+		                               unsigned int NumBuffer) override;
+
+	/**
+	  * @brief      SetPixelShaderConstantBuffer function, to set constant
+	  *             buffer of the pixel shader
+	  * @param      ConstBuff parameter one, a pointer of CConstantBuffer
+	  * @param      StartSlot parameter two, start slot for set constant buffer
+	  * @param      NumBuffer parameter three, number of buffer
+	  * @bug		No know Bugs
+	  * @return     Returns nothing
+	*/
+	void SetPixelShaderConstantBuffer(CConstantBuffer*& ConstBuff,
+		                              unsigned int StartSlot,
+		                              unsigned int NumBuffer) override;
 
 	/**
 	  * @brief      SetPixelShaders function, to set pixel shader
@@ -317,6 +331,14 @@ public:
 		             float Height,
 		             float TopLeftX,
 		             float TopLeftY) override;
+
+	/**
+	  * @brief      SetPrimitiveTopology function, to set primitive topology
+	  * @param      PRIMITIVE_TOPOLOGY parameter one, topology to set
+	  * @bug		No know Bugs
+	  * @return     Returns nothing
+	*/
+	void SetPrimitiveTopology(PRIMITIVE_TOPOLOGY Topology) override;
 
 	//clear
 
