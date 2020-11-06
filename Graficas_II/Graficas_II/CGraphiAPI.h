@@ -237,21 +237,6 @@ struct SimpleVertex
 	glm::vec2 Tex;
 };
 
-struct CBNeverChanges
-{
-	glm::mat4x4 mView;
-};
-struct CBChangeOnResize
-{
-	glm::mat4x4 mProjection;
-};
-
-struct CBChangesEveryFrame
-{
-	glm::mat4x4 mWorld;
-	glm::vec4 vMeshColor;
-};
-
 struct ColorStruct
 {
 	float R = 0;
@@ -363,7 +348,7 @@ public:
 	  * @bug		   No know Bugs
 	  * @return     Returns a pointer of CBuffer
 	*/
-	virtual CIndexBuffer* CreateIndexBuffer(const std::vector<unsigned int> & Ind,
+	virtual CIndexBuffer* CreateIndexBuffer(const std::vector<uint32_t> & Ind,
 		                                    unsigned int BufferSize,
 		                                    unsigned int NumBuffer = 0) = 0;
 
@@ -645,33 +630,10 @@ public:
 		                           float Depth = 1.0f,
 		                           unsigned int Stencil = 0) = 0;
 
-
-	//virtual glm::mat4 InitWorldMatrix(glm::mat4 &World) = 0;
-
-	/**
-	  * @brief      InitViewMatrix function, to init view matrix
-	  * @param      View parameter one, a view matrix
-	  * @param      ConstantBufffer parameter two, a constant buffer
-	  * @bug		No know Bugs
-	  * @return     Returns nothing
-	*/
-	virtual void InitViewMatrix(glm::mat4& View, 
-		                        CConstantBuffer*& ConstantBufffer) = 0;
-
-	/**
-	  * @brief      InitProjectionMatrix function, to init projection matrix
-	  * @param      Projection parameter one, a projection matrix
-	  * @param      ConstantBufffer parameter two, a constant buffer
-	  * @bug		No know Bugs
-	  * @return     Returns nothing
-	*/
-	virtual void InitProjectionMatrix(glm::mat4& Projection,
-		                              CConstantBuffer*& ConstantBufffer) = 0;
 		
 
-	virtual void UpdateSubresource(glm::mat4& World,
-		                           CConstantBuffer*& ConstantBufffer,
-		                           glm::vec4& MeshColor) = 0;
+	virtual void UpdateSubresource(const void* Data,
+		                           CConstantBuffer& ConstantBufffer) = 0;
 
 
 	//draw

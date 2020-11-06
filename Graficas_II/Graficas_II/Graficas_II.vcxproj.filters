@@ -258,8 +258,5 @@
     <FxCompile Include="Tutorial07.fx">
       <Filter>Shaders</Filter>
     </FxCompile>
-    <FxCompile Include="..\Tutorial070.fx">
-      <Filter>Shaders</Filter>
-    </FxCompile>
   </ItemGroup>
 </Project>

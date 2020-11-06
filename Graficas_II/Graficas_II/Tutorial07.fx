@@ -13,19 +13,10 @@ SamplerState samLinear : register( s0 );
 cbuffer cbNeverChanges : register( b0 )
 {
     matrix View;
-};
-
-cbuffer cbChangeOnResize : register( b1 )
-{
     matrix Projection;
-};
-
-cbuffer cbChangesEveryFrame : register( b2 )
-{
     matrix World;
     float4 vMeshColor;
 };
-
 
 //--------------------------------------------------------------------------------------
 struct VS_INPUT
@@ -61,5 +52,5 @@ PS_INPUT VS( VS_INPUT input )
 //--------------------------------------------------------------------------------------
 float4 PS( PS_INPUT input) : SV_Target
 {
-    return txDiffuse.Sample( samLinear, input.Tex ) * vMeshColor;
+    return vMeshColor;
 }

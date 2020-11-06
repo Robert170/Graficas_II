@@ -199,7 +199,7 @@ CVertexShader* COGLGraphiAPI::CreateVertexShaders(const std::string &FileName,
 	return VertexShader;
 }
 
-CInputLayout* COGLGraphiAPI::CreateInputLayout(CVertexShader* &Vertex,
+CInputLayout* COGLGraphiAPI::CreateInputLayout(CVertexShader &Vertex,
 	                                           const std::vector<std::string> &SemanticName,
 	                                           unsigned int NumInputLayout)
 {

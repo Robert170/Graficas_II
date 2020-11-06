@@ -168,7 +168,7 @@ public:
 	  * @bug		No know Bugs
 	  * @return     Returns a pointer of CInputLayout
 	*/
-	CInputLayout* CreateInputLayout(CVertexShader* &Vertex,
+	CInputLayout* CreateInputLayout(CVertexShader &Vertex,
 		                            const std::vector<std::string> &SemanticName,
 		                            unsigned int NumInputLayout) override;
 

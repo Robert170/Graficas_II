@@ -161,7 +161,61 @@ void CDXGraphiAPI::CreateDeviceandSwap()
     if (FAILED(hr))
     {
         std::cout << "//error fallo la creacion del device y swapchain" << std::endl;
+        return;
     }
+
+    auto BackBuffer = new CTextureDX();
+    hr = m_pSwapChain->GetBuffer(0,
+                                 __uuidof(ID3D11Texture2D),
+                                 (LPVOID*)&BackBuffer->m_pTexture);
+
+    hr = m_pd3dDevice->CreateRenderTargetView(BackBuffer->m_pTexture,
+                                              nullptr,
+                                              &BackBuffer->m_pRTV);
+
+    if (FAILED(hr))
+    {
+        std::cout << "//error fallo la creacion del render target view" << std::endl;
+        return;
+    }
+
+    m_BackBuffer = BackBuffer;
+
+
+    //// Create depth stencil texture
+
+
+    //auto DepthStencil = new CTextureDX();
+
+    //D3D11_TEXTURE2D_DESC descDepth;
+    //ZeroMemory(&descDepth, sizeof(descDepth));
+    //descDepth.Width = m_Width;
+    //descDepth.Height = m_Height;
+    //descDepth.MipLevels = 1;
+    //descDepth.ArraySize = 1;
+    //descDepth.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
+    //descDepth.SampleDesc.Count = 1;
+    //descDepth.SampleDesc.Quality = 0;
+    //descDepth.Usage = D3D11_USAGE_DEFAULT;
+    //descDepth.BindFlags = D3D11_BIND_DEPTH_STENCIL;
+    //descDepth.CPUAccessFlags = 0;
+    //descDepth.MiscFlags = 0;
+    //hr = m_pd3dDevice->CreateTexture2D(&descDepth, NULL, &DepthStencil->m_pTexture);
+    //if (FAILED(hr))
+    //    return;
+
+    //// Create the depth stencil view
+    //D3D11_DEPTH_STENCIL_VIEW_DESC descDSV;
+    //ZeroMemory(&descDSV, sizeof(descDSV));
+    //descDSV.Format = descDepth.Format;
+    //descDSV.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
+    //descDSV.Texture2D.MipSlice = 0;
+    //hr = m_pd3dDevice->CreateDepthStencilView(DepthStencil->m_pTexture, &descDSV, &DepthStencil->m_pDSV);
+    //if (FAILED(hr))
+    //    return;
+
+    //m_DepthStencil = DepthStencil;
+
 }
 
 void CDXGraphiAPI::CreateDeferredContext()
@@ -196,17 +250,17 @@ CVertexBuffer* CDXGraphiAPI::CreateVertexBuffer(const vector <SimpleVertex>& Ver
 }
 
 //fuction to create an index buffer 
-CIndexBuffer* CDXGraphiAPI::CreateIndexBuffer(const std::vector<unsigned int>& Ind,
+CIndexBuffer* CDXGraphiAPI::CreateIndexBuffer(const std::vector<uint32_t>& Ind,
                                               unsigned int BufferSize,
                                               unsigned int NumBuffer)
 {
     auto IndexBuffer = new CIndexBufferDX();
-    CD3D11_BUFFER_DESC BufferDesc(Ind.size() *sizeof(unsigned int),
-                                  D3D11_BIND_VERTEX_BUFFER);
+    CD3D11_BUFFER_DESC BufferDesc(Ind.size() *sizeof(uint32_t),
+                                  D3D11_BIND_INDEX_BUFFER);
 
     D3D11_SUBRESOURCE_DATA InitData;
     ZeroMemory(&InitData, sizeof(InitData));
-    InitData.pSysMem = Ind.data();
+    InitData.pSysMem = &Ind.at(0);
 
     HRESULT hr = m_pd3dDevice->CreateBuffer(&BufferDesc,
                                             &InitData,
@@ -274,7 +328,8 @@ CTexture* CDXGraphiAPI::CreateTexture2D(unsigned int width,
     //Checar que interfaces se van a crear
     if(bindFlags & D3D11_BIND_SHADER_RESOURCE)
     {//Crear SRV
-      CD3D11_SHADER_RESOURCE_VIEW_DESC srvDesc(D3D11_SRV_DIMENSION_TEXTURE2D);
+      CD3D11_SHADER_RESOURCE_VIEW_DESC srvDesc(D3D11_SRV_DIMENSION_TEXTURE2D,
+                                               static_cast<DXGI_FORMAT>(format));
 
       hr = m_pd3dDevice->CreateShaderResourceView(texture->m_pTexture,
                                                   &srvDesc,
@@ -289,10 +344,9 @@ CTexture* CDXGraphiAPI::CreateTexture2D(unsigned int width,
     if(bindFlags & D3D11_BIND_DEPTH_STENCIL)
     {//Crear DSV
 
-        auto DepthStencil = reinterpret_cast<CTextureDX*>(m_DepthStencil);
-
-        DepthStencil = texture;
-        CD3D11_DEPTH_STENCIL_VIEW_DESC dsvDesc(D3D11_DSV_DIMENSION_TEXTURE2D);
+       
+        CD3D11_DEPTH_STENCIL_VIEW_DESC dsvDesc(D3D11_DSV_DIMENSION_TEXTURE2D,
+                                               static_cast<DXGI_FORMAT>(format));
 
         hr = m_pd3dDevice->CreateDepthStencilView(texture->m_pTexture,
                                                   &dsvDesc,
@@ -308,19 +362,9 @@ CTexture* CDXGraphiAPI::CreateTexture2D(unsigned int width,
     if (bindFlags & D3D11_BIND_RENDER_TARGET)
     {//Crear RTV
 
-        auto BackBuffer = reinterpret_cast<CTextureDX*>(m_BackBuffer);
-        //auto BackBuffer = new CTextureDX();
-        BackBuffer = texture;
-        hr = m_pSwapChain->GetBuffer(0,
-                                     __uuidof(ID3D11Texture2D),
-                                     (LPVOID*)&texture->m_pTexture);
-        if (FAILED(hr))
-        {
-            std::cout << "//Error fallo al obtener el buffer para el back buffer" << std::endl;
-            return nullptr;
-        }
 
-        CD3D11_RENDER_TARGET_VIEW_DESC rtvDesc(D3D11_RTV_DIMENSION_TEXTURE2D);
+        CD3D11_RENDER_TARGET_VIEW_DESC rtvDesc(D3D11_RTV_DIMENSION_TEXTURE2D,
+                                               static_cast<DXGI_FORMAT>(format));
 
         hr = m_pd3dDevice->CreateRenderTargetView(texture->m_pTexture,
                                                   &rtvDesc,
@@ -561,7 +605,7 @@ void CDXGraphiAPI::SetIndexBuffer(CIndexBuffer* &IndBuff,
     IndexBuff->m_Offset = offset;
 
     m_pImmediateContext->IASetIndexBuffer(IndexBuff->m_pIndexBuffer,
-                                          DXGI_FORMAT_R16_UINT, 
+                                          DXGI_FORMAT_R32_UINT, 
                                           IndexBuff->m_Offset);
 }
 
@@ -723,48 +767,15 @@ void CDXGraphiAPI::ClearDepthStencil(CTexture* &DS,
                                                Stencil);
 }
 
-void CDXGraphiAPI::InitViewMatrix(glm::mat4& View, CConstantBuffer*& ConstantBufffer)
+void CDXGraphiAPI::UpdateSubresource(const void* Data,
+                                     CConstantBuffer& ConstantBufffer)
 {
-    auto ConstantBufferView = reinterpret_cast<CConstantBufferDX*>(ConstantBufffer);
+    auto ConstantBufferChangeEvery = reinterpret_cast<CConstantBufferDX&>(ConstantBufffer);
 
-    CBNeverChanges cbNeverChanges;
-    cbNeverChanges.mView = glm::transpose(View);
-    m_pImmediateContext->UpdateSubresource(ConstantBufferView->m_pConstantBuffer, 
-                                           0, 
-                                           nullptr, 
-                                           &cbNeverChanges, 
-                                           0, 
-                                           0);
-}
-
-void CDXGraphiAPI::InitProjectionMatrix(glm::mat4& Projection, 
-                                        CConstantBuffer*& ConstantBufffer)
-{
-    auto ConstantBufferProjection = reinterpret_cast<CConstantBufferDX*>(ConstantBufffer);
-
-    CBChangeOnResize cbChangesOnResize;
-    cbChangesOnResize.mProjection = glm::transpose(Projection);
-    m_pImmediateContext->UpdateSubresource(ConstantBufferProjection->m_pConstantBuffer, 
-                                           0, 
-                                           nullptr, 
-                                           &cbChangesOnResize, 
-                                           0, 
-                                           0);
-}
-
-void CDXGraphiAPI::UpdateSubresource(glm::mat4& World, 
-                                     CConstantBuffer*& ConstantBufffer, 
-                                     glm::vec4& MeshColor)
-{
-    auto ConstantBufferChangeEvery = reinterpret_cast<CConstantBufferDX*>(ConstantBufffer);
-
-    CBChangesEveryFrame cb;
-    cb.mWorld = glm::transpose(World);
-    cb.vMeshColor = MeshColor;
-    m_pImmediateContext->UpdateSubresource(ConstantBufferChangeEvery->m_pConstantBuffer,
+    m_pImmediateContext->UpdateSubresource(ConstantBufferChangeEvery.m_pConstantBuffer,
                                            0,
                                            nullptr,
-                                           &cb,
+                                           Data,
                                            0,
                                            0);
 }

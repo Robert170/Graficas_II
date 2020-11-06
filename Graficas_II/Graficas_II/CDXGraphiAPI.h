@@ -51,7 +51,7 @@ private:
 	*/
 	IDXGISwapChain* m_pSwapChain;
 
-	CTexture* m_BackBuffer;
+	
 
 	CTexture* m_DepthStencil;
 
@@ -87,6 +87,9 @@ protected:
 	void CreateDeferredContext() override;
 
 public:
+
+	CTexture* m_BackBuffer;
+
 	/// Default Constructor
 	CDXGraphiAPI();
 
@@ -120,7 +123,7 @@ public:
 	  * @bug		   No know Bugs
 	  * @return     Returns a pointer of CBuffer
 	*/
-	CIndexBuffer* CreateIndexBuffer(const std::vector<unsigned int>& Ind,
+	CIndexBuffer* CreateIndexBuffer(const std::vector<uint32_t>& Ind,
 		                            unsigned int BufferSize,
 		                            unsigned int NumBuffer) override; //Numberos de index buffer, deberia estar en la clase buffer
 
@@ -401,29 +404,9 @@ public:
 		                   float Depth,
 		                   unsigned int Stencil) override;
 
-	/**
-	  * @brief      InitViewMatrix function, to init view matrix
-	  * @param      View parameter one, a view matrix
-	  * @param      ConstantBufffer parameter two, a constant buffer
-	  * @bug		No know Bugs
-	  * @return     Returns nothing
-	*/
-	void InitViewMatrix(glm::mat4& View,
-		                CConstantBuffer*& ConstantBufffer) override;
 
-	/**
-	  * @brief      InitProjectionMatrix function, to init projection matrix
-	  * @param      Projection parameter one, a projection matrix
-	  * @param      ConstantBufffer parameter two, a constant buffer
-	  * @bug		No know Bugs
-	  * @return     Returns nothing
-	*/
-	void InitProjectionMatrix(glm::mat4& Projection,
-		                      CConstantBuffer*& ConstantBufffer) override;
-
-	void UpdateSubresource(glm::mat4& World,
-		                   CConstantBuffer*& ConstantBufffer,
-		                   glm::vec4& MeshColor);
+	void UpdateSubresource(const void* Data,
+		                   CConstantBuffer& ConstantBufffer);
 
 	//draw
 
