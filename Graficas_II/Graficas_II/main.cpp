@@ -2,8 +2,8 @@
 #include "COGLGraphiAPI.h"
 #include "CDXGraphiAPI.h"
 
-CGraphiAPI* API = new CDXGraphiAPI();
-//CGraphiAPI* API = new COGLGraphiAPI();
+//CGraphiAPI* API = new CDXGraphiAPI();
+CGraphiAPI* API = new COGLGraphiAPI();
 
 //Textures
 CTexture* g_pRenderTarget = nullptr;
@@ -216,11 +216,6 @@ void Init()
 
 void Update()
 {
-
-	
-
-	
-
 	ConstantBuffer.mView = glm::transpose(g_View);
 	ConstantBuffer.mProjection = glm::transpose(g_Projection);
 	ConstantBuffer.mWorld = glm::transpose(g_World);

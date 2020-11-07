@@ -27,6 +27,16 @@ void COGLGraphiAPI::InitWindow(unsigned int width,
 	glfwMakeContextCurrent(m_window);
 	glfwSetFramebufferSizeCallback(m_window, framebuffer_size_callback);
 
+	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
+	{
+		std::cout << "Failed to initialize GLAD" << std::endl;
+		return;
+	}
+
+	// configure global opengl state
+	// -----------------------------
+	glEnable(GL_DEPTH_TEST);
+
 }
 
 
@@ -50,14 +60,14 @@ COGLGraphiAPI::~COGLGraphiAPI()
 
 CVertexBuffer* COGLGraphiAPI::CreateVertexBuffer(const std::vector <SimpleVertex>& Ver,
 	                                             unsigned int BufferSize,
-	                                             unsigned int NumBuffer)
+	                                             unsigned int Size)
 {
 	auto VertexBuffer = new CVertexBufferOGL();
 
-	glGenBuffers(NumBuffer, 
+	glGenBuffers(Size,
 		         &VertexBuffer->m_VBO);
 	glBufferData(GL_ARRAY_BUFFER, 
-		         Ver.size()* BufferSize, 
+		         Ver.size()* sizeof(SimpleVertex),
 		         Ver.data(), 
 		         GL_STATIC_DRAW);
 
@@ -74,7 +84,7 @@ CIndexBuffer* COGLGraphiAPI::CreateIndexBuffer(const std::vector<unsigned int>& 
 		         &IndexBuffer->m_IBO);
 	
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, 
-		         Ind.size()* BufferSize, 
+		         Ind.size()* sizeof(unsigned int),
 		         Ind.data(), 
 		         GL_STATIC_DRAW);
 
@@ -351,6 +361,10 @@ void COGLGraphiAPI::SetPrimitiveTopology(PRIMITIVE_TOPOLOGY Topology)
 {
 }
 
+void COGLGraphiAPI::SetDefaultRenderTarget()
+{
+}
+
 void COGLGraphiAPI::ClearRenderTarget(CTexture* &RT,
 	                                 ColorStruct Color)
 {
@@ -360,6 +374,16 @@ void COGLGraphiAPI::ClearDepthStencil(CTexture* &RT,
 	                                  unsigned int ClerFlag,
 	                                  float Depth, 
 	                                  unsigned int Stencil)
+{
+}
+
+void COGLGraphiAPI::ClearDefaultRenderTargetAndDepthStencil(ColorStruct Color)
+{
+	glClearColor(Color.R, Color.G, Color.B, Color.A);
+	glClear(GL_COLOR_BUFFER_BIT);
+}
+
+void COGLGraphiAPI::UpdateSubresource(const void* Data, CConstantBuffer& ConstantBufffer)
 {
 }
 
@@ -416,6 +440,31 @@ void COGLGraphiAPI::Draw(unsigned int VertexCount,
 void COGLGraphiAPI::Present()
 {
 	glfwSwapBuffers(m_window);
+	glfwPollEvents();
+}
+
+void COGLGraphiAPI::ClearMemory(const std::vector<CTexture*>& RenderTargets, 
+	                            const std::vector<CConstantBuffer*>& ConstantBuffers, 
+	                            const std::vector<CSamplerState*>& SamplerStates, 
+	                            const std::vector<CTexture*>& ShaderResource, 
+	                            CInputLayout*& InputLayout, 
+	                            CVertexShader*& VertexShader, 
+	                            CPixelShader*& PixelShader, 
+	                            CVertexBuffer* VertexBuffer, 
+	                            CIndexBuffer* IndexBuffer, 
+	                            CTexture*& DeptStencil)
+{
+
+	auto InputLay = reinterpret_cast<CInputLayoutOGL*>(InputLayout);
+	glDeleteVertexArrays(1, &InputLay->m_IPLA);
+
+	auto VertexBuff = reinterpret_cast<CVertexBufferOGL*>(VertexBuffer);
+	glDeleteBuffers(1, &VertexBuff->m_VBO);
+
+	auto IndexBuff = reinterpret_cast<CIndexBufferOGL*>(IndexBuffer);
+	glDeleteBuffers(1, &IndexBuff->m_IBO);
+
+	glfwTerminate();
 }
 
 

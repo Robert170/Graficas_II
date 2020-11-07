@@ -53,6 +53,8 @@ private:
 
 	
 
+	CTexture* m_BackBuffer;
+
 	CTexture* m_DepthStencil;
 
 
@@ -88,7 +90,7 @@ protected:
 
 public:
 
-	CTexture* m_BackBuffer;
+	
 
 	/// Default Constructor
 	CDXGraphiAPI();

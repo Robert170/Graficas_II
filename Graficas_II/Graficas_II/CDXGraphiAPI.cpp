@@ -935,7 +935,7 @@ void CDXGraphiAPI::ClearMemory(const std::vector<CTexture*>& RenderTargets,
 
     //depth stencil view
     auto DepthStencilView = reinterpret_cast<CTextureDX*>(DeptStencil);
-    if (nullptr != DepthStencilView->m_pDSV)
+    if (nullptr != DepthStencilView)
     {
         DepthStencilView->m_pDSV->Release();
     }
@@ -949,6 +949,12 @@ void CDXGraphiAPI::ClearMemory(const std::vector<CTexture*>& RenderTargets,
         {
             RendTarg->m_pRTV->Release();
         }
+    }
+
+    auto BackBuffer = reinterpret_cast<CTextureDX*>(m_BackBuffer);
+    if (nullptr != BackBuffer)
+    {
+        BackBuffer->m_pRTV->Release();
     }
     
 
