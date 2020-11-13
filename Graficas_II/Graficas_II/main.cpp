@@ -54,7 +54,7 @@ CBNeverChanges ConstantBuffer;
 void Init()
 {
 
-	
+
 
 	CCameraDatas Data;
 	Data.Far = 100;
@@ -66,6 +66,62 @@ void Init()
 	glm::vec3 Eye = { 0.0f, 3.0f, -6.0f };
 	glm::vec3 At = { 0.0f, 1.0f, 0.0f };
 	glm::vec3 Up = { 0.0f, 1.0f, 0.0f };
+
+	/*std::vector<uint32_t> indices =
+	{
+		3,1,0,
+		2,1,3,
+
+		6,4,5,
+		7,4,6,
+
+		11,9,8,
+		10,9,11,
+
+		14,12,13,
+		15,12,14,
+
+		19,17,16,
+		18,17,19,
+
+		22,20,21,
+		23,20,22
+	};*/
+
+	/*std::vector<SimpleVertex> vertices =
+	{
+		// positions                    // texture coords
+		{glm::vec3(-1.0f, 1.0f, -1.0f),  glm::vec2(0.0f, 0.0f) },
+		{glm::vec3(1.0f, 1.0f, -1.0f),   glm::vec2(1.0f, 0.0f) },
+		{glm::vec3(1.0f, 1.0f, 1.0f),    glm::vec2(1.0f, 1.0f) },
+		{glm::vec3(-1.0f, 1.0f, 1.0f),   glm::vec2(0.0f, 1.0f) },
+
+		{glm::vec3(-1.0f, -1.0f, -1.0f), glm::vec2(0.0f, 0.0f) },
+		{glm::vec3(1.0f, -1.0f, -1.0f),  glm::vec2(1.0f, 0.0f) },
+		{glm::vec3(1.0f, -1.0f, 1.0f),   glm::vec2(1.0f, 1.0f) },
+		{glm::vec3(-1.0f, -1.0f, 1.0f),  glm::vec2(0.0f, 1.0f) },
+
+		{glm::vec3(-1.0f, -1.0f, 1.0f),  glm::vec2(0.0f, 0.0f) },
+		{glm::vec3(-1.0f, -1.0f, -1.0f), glm::vec2(1.0f, 0.0f) },
+		{glm::vec3(-1.0f, 1.0f, -1.0f),  glm::vec2(1.0f, 1.0f) },
+		{glm::vec3(-1.0f, 1.0f, 1.0f),   glm::vec2(0.0f, 1.0f) },
+
+		{glm::vec3(1.0f, -1.0f, 1.0f),   glm::vec2(0.0f, 0.0f) },
+		{glm::vec3(1.0f, -1.0f, -1.0f),  glm::vec2(1.0f, 0.0f) },
+		{glm::vec3(1.0f, 1.0f, -1.0f),   glm::vec2(1.0f, 1.0f) },
+		{glm::vec3(1.0f, 1.0f, 1.0f),    glm::vec2(0.0f, 1.0f) },
+
+		{glm::vec3(-1.0f, -1.0f, -1.0f), glm::vec2(0.0f, 0.0f) },
+		{glm::vec3(1.0f, -1.0f, -1.0f),  glm::vec2(1.0f, 0.0f) },
+		{glm::vec3(1.0f, 1.0f, -1.0f),   glm::vec2(1.0f, 1.0f) },
+		{glm::vec3(-1.0f, 1.0f, -1.0f),  glm::vec2(0.0f, 1.0f) },
+
+		{glm::vec3(-1.0f, -1.0f, 1.0f),  glm::vec2(0.0f, 0.0f) },
+		{glm::vec3(1.0f, -1.0f, 1.0f),   glm::vec2(1.0f, 0.0f) },
+		{glm::vec3(1.0f, 1.0f, 1.0f),    glm::vec2(1.0f, 1.0f) },
+		{glm::vec3(-1.0f, 1.0f, 1.0f),   glm::vec2(0.0f, 1.0f) },
+	};*/
+
 
 	std::vector<uint32_t> indices =
 	{
@@ -90,35 +146,51 @@ void Init()
 
 	std::vector<SimpleVertex> vertices =
 	{
-		{glm::vec3(-1.0f, 1.0f, -1.0f), glm::vec2(0.0f, 0.0f) },
-		{glm::vec3(1.0f, 1.0f, -1.0f), glm::vec2(1.0f, 0.0f) },
-		{glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(1.0f, 1.0f) },
-		{glm::vec3(-1.0f, 1.0f, 1.0f), glm::vec2(0.0f, 1.0f) },
+		// positions                     // texture coords
+		{glm::vec3(-0.5f, -0.5f, -0.5f), glm::vec2(0.0f, 0.0f)},
+		{glm::vec3(0.5f, -0.5f, -0.5f),  glm::vec2(1.0f, 0.0f)},
+		{glm::vec3(0.5f,  0.5f, -0.5f),  glm::vec2(1.0f, 1.0f)},
+		{glm::vec3(0.5f,  0.5f, -0.5f),  glm::vec2(1.0f, 1.0f)},
 
-		{glm::vec3(-1.0f, -1.0f, -1.0f), glm::vec2(0.0f, 0.0f) },
-		{glm::vec3(1.0f, -1.0f, -1.0f), glm::vec2(1.0f, 0.0f) },
-		{glm::vec3(1.0f, -1.0f, 1.0f), glm::vec2(1.0f, 1.0f) },
-		{glm::vec3(-1.0f, -1.0f, 1.0f), glm::vec2(0.0f, 1.0f) },
+		{glm::vec3(-0.5f,  0.5f, -0.5f), glm::vec2(0.0f, 1.0f)},
+		{glm::vec3(-0.5f, -0.5f, -0.5f), glm::vec2(0.0f, 0.0f)},
+		{glm::vec3(-0.5f, -0.5f,  0.5f), glm::vec2(0.0f, 0.0f)},
+		{glm::vec3(0.5f, -0.5f,  0.5f),  glm::vec2(1.0f, 0.0f)},
 
-		{glm::vec3(-1.0f, -1.0f, 1.0f), glm::vec2(0.0f, 0.0f) },
-		{glm::vec3(-1.0f, -1.0f, -1.0f), glm::vec2(1.0f, 0.0f) },
-		{glm::vec3(-1.0f, 1.0f, -1.0f), glm::vec2(1.0f, 1.0f) },
-		{glm::vec3(-1.0f, 1.0f, 1.0f), glm::vec2(0.0f, 1.0f) },
+		{glm::vec3(0.5f,  0.5f,  0.5f),  glm::vec2(1.0f, 1.0f)},
+		{glm::vec3(0.5f,  0.5f,  0.5f),  glm::vec2(1.0f, 1.0f)},
+		{glm::vec3(-0.5f,  0.5f,  0.5f), glm::vec2(0.0f, 1.0f)},
+		{glm::vec3(-0.5f, -0.5f,  0.5f), glm::vec2(0.0f, 0.0f)},
 
-		{glm::vec3(1.0f, -1.0f, 1.0f), glm::vec2(0.0f, 0.0f) },
-		{glm::vec3(1.0f, -1.0f, -1.0f), glm::vec2(1.0f, 0.0f) },
-		{glm::vec3(1.0f, 1.0f, -1.0f), glm::vec2(1.0f, 1.0f) },
-		{glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(0.0f, 1.0f) },
+		{glm::vec3(-0.5f,  0.5f,  0.5f), glm::vec2(1.0f, 0.0f)},
+		{glm::vec3(-0.5f,  0.5f, -0.5f), glm::vec2(1.0f, 1.0f)},
+		{glm::vec3(-0.5f, -0.5f, -0.5f), glm::vec2(0.0f, 1.0f)},
+		{glm::vec3(-0.5f, -0.5f, -0.5f), glm::vec2(0.0f, 1.0f)},
 
-		{glm::vec3(-1.0f, -1.0f, -1.0f), glm::vec2(0.0f, 0.0f) },
-		{glm::vec3(1.0f, -1.0f, -1.0f), glm::vec2(1.0f, 0.0f) },
-		{glm::vec3(1.0f, 1.0f, -1.0f), glm::vec2(1.0f, 1.0f) },
-		{glm::vec3(-1.0f, 1.0f, -1.0f), glm::vec2(0.0f, 1.0f) },
+		{glm::vec3(-0.5f, -0.5f,  0.5f), glm::vec2(0.0f, 0.0f)},
+		{glm::vec3(-0.5f,  0.5f,  0.5f), glm::vec2(1.0f, 0.0f)},
+		{glm::vec3(0.5f,  0.5f,  0.5f),  glm::vec2(1.0f, 0.0f)},
+		{glm::vec3(0.5f,  0.5f, -0.5f),  glm::vec2(1.0f, 1.0f)},
 
-		{glm::vec3(-1.0f, -1.0f, 1.0f), glm::vec2(0.0f, 0.0f) },
-		{glm::vec3(1.0f, -1.0f, 1.0f), glm::vec2(1.0f, 0.0f) },
-		{glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(1.0f, 1.0f) },
-		{glm::vec3(-1.0f, 1.0f, 1.0f), glm::vec2(0.0f, 1.0f) },
+		{glm::vec3(0.5f, -0.5f, -0.5f),  glm::vec2(0.0f, 1.0f)},
+		{glm::vec3(0.5f, -0.5f, -0.5f),  glm::vec2(0.0f, 1.0f)},
+		{glm::vec3(0.5f, -0.5f,  0.5f),  glm::vec2(0.0f, 0.0f)},
+		{glm::vec3(0.5f,  0.5f,  0.5f),  glm::vec2(1.0f, 0.0f)},
+
+		{glm::vec3(-0.5f, -0.5f, -0.5f), glm::vec2(0.0f, 1.0f)},
+		{glm::vec3(0.5f, -0.5f, -0.5f),  glm::vec2(1.0f, 1.0f)},
+		{glm::vec3(0.5f, -0.5f,  0.5f),  glm::vec2(1.0f, 0.0f)},
+		{glm::vec3(0.5f, -0.5f,  0.5f),  glm::vec2(1.0f, 0.0f)},
+
+		{glm::vec3(-0.5f, -0.5f,  0.5f), glm::vec2(0.0f, 0.0f)},
+		{glm::vec3(-0.5f, -0.5f, -0.5f), glm::vec2(0.0f, 1.0f)},
+		{glm::vec3(-0.5f,  0.5f, -0.5f), glm::vec2(0.0f, 1.0f)},
+		{glm::vec3(0.5f,  0.5f, -0.5f),  glm::vec2(1.0f, 1.0f)},
+
+		{glm::vec3(0.5f,  0.5f,  0.5f),  glm::vec2(1.0f, 0.0f)},
+		{glm::vec3(0.5f,  0.5f,  0.5f),  glm::vec2(1.0f, 0.0f)},
+		{glm::vec3(-0.5f,  0.5f,  0.5f), glm::vec2(0.0f, 0.0f)},
+		{glm::vec3(-0.5f,  0.5f, -0.5f), glm::vec2(0.0f, 1.0f)} 
 	};
 
 	g_MeshColor.x = 1;
@@ -156,9 +228,10 @@ void Init()
 	g_vShaderResources.push_back(g_pShaderResource);*/
 
 	// Create the vertex shader
-    g_pVertexShader = API->CreateVertexShaders("Tutorial07.fx",
+    g_pVertexShader = API->CreateVertexShaders("6.2.coordinate_systemsVS.txt",
 			                                   "VS",
-			                                   "vs_4_0",0);
+			                                   "vs_4_0", 
+		                                        1);
 
 	//Set semantic 
 	g_vSemanticNames.push_back("POSITION");
@@ -166,25 +239,26 @@ void Init()
 
 	// Create the input layout
 	g_pInputLayout = API->CreateInputLayout(*g_pVertexShader,
-		                                    g_vSemanticNames,0);
+		                                    g_vSemanticNames,1);
 
 	// Create the pixel shader
-	g_pPixelShader = API->CreatePixelShaders("Tutorial07.fx",
+	g_pPixelShader = API->CreatePixelShaders("6.2.coordinate_systemsPS.txt",
 		                                     "PS",
-		                                     "ps_4_0",0);
+		                                     "ps_4_0", 
+		                                      1);
 
 	// Create vertex buffer
 
 	g_pVertexBuffer = API->CreateVertexBuffer(vertices,
-		                                      vertices.size(),0);
+		                                      vertices.size(),1);
 
 	// Create index buffer
 	g_pIndexBuffer = API->CreateIndexBuffer(indices,
-		                                    indices.size(),0);
+		                                    indices.size(),1);
 
 	// Create the constant buffers
 
-	g_pCBNeverChanges = API->CreateConstantBuffer(sizeof(CBNeverChanges),0);
+	g_pCBNeverChanges = API->CreateConstantBuffer(sizeof(CBNeverChanges),1);
 
 	g_vConstantBuffers.push_back(g_pCBNeverChanges);
 
@@ -318,7 +392,7 @@ int main()
 	MSG msg = { 0 };
 	while (WM_QUIT != msg.message)
 	{
-		if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
+		if (PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE))
 		{
 			TranslateMessage(&msg);
 			DispatchMessage(&msg);

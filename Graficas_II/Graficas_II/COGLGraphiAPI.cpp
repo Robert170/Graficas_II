@@ -13,12 +13,13 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void COGLGraphiAPI::InitWindow(unsigned int width, 
 	                           unsigned int height)
 {
+	glfwInit();
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
 	m_window = glfwCreateWindow(width, height, "LearnOpenGL", nullptr, nullptr);
-	if (m_window == nullptr)
+	if (nullptr == m_window)
 	{
 		std::cout << "Failed to create GLFW window" << std::endl;
 		glfwTerminate();
@@ -42,7 +43,7 @@ void COGLGraphiAPI::InitWindow(unsigned int width,
 
 void COGLGraphiAPI::CreateDeviceandSwap()
 {
-	glfwInit();
+	
 }
 
 void COGLGraphiAPI::CreateDeferredContext()
@@ -179,14 +180,27 @@ void COGLGraphiAPI::CreateTexture3D()
 CPixelShader* COGLGraphiAPI::CreatePixelShaders(const std::string &FileName,
 	                                            const std::string &Entry,
 	                                            const std::string &ShaderModel,
-	                                            int ID)
+	                                            int NumPixelShader)
 {
 	// Pixel Shader
 	auto PixelShader = new CPixelShaderOGL();
-	const char* PixelCode = PixelShader->ReadFile(FileName).c_str();
-	PixelShader->m_PixelShader = glCreateShader(GL_FRAGMENT_SHADER);
-	glShaderSource(PixelShader->m_PixelShader, ID, &PixelCode, NULL);
 
+	const char* PixelCode = PixelShader->ReadFile(FileName).c_str();
+
+	PixelShader->m_PixelShader = glCreateShader(GL_FRAGMENT_SHADER);
+
+	glShaderSource(PixelShader->m_PixelShader, 
+		           NumPixelShader, 
+		           &PixelCode, 
+		           nullptr);
+
+	glCompileShader(PixelShader->m_PixelShader);
+
+	glAttachShader(m_AttachShaderID,
+		           PixelShader->m_PixelShader);
+
+	//delete shader
+	glDeleteShader(PixelShader->m_PixelShader);
 
 	return PixelShader;
 
@@ -195,16 +209,26 @@ CPixelShader* COGLGraphiAPI::CreatePixelShaders(const std::string &FileName,
 CVertexShader* COGLGraphiAPI::CreateVertexShaders(const std::string &FileName,
 	                                              const std::string &Entry,
 	                                              const std::string &ShaderModel,
-	                                              int ID)
+	                                              int NumVertexShader)
 {
 	// vertex Shader
 	auto VertexShader = new CVertexShaderOGL();
 
 	const char* VertexCode = VertexShader->ReadFile(FileName).c_str();
 
-	VertexShader->m_VertexShader = glCreateShader(GL_FRAGMENT_SHADER);
+	VertexShader->m_VertexShader = glCreateShader(GL_VERTEX_SHADER);
 
-	glShaderSource(VertexShader->m_VertexShader, ID, &VertexCode, NULL);
+	glShaderSource(VertexShader->m_VertexShader, 
+		           NumVertexShader, 
+		           &VertexCode, 
+		           nullptr);
+
+	glCompileShader(VertexShader->m_VertexShader);
+
+	glAttachShader(m_AttachShaderID, 
+		           VertexShader->m_VertexShader);
+
+	glDeleteShader(VertexShader->m_VertexShader);
 
 	return VertexShader;
 }
@@ -217,6 +241,37 @@ CInputLayout* COGLGraphiAPI::CreateInputLayout(CVertexShader &Vertex,
 
 	glGenVertexArrays(NumInputLayout,
 		              &InputLa->m_IPLA);
+
+	/*for (int i = 0; i < SemanticName.size(); i++)
+	{
+		
+		if ("POSITION" == SemanticName.at(i))
+		{
+			glVertexAttribFormat(normalAttrLoc, 3, GL_FLOAT, false, offsetof(Vertex, normal));
+			glVertexAttribBinding(normalAttrLoc, vertexBindingPoint);
+			glEnableVertexAttribArray(normalAttrLoc);
+		}
+		else if ("TEXCOORD" == SemanticName.at(i))
+		{
+			glVertexAttribFormat(normalAttrLoc, 2, GL_FLOAT, false, offsetof(Vertex, normal));
+			glVertexAttribBinding(normalAttrLoc, vertexBindingPoint);
+			glEnableVertexAttribArray(normalAttrLoc);
+		}
+		else if ("COLOR" == SemanticName.at(i))
+		{
+			glVertexAttribFormat(normalAttrLoc, 3, GL_FLOAT, false, offsetof(Vertex, normal));
+			glVertexAttribBinding(normalAttrLoc, vertexBindingPoint);
+			glEnableVertexAttribArray(normalAttrLoc);
+		}
+		else if ("NORMAL" == SemanticName.at(i))
+		{
+			glVertexAttribFormat(normalAttrLoc, 3, GL_FLOAT, false, offsetof(Vertex, normal));
+			glVertexAttribBinding(normalAttrLoc, vertexBindingPoint);
+			glEnableVertexAttribArray(normalAttrLoc);
+		}
+	
+	}*/
+	
 
 	return InputLa;
 }
@@ -283,23 +338,12 @@ void COGLGraphiAPI::SetPixelShaderConstantBuffer(CConstantBuffer*& ConstBuff,
 
 void COGLGraphiAPI::SetPixelShaders(CPixelShader* &Pixel)
 {
-	auto PixelSh = reinterpret_cast<CPixelShaderOGL*>(Pixel);
-	glCompileShader(PixelSh->m_PixelShader);
-	glAttachShader(m_AttachShaderID, PixelSh->m_PixelShader);
-
-	//delete shader
-	glDeleteShader(PixelSh->m_PixelShader);
+	glUseProgram(m_AttachShaderID);
 }
 
 void COGLGraphiAPI::SetVertexShaders(CVertexShader* &Vertex)
 {
-	auto VertexSh = reinterpret_cast<CVertexShaderOGL*>(Vertex);
-
-	glCompileShader(VertexSh->m_VertexShader);
-
-	glAttachShader(m_AttachShaderID, VertexSh->m_VertexShader);
-
-	glDeleteShader(VertexSh->m_VertexShader);
+	glUseProgram(m_AttachShaderID);
 }
 
 void COGLGraphiAPI::SetInputLayout(CInputLayout* &Inp)
@@ -380,7 +424,7 @@ void COGLGraphiAPI::ClearDepthStencil(CTexture* &RT,
 void COGLGraphiAPI::ClearDefaultRenderTargetAndDepthStencil(ColorStruct Color)
 {
 	glClearColor(Color.R, Color.G, Color.B, Color.A);
-	glClear(GL_COLOR_BUFFER_BIT);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
 void COGLGraphiAPI::UpdateSubresource(const void* Data, CConstantBuffer& ConstantBufffer)
@@ -422,6 +466,8 @@ void COGLGraphiAPI::DrawIndexed(unsigned int NumIndex,
 	                            unsigned int StartindexLocation,
 	                            unsigned int BaseVertexLocation)
 {
+	glDrawArrays(GL_TRIANGLES, StartindexLocation, NumIndex);
+
 	//glDrawElements(GL_TRIANGLES, NumIndex, GL_UNSIGNED_BYTE, GL_ELEMENT_ARRAY_BUFFER)
 }
 void COGLGraphiAPI::DrawInstanced(unsigned int VertexCountPerInstance, 

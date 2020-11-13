@@ -59,7 +59,7 @@ protected:
 	std::stringstream m_VertexShaderStream;
 
 	/**
-	  * @Variable m_VertexShader, unsigned int for the pixel shader
+	  * @Variable m_VertexShader, unsigned int for the vertex shader
 	*/
 	unsigned int m_VertexShader;
 
