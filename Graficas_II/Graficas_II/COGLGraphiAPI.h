@@ -11,11 +11,6 @@ private:
 	*/
 
 	/**
-	  * @Variable m_AttachShaderID
-	*/
-	unsigned int m_AttachShaderID;
-
-	/**
 	  * @Variable m_window, a variable for a window
 	*/
 	GLFWwindow* m_window;

@@ -38,12 +38,13 @@ void COGLGraphiAPI::InitWindow(unsigned int width,
 	// -----------------------------
 	glEnable(GL_DEPTH_TEST);
 
+	
+
 }
 
 
 void COGLGraphiAPI::CreateDeviceandSwap()
 {
-	
 }
 
 void COGLGraphiAPI::CreateDeferredContext()
@@ -61,11 +62,11 @@ COGLGraphiAPI::~COGLGraphiAPI()
 
 CVertexBuffer* COGLGraphiAPI::CreateVertexBuffer(const std::vector <SimpleVertex>& Ver,
 	                                             unsigned int BufferSize,
-	                                             unsigned int Size)
+	                                             unsigned int NumBuffers)
 {
 	auto VertexBuffer = new CVertexBufferOGL();
 
-	glGenBuffers(Size,
+	glGenBuffers(NumBuffers,
 		         &VertexBuffer->m_VBO);
 
 	glBindBuffer(GL_ARRAY_BUFFER, 
@@ -81,7 +82,7 @@ CVertexBuffer* COGLGraphiAPI::CreateVertexBuffer(const std::vector <SimpleVertex
 }
 
 CIndexBuffer* COGLGraphiAPI::CreateIndexBuffer(const std::vector<unsigned int>& Ind,
-	                                           unsigned int BufferSize,
+	                                           unsigned int BufferSize, //no va
 	                                           unsigned int NumBuffer)
 {
 	auto IndexBuffer = new CIndexBufferOGL();
@@ -101,18 +102,22 @@ CIndexBuffer* COGLGraphiAPI::CreateIndexBuffer(const std::vector<unsigned int>& 
 	return IndexBuffer;
 }
 
-CConstantBuffer* COGLGraphiAPI::CreateConstantBuffer(unsigned int BufferSize,
-	                                                 unsigned int NumBuffer,
-	                                                 const void* Data)
+CConstantBuffer* COGLGraphiAPI::CreateConstantBuffer(unsigned int BufferSize,//2
+	                                                 unsigned int NumBuffer, //1
+	                                                 const void* Data) //3
 {
 	auto ConstantBuffer = new CConstantBufferOGL();
 
 	glGenBuffers(NumBuffer,
 		         &ConstantBuffer->m_CBO);
 
-	glBindBuffer(GL_UNIFORM_BUFFER, ConstantBuffer->m_CBO);
-	glBufferData(GL_UNIFORM_BUFFER, sizeof(Data), &Data, GL_DYNAMIC_DRAW);
-	glBindBuffer(GL_UNIFORM_BUFFER, ConstantBuffer->m_CBO);
+	glBindBuffer(GL_UNIFORM_BUFFER, 
+		         ConstantBuffer->m_CBO);
+	glBufferData(GL_UNIFORM_BUFFER, 
+		         sizeof(Data), &Data, 
+		         GL_DYNAMIC_DRAW);
+	glBindBuffer(GL_UNIFORM_BUFFER, 
+		         ConstantBuffer->m_CBO);
 
 	
 	return ConstantBuffer;
@@ -144,6 +149,7 @@ CTexture* COGLGraphiAPI::CreateTexture2D(unsigned int width,
 
 		glGenRenderbuffers(bindFlags,
 			               &Texture->m_DSV);
+
 		glRenderbufferStorage(GL_RENDERBUFFER, 
 			                  GL_DEPTH_COMPONENT, 
 			                  width,
@@ -213,8 +219,9 @@ CPixelShader* COGLGraphiAPI::CreatePixelShaders(const std::string &FileName,
 
 	glCompileShader(PixelShader->m_PixelShader);
 
-	glAttachShader(m_AttachShaderID,
-		           PixelShader->m_PixelShader);
+	//set del shader
+	/*glAttachShader(m_AttachShaderID,
+		           PixelShader->m_PixelShader);*/
 
 
 	return PixelShader;
@@ -242,8 +249,8 @@ CVertexShader* COGLGraphiAPI::CreateVertexShaders(const std::string &FileName,
 
 	glCompileShader(VertexShader->m_VertexShader);
 
-	glAttachShader(m_AttachShaderID, 
-		           VertexShader->m_VertexShader);
+	/*glAttachShader(m_AttachShaderID, 
+		           VertexShader->m_VertexShader);*/
 
 
 	return VertexShader;
@@ -294,6 +301,7 @@ CInputLayout* COGLGraphiAPI::CreateInputLayout(CVertexShader &Vertex,
 	return InputLa;
 }
 
+//mas parametros para diferentes samplers
 CSamplerState* COGLGraphiAPI::CreateSamplerState(unsigned int NumSamplerState)
 {
 	auto SamplerState = new CSamplerStateOGL();
@@ -313,8 +321,6 @@ CSamplerState* COGLGraphiAPI::CreateSamplerState(unsigned int NumSamplerState)
 	glSamplerParameteri(SamplerState->m_SamSt, 
 		                GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
 
-	glSamplerParameterf(SamplerState->m_SamSt, 
-	                	GL_TEXTURE_MAX_ANISOTROPY, 16.0f);
 	return SamplerState;
 }
 
@@ -330,7 +336,7 @@ void COGLGraphiAPI::SetVertexBuffer(CVertexBuffer* &VerBuff,
 	                                unsigned int offset)
 {
 	auto VertBuff = reinterpret_cast<CVertexBufferOGL*>(VerBuff);
-	//glBindBuffer(GL_ARRAY_BUFFER, VertBuff->m_VBO);
+	glBindBuffer(GL_ARRAY_BUFFER, VertBuff->m_VBO);
 
 	
 }
@@ -339,7 +345,7 @@ void COGLGraphiAPI::SetIndexBuffer(CIndexBuffer* &IndBuff,
 	                               unsigned int offset)
 {
 	auto IndexBuff = reinterpret_cast<CIndexBufferOGL*>(IndBuff);
-	//glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IndexBuff->m_IBO);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IndexBuff->m_IBO);
 }
 
 void COGLGraphiAPI::SetVertexShaderConstantBuffer(CConstantBuffer* &ConstBuff,
@@ -356,12 +362,14 @@ void COGLGraphiAPI::SetPixelShaderConstantBuffer(CConstantBuffer*& ConstBuff,
 
 void COGLGraphiAPI::SetPixelShaders(CPixelShader* &Pixel)
 {
-	glUseProgram(m_AttachShaderID);
+	/*glAttachShader(m_AttachShaderID,
+		VertexShader->m_VertexShader)*/
+	//glUseProgram(m_AttachShaderID);
 }
 
 void COGLGraphiAPI::SetVertexShaders(CVertexShader* &Vertex)
 {
-	glUseProgram(m_AttachShaderID);
+	//glUseProgram(m_AttachShaderID);
 }
 
 void COGLGraphiAPI::SetInputLayout(CInputLayout* &Inp)
@@ -445,6 +453,7 @@ void COGLGraphiAPI::ClearDefaultRenderTargetAndDepthStencil(ColorStruct Color)
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
+//tamaño de los datos
 void COGLGraphiAPI::UpdateSubresource(const void* Data, 
 	                                  CConstantBuffer& ConstantBufffer)
 {
@@ -455,8 +464,8 @@ void COGLGraphiAPI::UpdateSubresource(const void* Data,
 	view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
 	projection = glm::perspective(glm::radians(45.0f), (float)m_Width / (float)m_Height, 0.1f, 100.0f);
 	// retrieve the matrix uniform locations
-	unsigned int modelLoc = glGetUniformLocation(m_AttachShaderID, "model");
-	unsigned int viewLoc = glGetUniformLocation(m_AttachShaderID, "view");
+	unsigned int modelLoc = glGetUniformLocation(m_AttachShaderID, "model");//mal
+	unsigned int viewLoc = glGetUniformLocation(m_AttachShaderID, "view");//mal
 	// pass them to the shaders (3 different ways)
 	glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
 	glUniformMatrix4fv(viewLoc, 1, GL_FALSE, &view[0][0]);
@@ -524,6 +533,7 @@ void COGLGraphiAPI::Present()
 	glfwPollEvents();
 }
 
+//no es del API
 void COGLGraphiAPI::ClearMemory(const std::vector<CTexture*>& RenderTargets, 
 	                            const std::vector<CConstantBuffer*>& ConstantBuffers, 
 	                            const std::vector<CSamplerState*>& SamplerStates, 
@@ -551,6 +561,13 @@ void COGLGraphiAPI::ClearMemory(const std::vector<CTexture*>& RenderTargets,
 	auto PixShader = reinterpret_cast<CPixelShaderOGL*>(PixelShader);
 	glDeleteShader(PixShader->m_PixelShader);
 
+
+	for (int i = 0; i < SamplerStates.size(); i++)
+	{
+		auto Sampler = reinterpret_cast<CSamplerStateOGL*>(SamplerStates.at(i));
+		//glDeleteSamplers(SamplerStates.size(),Sampler->m_SamSt);
+
+	}
 	glfwTerminate();
 }
 
