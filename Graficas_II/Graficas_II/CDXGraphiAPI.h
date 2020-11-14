@@ -132,12 +132,15 @@ public:
 	/**
 	  * @brief      CreateConstantBuffer function, to create constant buffer
 	  *             Never Change
-	  * @param      bindFlags parameter one, bind Flags for the desc of constant buffer
-	  * @bug		   No know Bugs
+	  * @param      BufferSize parameter one, buffer size
+	  * @param      NumBuffer parameter two, number of buffer
+	  * @param      Data parameter three, void pointer for the data
+	  * @bug		No know Bugs
 	  * @return     Returns a pointer of CBuffer
 	*/
 	CConstantBuffer* CreateConstantBuffer(unsigned int BufferSize,
-		                                  unsigned int NumBuffer) override;
+		                                  unsigned int NumBuffer,
+		                                  const void* Data) override;
 
     
 	/**

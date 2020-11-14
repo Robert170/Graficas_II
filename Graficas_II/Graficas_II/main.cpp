@@ -49,7 +49,7 @@ struct CBNeverChanges
 	glm::vec4 vMeshColor;
 };
 
-CBNeverChanges ConstantBuffer;
+CBNeverChanges g_ConstantBuffer;
 
 void Init()
 {
@@ -258,7 +258,7 @@ void Init()
 
 	// Create the constant buffers
 
-	g_pCBNeverChanges = API->CreateConstantBuffer(sizeof(CBNeverChanges),1);
+	g_pCBNeverChanges = API->CreateConstantBuffer(sizeof(CBNeverChanges),1, &g_ConstantBuffer);
 
 	g_vConstantBuffers.push_back(g_pCBNeverChanges);
 
@@ -290,12 +290,13 @@ void Init()
 
 void Update()
 {
-	ConstantBuffer.mView = glm::transpose(g_View);
-	ConstantBuffer.mProjection = glm::transpose(g_Projection);
-	ConstantBuffer.mWorld = glm::transpose(g_World);
-	ConstantBuffer.vMeshColor = g_MeshColor;
+	//g_ConstantBuffer.mView = glm::transpose(g_View);
+	g_ConstantBuffer.mView = g_View;
+	g_ConstantBuffer.mProjection = glm::transpose(g_Projection);
+	g_ConstantBuffer.mWorld = glm::transpose(g_World);
+	g_ConstantBuffer.vMeshColor = g_MeshColor;
 
-	API->UpdateSubresource(&ConstantBuffer,
+	API->UpdateSubresource(&g_ConstantBuffer,
 		                   *g_pCBNeverChanges);
 
 
@@ -341,11 +342,11 @@ void Render()
 
 
 	//// Clear the render target
-	//API->ClearRenderTarget(g_pRenderTarget,
-	//	                     Color);
+	/*API->ClearRenderTarget(g_pRenderTarget,
+		                   Color);*/
 
 	//// Clear the depth stencil
-	//API->ClearDepthStencil(g_pDepthStencil, CLEAR_DEPTH,1.0f,0);
+	/*API->ClearDepthStencil(g_pDepthStencil, CLEAR_DEPTH,1.0f,0);*/
 
 	API->ClearDefaultRenderTargetAndDepthStencil(Color);
 
@@ -356,10 +357,9 @@ void Render()
 
 	//set all vertex shader constant buffer
 
-	//meter en un for
 	API->SetVertexShaderConstantBuffer(g_pCBNeverChanges,
-		0,
-		1);
+		                               0,
+		                               1);
 
 	
 
@@ -369,8 +369,8 @@ void Render()
 	//set pixel shader constant buffer
 
 	API->SetPixelShaderConstantBuffer(g_pCBNeverChanges,
-		0,
-		1);
+		                              0,
+		                              1);
 
 	/*API->SetShaderResource(g_vShaderResources,
 		                   0);*/

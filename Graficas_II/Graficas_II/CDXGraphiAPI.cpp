@@ -275,7 +275,8 @@ CIndexBuffer* CDXGraphiAPI::CreateIndexBuffer(const std::vector<uint32_t>& Ind,
 
 //fuction to create a constant buffer 
 CConstantBuffer* CDXGraphiAPI::CreateConstantBuffer(unsigned int BufferSize,
-                                                    unsigned int NumBuffer)
+                                                    unsigned int NumBuffer,
+                                                    const void* Data)
 {
     auto ConsBuffer = new CConstantBufferDX();
 

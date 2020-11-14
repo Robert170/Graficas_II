@@ -30,22 +30,22 @@ protected:
 	  * @brief      InitWindow function, to create window for the api
 	  * @param      width parameter one, width of the window
 	  * @param      height parameter two, height of the window
-	  * @bug		   No know Bugs
+	  * @bug		No know Bugs
 	  * @return     Returns nothing
 	*/
 	void InitWindow(unsigned int width,
-		unsigned int height) override; //no usar
+		            unsigned int height) override; 
 
 /**
   * @brief      CreateDeviceandSwap function, to create device and swapchain
-  * @bug		   No know Bugs
+  * @bug		No know Bugs
   * @return     Returns nothing
 */
 	void CreateDeviceandSwap() override;
 
 	/**
 	  * @brief      CreateDeferredContext function, to create Deferred Context
-	  * @bug		   No know Bugs
+	  * @bug		No know Bugs
 	  * @return     Returns nothing
 	*/
 	void CreateDeferredContext() override;
@@ -72,7 +72,7 @@ public:
 	  * @param      bindFlags parameter one, bind Flags for the desc of vertex buffer
 	  * @param      Ver parameter two, a vector whit positions and tex of vertices
 	  * @param      ID parameter three, id for the vertex buffer
-	  * @bug		   No know Bugs
+	  * @bug		No know Bugs
 	  * @return     Returns a pointer of CBuffer
 	*/
 	CVertexBuffer* CreateVertexBuffer(const std::vector <SimpleVertex>& Ver,
@@ -84,27 +84,30 @@ public:
 	  * @param      bindFlags parameter one, bind Flags for the desc of index buffer
 	  * @param      Ind parameter two, a vector unsigned ints of indices
 	  * @param      ID parameter three, id for the index buffer
-	  * @bug		   No know Bugs
+	  * @bug		No know Bugs
 	  * @return     Returns a pointer of CBuffer
 	*/
 	CIndexBuffer* CreateIndexBuffer(const std::vector<uint32_t>& Ind,
 		                            unsigned int BufferSize,
 		                            unsigned int NumBuffer) override; //Numberos de index buffer, deberia estar en la clase buffer
 
-/**
-  * @brief      CreateConstantBuffer function, to create constant buffer
-  *             Never Change
-  * @param      bindFlags parameter one, bind Flags for the desc of constant buffer
-  * @bug		   No know Bugs
-  * @return     Returns a pointer of CBuffer
-*/
+	/**
+	  * @brief      CreateConstantBuffer function, to create constant buffer
+	  *             Never Change
+	  * @param      BufferSize parameter one, buffer size
+	  * @param      NumBuffer parameter two, number of buffer
+	  * @param      Data parameter three, void pointer for the data
+	  * @bug		No know Bugs
+	  * @return     Returns a pointer of CBuffer
+	*/
 	CConstantBuffer* CreateConstantBuffer(unsigned int BufferSize,
-		                                  unsigned int NumBuffer) override;
+		                                  unsigned int NumBuffer,
+		                                  const void* Data) override;
 
 
 	/**
 	  * @brief      CreateTexture1D function, to create a texture
-	  * @bug		   No know Bugs
+	  * @bug		No know Bugs
 	  * @return     Returns nothing
 	*/
 	void CreateTexture1D() override;
@@ -117,7 +120,7 @@ public:
 	  * @param      format parameter fourth, format for the desc of the txture
 	  * @param      bindFlags parameter five, bind Flags for the desc of the txture
 	  * @param      Usage parameter six, Usage for the desc of the txture
-	  * @bug		   No know Bugs
+	  * @bug		No know Bugs
 	  * @return     Returns a pointer of CTexture
 	*/
 	CTexture* CreateTexture2D(unsigned int width,

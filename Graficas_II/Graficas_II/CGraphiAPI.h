@@ -344,7 +344,7 @@ public:
 	  * @brief      CreateIndexBuffer function, to create index buffer
 	  * @param      bindFlags parameter one, bind Flags for the desc of index buffer
 	  * @param      Ind parameter two, a vector unsigned ints of indices
-	  * @param      ID parameter three, id for the index buffer
+	  * @param      NumBuffer parameter three, NumBuffer for the index buffer
 	  * @bug		   No know Bugs
 	  * @return     Returns a pointer of CBuffer
 	*/
@@ -355,12 +355,15 @@ public:
 	/**
 	  * @brief      CreateConstantBuffer function, to create constant buffer
 	  *             Never Change
-	  * @param      bindFlags parameter one, bind Flags for the desc of constant buffer
-	  * @bug		   No know Bugs
+	  * @param      BufferSize parameter one, buffer size
+	  * @param      NumBuffer parameter two, number of buffer
+	  * @param      Data parameter three, void pointer for the data
+	  * @bug		No know Bugs
 	  * @return     Returns a pointer of CBuffer
 	*/
 	virtual CConstantBuffer* CreateConstantBuffer(unsigned int BufferSize,
-		                                          unsigned int NumBuffer = 0) = 0;
+		                                          unsigned int NumBuffer = 0,
+		                                          const void* Data = nullptr) = 0;
 
 
 

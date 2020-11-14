@@ -147,6 +147,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="CCamera.cpp" />
     <ClCompile Include="CConstantBuffer.cpp" />
     <ClCompile Include="CConstantBufferDX.cpp" />
     <ClCompile Include="CConstantBufferOGL.cpp" />
@@ -184,6 +185,7 @@
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="CCamera.h" />
     <ClInclude Include="CConstantBuffer.h" />
     <ClInclude Include="CConstantBufferDX.h" />
     <ClInclude Include="CConstantBufferOGL.h" />
@@ -230,6 +232,10 @@
     <FxCompile Include="Tutorial07.fx">
       <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">VS</EntryPointName>
     </FxCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="6.2.coordinate_systemsPS.txt" />
+    <Text Include="6.2.coordinate_systemsVS.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

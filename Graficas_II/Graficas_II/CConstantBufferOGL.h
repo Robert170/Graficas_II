@@ -29,7 +29,7 @@ class CConstantBufferOGL: public CConstantBuffer
 	/**
 	  * @Variable m_CBO, is for a Constant buffer
 	*/
-	unsigned int m_CBO;
+	unsigned int m_CBO = 0;
 
 	friend class COGLGraphiAPI;
 };

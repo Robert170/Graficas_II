@@ -26,7 +26,7 @@ void COGLGraphiAPI::InitWindow(unsigned int width,
 		return;
 	}
 	glfwMakeContextCurrent(m_window);
-	glfwSetFramebufferSizeCallback(m_window, framebuffer_size_callback);
+	//glfwSetFramebufferSizeCallback(m_window, framebuffer_size_callback);
 
 	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
 	{
@@ -67,10 +67,15 @@ CVertexBuffer* COGLGraphiAPI::CreateVertexBuffer(const std::vector <SimpleVertex
 
 	glGenBuffers(Size,
 		         &VertexBuffer->m_VBO);
+
+	glBindBuffer(GL_ARRAY_BUFFER, 
+		         VertexBuffer->m_VBO);
+
 	glBufferData(GL_ARRAY_BUFFER, 
 		         Ver.size()* sizeof(SimpleVertex),
 		         Ver.data(), 
 		         GL_STATIC_DRAW);
+
 
 	return VertexBuffer;
 }
@@ -81,26 +86,36 @@ CIndexBuffer* COGLGraphiAPI::CreateIndexBuffer(const std::vector<unsigned int>& 
 {
 	auto IndexBuffer = new CIndexBufferOGL();
 
+
 	glGenBuffers(NumBuffer, 
 		         &IndexBuffer->m_IBO);
-	
+
+	glBindBuffer(GL_ARRAY_BUFFER,
+		         IndexBuffer->m_IBO);
+
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, 
 		         Ind.size()* sizeof(unsigned int),
-		         Ind.data(), 
+		         &Ind[0],
 		         GL_STATIC_DRAW);
 
 	return IndexBuffer;
 }
 
 CConstantBuffer* COGLGraphiAPI::CreateConstantBuffer(unsigned int BufferSize,
-	                                                 unsigned int NumBuffer)
+	                                                 unsigned int NumBuffer,
+	                                                 const void* Data)
 {
 	auto ConstantBuffer = new CConstantBufferOGL();
 
-	glGenBuffers(BufferSize,
+	glGenBuffers(NumBuffer,
 		         &ConstantBuffer->m_CBO);
-	//glBufferData(GL_UNIFORM_BUFFER, BufferSize, &shader_data, GL_DYNAMIC_DRAW);
-	return nullptr;
+
+	glBindBuffer(GL_UNIFORM_BUFFER, ConstantBuffer->m_CBO);
+	glBufferData(GL_UNIFORM_BUFFER, sizeof(Data), &Data, GL_DYNAMIC_DRAW);
+	glBindBuffer(GL_UNIFORM_BUFFER, ConstantBuffer->m_CBO);
+
+	
+	return ConstantBuffer;
 }
 
 
@@ -185,7 +200,9 @@ CPixelShader* COGLGraphiAPI::CreatePixelShaders(const std::string &FileName,
 	// Pixel Shader
 	auto PixelShader = new CPixelShaderOGL();
 
-	const char* PixelCode = PixelShader->ReadFile(FileName).c_str();
+	std::string Temp = PixelShader->ReadFile(FileName);
+
+	const char* PixelCode = Temp.c_str();
 
 	PixelShader->m_PixelShader = glCreateShader(GL_FRAGMENT_SHADER);
 
@@ -199,8 +216,6 @@ CPixelShader* COGLGraphiAPI::CreatePixelShaders(const std::string &FileName,
 	glAttachShader(m_AttachShaderID,
 		           PixelShader->m_PixelShader);
 
-	//delete shader
-	glDeleteShader(PixelShader->m_PixelShader);
 
 	return PixelShader;
 
@@ -214,7 +229,9 @@ CVertexShader* COGLGraphiAPI::CreateVertexShaders(const std::string &FileName,
 	// vertex Shader
 	auto VertexShader = new CVertexShaderOGL();
 
-	const char* VertexCode = VertexShader->ReadFile(FileName).c_str();
+	std::string Temp = VertexShader->ReadFile(FileName);
+
+	const char* VertexCode = Temp.c_str();
 
 	VertexShader->m_VertexShader = glCreateShader(GL_VERTEX_SHADER);
 
@@ -228,7 +245,6 @@ CVertexShader* COGLGraphiAPI::CreateVertexShaders(const std::string &FileName,
 	glAttachShader(m_AttachShaderID, 
 		           VertexShader->m_VertexShader);
 
-	glDeleteShader(VertexShader->m_VertexShader);
 
 	return VertexShader;
 }
@@ -241,6 +257,8 @@ CInputLayout* COGLGraphiAPI::CreateInputLayout(CVertexShader &Vertex,
 
 	glGenVertexArrays(NumInputLayout,
 		              &InputLa->m_IPLA);
+
+	glBindVertexArray(InputLa->m_IPLA);
 
 	/*for (int i = 0; i < SemanticName.size(); i++)
 	{
@@ -312,7 +330,7 @@ void COGLGraphiAPI::SetVertexBuffer(CVertexBuffer* &VerBuff,
 	                                unsigned int offset)
 {
 	auto VertBuff = reinterpret_cast<CVertexBufferOGL*>(VerBuff);
-	glBindBuffer(GL_ARRAY_BUFFER, VertBuff->m_VBO);
+	//glBindBuffer(GL_ARRAY_BUFFER, VertBuff->m_VBO);
 
 	
 }
@@ -321,7 +339,7 @@ void COGLGraphiAPI::SetIndexBuffer(CIndexBuffer* &IndBuff,
 	                               unsigned int offset)
 {
 	auto IndexBuff = reinterpret_cast<CIndexBufferOGL*>(IndBuff);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IndexBuff->m_IBO);
+	//glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IndexBuff->m_IBO);
 }
 
 void COGLGraphiAPI::SetVertexShaderConstantBuffer(CConstantBuffer* &ConstBuff,
@@ -427,8 +445,25 @@ void COGLGraphiAPI::ClearDefaultRenderTargetAndDepthStencil(ColorStruct Color)
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
-void COGLGraphiAPI::UpdateSubresource(const void* Data, CConstantBuffer& ConstantBufffer)
+void COGLGraphiAPI::UpdateSubresource(const void* Data, 
+	                                  CConstantBuffer& ConstantBufffer)
 {
+	glm::mat4 model = glm::mat4(1.0f); // make sure to initialize matrix to identity matrix first
+	glm::mat4 view = glm::mat4(1.0f);
+	glm::mat4 projection = glm::mat4(1.0f);
+	model = glm::rotate(model, (float)glfwGetTime(), glm::vec3(0.5f, 1.0f, 0.0f));
+	view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
+	projection = glm::perspective(glm::radians(45.0f), (float)m_Width / (float)m_Height, 0.1f, 100.0f);
+	// retrieve the matrix uniform locations
+	unsigned int modelLoc = glGetUniformLocation(m_AttachShaderID, "model");
+	unsigned int viewLoc = glGetUniformLocation(m_AttachShaderID, "view");
+	// pass them to the shaders (3 different ways)
+	glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+	glUniformMatrix4fv(viewLoc, 1, GL_FALSE, &view[0][0]);
+	// note: currently we set the projection matrix each frame, but since the projection matrix rarely changes it's often best practice to set it outside the main loop only once.
+	std::string Temp = "projection";
+	glUniformMatrix4fv(glGetUniformLocation(m_AttachShaderID, Temp.c_str()), 1, GL_FALSE, &projection[0][0]);
+	
 }
 
 void COGLGraphiAPI::SetRasterizerState(CRasterizerState* &RasState)
@@ -440,7 +475,7 @@ void COGLGraphiAPI::SetRenderTarget(const std::vector<CTexture*>& pRTTex,
 {
 	for (int i = 0; i < pRTTex.size(); i++)
 	{
-		auto pRTDX = reinterpret_cast<CTextureOGL*>(pRTTex.at(i));
+		auto pRTODL = reinterpret_cast<CTextureOGL*>(pRTTex.at(i));
 
 		/*ID3D11DepthStencilView* pDSV = nullptr;
 
@@ -451,11 +486,11 @@ void COGLGraphiAPI::SetRenderTarget(const std::vector<CTexture*>& pRTTex,
 		}*/
 
 		glBindFramebuffer(GL_FRAMEBUFFER, 
-			              pRTDX->m_RTV);
+			              pRTODL->m_RTV);
 
 		glFramebufferTexture(GL_FRAMEBUFFER, 
 			                 GL_COLOR_ATTACHMENT0, 
-			                 pRTDX->m_Texture, 
+			                 pRTODL->m_Texture,
 			                 i);
 	}
 }
@@ -468,7 +503,7 @@ void COGLGraphiAPI::DrawIndexed(unsigned int NumIndex,
 {
 	glDrawArrays(GL_TRIANGLES, StartindexLocation, NumIndex);
 
-	//glDrawElements(GL_TRIANGLES, NumIndex, GL_UNSIGNED_BYTE, GL_ELEMENT_ARRAY_BUFFER)
+	//glDrawElements(GL_TRIANGLES, NumIndex, GL_UNSIGNED_INT, StartindexLocation);
 }
 void COGLGraphiAPI::DrawInstanced(unsigned int VertexCountPerInstance, 
 	                              unsigned int InstanceCount, 
@@ -509,6 +544,12 @@ void COGLGraphiAPI::ClearMemory(const std::vector<CTexture*>& RenderTargets,
 
 	auto IndexBuff = reinterpret_cast<CIndexBufferOGL*>(IndexBuffer);
 	glDeleteBuffers(1, &IndexBuff->m_IBO);
+
+	auto VerShader = reinterpret_cast<CVertexShaderOGL*>(VertexShader);
+	glDeleteShader(VerShader->m_VertexShader);
+
+	auto PixShader = reinterpret_cast<CPixelShaderOGL*>(PixelShader);
+	glDeleteShader(PixShader->m_PixelShader);
 
 	glfwTerminate();
 }
