@@ -464,14 +464,14 @@ void COGLGraphiAPI::UpdateSubresource(const void* Data,
 	view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
 	projection = glm::perspective(glm::radians(45.0f), (float)m_Width / (float)m_Height, 0.1f, 100.0f);
 	// retrieve the matrix uniform locations
-	unsigned int modelLoc = glGetUniformLocation(m_AttachShaderID, "model");//mal
-	unsigned int viewLoc = glGetUniformLocation(m_AttachShaderID, "view");//mal
+	//unsigned int modelLoc = glGetUniformLocation(m_AttachShaderID, "model");//mal
+	//unsigned int viewLoc = glGetUniformLocation(m_AttachShaderID, "view");//mal
 	// pass them to the shaders (3 different ways)
-	glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
-	glUniformMatrix4fv(viewLoc, 1, GL_FALSE, &view[0][0]);
+	//glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+	//glUniformMatrix4fv(viewLoc, 1, GL_FALSE, &view[0][0]);
 	// note: currently we set the projection matrix each frame, but since the projection matrix rarely changes it's often best practice to set it outside the main loop only once.
 	std::string Temp = "projection";
-	glUniformMatrix4fv(glGetUniformLocation(m_AttachShaderID, Temp.c_str()), 1, GL_FALSE, &projection[0][0]);
+	//glUniformMatrix4fv(glGetUniformLocation(m_AttachShaderID, Temp.c_str()), 1, GL_FALSE, &projection[0][0]);
 	
 }
 

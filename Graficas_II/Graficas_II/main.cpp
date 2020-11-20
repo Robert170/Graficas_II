@@ -2,8 +2,8 @@
 #include "COGLGraphiAPI.h"
 #include "CDXGraphiAPI.h"
 
-//CGraphiAPI* API = new CDXGraphiAPI();
-CGraphiAPI* API = new COGLGraphiAPI();
+CGraphiAPI* API = new CDXGraphiAPI();
+//CGraphiAPI* API = new COGLGraphiAPI();
 
 //Textures
 CTexture* g_pRenderTarget = nullptr;
@@ -67,7 +67,7 @@ void Init()
 	glm::vec3 At = { 0.0f, 1.0f, 0.0f };
 	glm::vec3 Up = { 0.0f, 1.0f, 0.0f };
 
-	/*std::vector<uint32_t> indices =
+	std::vector<uint32_t> indices =
 	{
 		3,1,0,
 		2,1,3,
@@ -86,9 +86,9 @@ void Init()
 
 		22,20,21,
 		23,20,22
-	};*/
+	};
 
-	/*std::vector<SimpleVertex> vertices =
+	std::vector<SimpleVertex> vertices =
 	{
 		// positions                    // texture coords
 		{glm::vec3(-1.0f, 1.0f, -1.0f),  glm::vec2(0.0f, 0.0f) },
@@ -120,10 +120,10 @@ void Init()
 		{glm::vec3(1.0f, -1.0f, 1.0f),   glm::vec2(1.0f, 0.0f) },
 		{glm::vec3(1.0f, 1.0f, 1.0f),    glm::vec2(1.0f, 1.0f) },
 		{glm::vec3(-1.0f, 1.0f, 1.0f),   glm::vec2(0.0f, 1.0f) },
-	};*/
+	};
 
 
-	std::vector<uint32_t> indices =
+	/*std::vector<uint32_t> indices =
 	{
 		3,1,0,
 		2,1,3,
@@ -191,7 +191,7 @@ void Init()
 		{glm::vec3(0.5f,  0.5f,  0.5f),  glm::vec2(1.0f, 0.0f)},
 		{glm::vec3(-0.5f,  0.5f,  0.5f), glm::vec2(0.0f, 0.0f)},
 		{glm::vec3(-0.5f,  0.5f, -0.5f), glm::vec2(0.0f, 1.0f)} 
-	};
+	};*/
 
 	g_MeshColor.x = 1;
 	g_MeshColor.y = 1;
@@ -228,7 +228,7 @@ void Init()
 	g_vShaderResources.push_back(g_pShaderResource);*/
 
 	// Create the vertex shader
-    g_pVertexShader = API->CreateVertexShaders("6.2.coordinate_systemsVS.txt",
+    g_pVertexShader = API->CreateVertexShaders("Tutorial07.fx",
 			                                   "VS",
 			                                   "vs_4_0", 
 		                                        1);
@@ -242,7 +242,7 @@ void Init()
 		                                    g_vSemanticNames,1);
 
 	// Create the pixel shader
-	g_pPixelShader = API->CreatePixelShaders("6.2.coordinate_systemsPS.txt",
+	g_pPixelShader = API->CreatePixelShaders("Tutorial07.fx",
 		                                     "PS",
 		                                     "ps_4_0", 
 		                                      1);
@@ -291,7 +291,7 @@ void Init()
 void Update()
 {
 	//g_ConstantBuffer.mView = glm::transpose(g_View);
-	g_ConstantBuffer.mView = g_View;
+	g_ConstantBuffer.mView = glm::transpose(g_View);
 	g_ConstantBuffer.mProjection = glm::transpose(g_Projection);
 	g_ConstantBuffer.mWorld = glm::transpose(g_World);
 	g_ConstantBuffer.vMeshColor = g_MeshColor;
