@@ -257,20 +257,4 @@
       <Filter>Archivos de recursos</Filter>
     </ResourceCompile>
   </ItemGroup>
-  <ItemGroup>
-    <FxCompile Include="..\Tutorial02.fx">
-      <Filter>Shaders</Filter>
-    </FxCompile>
-    <FxCompile Include="Tutorial07.fx">
-      <Filter>Shaders</Filter>
-    </FxCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <Text Include="6.2.coordinate_systemsPS.txt">
-      <Filter>Shaders</Filter>
-    </Text>
-    <Text Include="6.2.coordinate_systemsVS.txt">
-      <Filter>Shaders</Filter>
-    </Text>
-  </ItemGroup>
 </Project>
