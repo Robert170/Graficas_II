@@ -1,1 +1,0 @@
-#include "CSamplerStateOGL.h"
