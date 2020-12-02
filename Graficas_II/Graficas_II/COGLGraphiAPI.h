@@ -17,9 +17,9 @@ private:
 
 	int m_AttachShaderID;
 
-	unsigned int m_BackBuffer;
+	//unsigned int m_BackBuffer;
 
-	unsigned int m_Depth;
+	//unsigned int m_Depth;
 
 protected:
 	/**

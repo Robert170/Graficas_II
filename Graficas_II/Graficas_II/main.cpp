@@ -3,8 +3,8 @@
 #include "CDXGraphiAPI.h"
 #include <windows.h>
 
-CGraphiAPI* API = new CDXGraphiAPI();
-//CGraphiAPI* API = new COGLGraphiAPI();
+//CGraphiAPI* API = new CDXGraphiAPI();
+CGraphiAPI* API = new COGLGraphiAPI();
 
 //Textures
 CTexture* g_pRenderTarget = nullptr;
@@ -163,10 +163,10 @@ void Init()
 	g_vShaderResources.push_back(g_pShaderResource);*/
 
 	// Create the vertex shader
-	g_pVertexShader = API->CreateVertexShaders("Tutorial07.fx",
-			                                    "VS",
-			                                    "vs_4_0",
-			                                     1);
+	g_pVertexShader = API->CreateVertexShaders("VS",
+			                                   "VS",
+			                                   "vs_4_0",
+			                                    1);
 
     /*g_pVertexShader = API->CreateVertexShaders("Tutorial07.fx",
 			                                   "VS",
@@ -185,7 +185,7 @@ void Init()
 		                                    g_InpLayDesc,1);
 
 	// Create the pixel shader
-	g_pPixelShader = API->CreatePixelShaders("Tutorial07.fx",
+	g_pPixelShader = API->CreatePixelShaders("PS",
 		                                     "PS",
 		                                     "ps_4_0",
 		                                     1);
@@ -201,11 +201,40 @@ void Init()
 
 	// Create index buffer
 	g_pIndexBuffer = API->CreateIndexBuffer(indices,
-		                                    indices.size(),1);
+		                                    indices.size(),
+		                                    1);
 
 	// Create the constant buffers
 
-	g_pCBNeverChanges = API->CreateConstantBuffer(sizeof(CBNeverChanges),1, &g_ConstantBuffer);
+	////Init World Matrix
+	g_World = glm::mat4(1.0);
+
+	////init view matrix
+	g_View = glm::lookAtLH(Eye,
+		At,
+		Up);
+
+	////init projection matrix
+	g_Projection = glm::perspectiveFovLH(Data.Fov,
+		                                 Data.H,
+		                                 Data.W,
+		                                 Data.Near,
+		                                 Data.Far);
+
+	//g_ConstantBuffer.mView = glm::transpose(g_View);
+	//g_ConstantBuffer.mProjection = glm::transpose(g_Projection);
+	//g_ConstantBuffer.mWorld = glm::transpose(g_World);
+
+
+	g_ConstantBuffer.mView = g_View;
+	g_ConstantBuffer.mProjection = g_Projection;
+	g_ConstantBuffer.mWorld = g_World;
+
+	g_ConstantBuffer.vMeshColor = g_MeshColor;
+
+	g_pCBNeverChanges = API->CreateConstantBuffer(sizeof(CBNeverChanges),
+		                                          1, 
+		                                          &g_ConstantBuffer);
 
 	g_vConstantBuffers.push_back(g_pCBNeverChanges);
 
@@ -215,33 +244,15 @@ void Init()
 
 	//g_vSamplers.push_back(g_pSamplerState);
 
-	////Init World Matrix
-	g_World = glm::mat4(1.0);
-
-	////init view matrix
-	g_View = glm::lookAtLH(Eye, 
-		                   At,
-		                   Up);
-
 	
-
-	////init projection matrix
-	g_Projection = glm::perspectiveFovLH(Data.Fov,
-		                                 Data.H,
-		                                 Data.W,
-		                                 Data.Near,
-		                                 Data.Far);
+		                                
 	
 	
 }
 
 void Update()
 {
-	//g_ConstantBuffer.mView = glm::transpose(g_View);
-	g_ConstantBuffer.mView = glm::transpose(g_View);
-	g_ConstantBuffer.mProjection = glm::transpose(g_Projection);
-	g_ConstantBuffer.mWorld = glm::transpose(g_World);
-	g_ConstantBuffer.vMeshColor = g_MeshColor;
+	
 
 	API->UpdateSubresource(&g_ConstantBuffer,
 		                   *g_pCBNeverChanges);

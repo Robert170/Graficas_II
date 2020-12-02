@@ -37,15 +37,15 @@ void COGLGraphiAPI::InitWindow(unsigned int width,
 	// configure global opengl state
 	// -----------------------------
 	glEnable(GL_DEPTH_TEST);
-	//default render target
-	glGenFramebuffers(1, &m_BackBuffer);
-	glBindFramebuffer(GL_FRAMEBUFFER, m_BackBuffer);
+	////default render target
+	//glGenFramebuffers(1, &m_BackBuffer);
+	//glBindFramebuffer(GL_FRAMEBUFFER, m_BackBuffer);
 
-	//default depth
-	glGenRenderbuffers(1, &m_Depth);
-	glBindRenderbuffer(GL_RENDERBUFFER, m_Depth);
-	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, width, height);
-	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, m_Depth);
+	////default depth
+	//glGenRenderbuffers(1, &m_Depth);
+	//glBindRenderbuffer(GL_RENDERBUFFER, m_Depth);
+	//glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, width, height);
+	//glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, m_Depth);
 
 }
 
@@ -87,8 +87,8 @@ CVertexBuffer* COGLGraphiAPI::CreateVertexBuffer(const std::vector <SimpleVertex
 
 	glEnableVertexAttribArray(0);
 
-	glBindBuffer(GL_ARRAY_BUFFER, 
-		         VertexBuffer->m_VBO);
+	/*glBindBuffer(GL_ARRAY_BUFFER, 
+		         0);*/
 
 
 	return VertexBuffer;
@@ -104,12 +104,12 @@ CIndexBuffer* COGLGraphiAPI::CreateIndexBuffer(const std::vector<unsigned int>& 
 	glGenBuffers(NumBuffer, 
 		         &IndexBuffer->m_IBO);
 
-	glBindBuffer(GL_ARRAY_BUFFER,
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER,
 		         IndexBuffer->m_IBO);
 
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, 
 		         Ind.size()* sizeof(unsigned int),
-		         &Ind[0],
+		         Ind.data(),
 		         GL_STATIC_DRAW);
 
 	return IndexBuffer;
@@ -126,11 +126,14 @@ CConstantBuffer* COGLGraphiAPI::CreateConstantBuffer(unsigned int BufferSize,//2
 
 	glBindBuffer(GL_UNIFORM_BUFFER, 
 		         ConstantBuffer->m_CBO);
+
 	glBufferData(GL_UNIFORM_BUFFER, 
-		         sizeof(Data), &Data, 
+		         BufferSize,
+		         &Data, 
 		         GL_DYNAMIC_DRAW);
+
 	glBindBuffer(GL_UNIFORM_BUFFER, 
-		         ConstantBuffer->m_CBO);
+		         0);
 
 	
 	return ConstantBuffer;
@@ -152,6 +155,7 @@ CTexture* COGLGraphiAPI::CreateTexture2D(unsigned int width,
 	
 
 	//Checar que interfaces se van a crear
+	//se puede omitir
 	if (bindFlags & TEXTURE_BIND_SHADER_RESOURCE)
 	{//Crear SRV
 		//flata arreglar
@@ -218,9 +222,11 @@ CPixelShader* COGLGraphiAPI::CreatePixelShaders(const std::string &FileName,
 	                                            int NumPixelShader)
 {
 	// Pixel Shader
+	std::string RealName = FileName + "_OGL.txt";
+
 	auto PixelShader = new CPixelShaderOGL();
 
-	std::string Temp = PixelShader->ReadFile(FileName);
+	std::string Temp = PixelShader->ReadFile(RealName);
 
 	const char* PixelCode = Temp.c_str();
 
@@ -233,10 +239,33 @@ CPixelShader* COGLGraphiAPI::CreatePixelShaders(const std::string &FileName,
 
 	glCompileShader(PixelShader->m_PixelShader);
 
-	//set del shader
-	/*glAttachShader(m_AttachShaderID,
-		            PixelShader->m_PixelShader);*/
+	GLint isCompiled = 0;
 
+	glGetShaderiv(PixelShader->m_PixelShader, GL_COMPILE_STATUS, &isCompiled);
+
+	if (isCompiled == GL_FALSE) {
+
+		GLint maxLength = 0;
+		glGetShaderiv(PixelShader->m_PixelShader, GL_INFO_LOG_LENGTH, &maxLength);
+
+		// The maxLength includes the NULL character
+		std::vector<GLchar> infoLog(maxLength);
+		glGetShaderInfoLog(PixelShader->m_PixelShader, maxLength, &maxLength, &infoLog[0]);
+
+		// We don't need the shader anymore.
+		glDeleteShader(PixelShader->m_PixelShader);
+		delete PixelShader;
+
+		return nullptr;
+	}
+
+
+
+	//set del shader
+	glAttachShader(m_AttachShaderID,
+		            PixelShader->m_PixelShader);
+
+	glLinkProgram(m_AttachShaderID);
 
 	return PixelShader;
 
@@ -248,9 +277,11 @@ CVertexShader* COGLGraphiAPI::CreateVertexShaders(const std::string &FileName,
 	                                              int NumVertexShader)
 {
 	// vertex Shader
+	std::string RealName = FileName + "_OGL.txt";
+
 	auto VertexShader = new CVertexShaderOGL();
 
-	std::string Temp = VertexShader->ReadFile(FileName);
+	std::string Temp = VertexShader->ReadFile(RealName);
 
 	const char* VertexCode = Temp.c_str();
 
@@ -262,6 +293,26 @@ CVertexShader* COGLGraphiAPI::CreateVertexShaders(const std::string &FileName,
 		           nullptr);
 
 	glCompileShader(VertexShader->m_VertexShader);
+
+	GLint isCompiled = 0;
+
+	glGetShaderiv(VertexShader->m_VertexShader, GL_COMPILE_STATUS, &isCompiled);
+
+	if (isCompiled == GL_FALSE) {
+
+		GLint maxLength = 0;
+		glGetShaderiv(VertexShader->m_VertexShader, GL_INFO_LOG_LENGTH, &maxLength);
+
+		// The maxLength includes the NULL character
+		std::vector<GLchar> infoLog(maxLength);
+		glGetShaderInfoLog(VertexShader->m_VertexShader, maxLength, &maxLength, &infoLog[0]);
+
+		// We don't need the shader anymore.
+		glDeleteShader(VertexShader->m_VertexShader);
+		delete VertexShader;
+
+		return nullptr;
+	}
 
 	glAttachShader(m_AttachShaderID, 
 		           VertexShader->m_VertexShader);
@@ -287,7 +338,7 @@ CInputLayout* COGLGraphiAPI::CreateInputLayout(CVertexShader &Vertex,
 
 	glGenVertexArrays(NumInputLayout,
 		              &InputLa->m_IPLA);
-	checkGLError();
+	//checkGLError();
 
 
 	glBindVertexArray(InputLa->m_IPLA);
@@ -322,16 +373,20 @@ CSamplerState* COGLGraphiAPI::CreateSamplerState(unsigned int NumSamplerState)
 		          &SamplerState->m_SamSt);
 
 	glSamplerParameteri(SamplerState->m_SamSt, 
-		                GL_TEXTURE_WRAP_S, GL_REPEAT);
+		                GL_TEXTURE_WRAP_S, 
+		                GL_REPEAT);
 
 	glSamplerParameteri(SamplerState->m_SamSt, 
-		                GL_TEXTURE_WRAP_T, GL_REPEAT);
+		                GL_TEXTURE_WRAP_T, 
+		                GL_REPEAT);
 
 	glSamplerParameteri(SamplerState->m_SamSt, 
-		                GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		                GL_TEXTURE_MAG_FILTER, 
+		                GL_LINEAR);
 
 	glSamplerParameteri(SamplerState->m_SamSt, 
-		                GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+		                GL_TEXTURE_MIN_FILTER, 
+		                GL_LINEAR_MIPMAP_LINEAR);
 
 	return SamplerState;
 }
@@ -348,7 +403,11 @@ void COGLGraphiAPI::SetVertexBuffer(CVertexBuffer* VerBuff,
 	                                unsigned int offset)
 {
 	auto* VertBuff = reinterpret_cast<CVertexBufferOGL*>(VerBuff);
-	glBindBuffer(GL_ARRAY_BUFFER, VertBuff->m_VBO);
+	glBindVertexBuffer(StartSlot,
+		               VertBuff->m_VBO,
+		               offset,
+		               stride);
+	checkGLError();
 
 	
 }
@@ -357,19 +416,27 @@ void COGLGraphiAPI::SetIndexBuffer(CIndexBuffer* IndBuff,
 	                               unsigned int offset)
 {
 	auto* IndexBuff = reinterpret_cast<CIndexBufferOGL*>(IndBuff);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IndexBuff->m_IBO);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 
+		         IndexBuff->m_IBO);
+	checkGLError();
 }
 
 void COGLGraphiAPI::SetVertexShaderConstantBuffer(CConstantBuffer* ConstBuff,
 	                                              unsigned int StartSlot,
 	                                              unsigned int NumBuffer)
 {
+	auto* ConstantBuffer = reinterpret_cast<CConstantBufferOGL*>(ConstBuff);
+	glBindBufferBase(GL_UNIFORM_BUFFER, StartSlot, ConstantBuffer->m_CBO);
+	checkGLError();
 }
 
 void COGLGraphiAPI::SetPixelShaderConstantBuffer(CConstantBuffer* ConstBuff, 
 	                                             unsigned int StartSlot, 
 	                                             unsigned int NumBuffer)
 {
+	auto* ConstantBuffer = reinterpret_cast<CConstantBufferOGL*>(ConstBuff);
+	glBindBufferBase(GL_UNIFORM_BUFFER, StartSlot, ConstantBuffer->m_CBO);
+	checkGLError();
 }
 
 void COGLGraphiAPI::SetPixelShaders(CPixelShader* Pixel)
@@ -377,17 +444,20 @@ void COGLGraphiAPI::SetPixelShaders(CPixelShader* Pixel)
 	/*glAttachShader(m_AttachShaderID,
 		VertexShader->m_VertexShader)*/
 	glUseProgram(m_AttachShaderID);
+	checkGLError();
 }
 
 void COGLGraphiAPI::SetVertexShaders(CVertexShader* Vertex)
 {
 	glUseProgram(m_AttachShaderID);
+	checkGLError();
 }
 
 void COGLGraphiAPI::SetInputLayout(CInputLayout* Inp)
 {
 	auto* InpL = reinterpret_cast<CInputLayoutOGL*>(Inp);
 	glBindVertexArray(InpL->m_IPLA);
+	checkGLError();
 }
 
 void COGLGraphiAPI::SetSamplerState(const std::vector<CSamplerState*>& Sam,
@@ -398,6 +468,7 @@ void COGLGraphiAPI::SetSamplerState(const std::vector<CSamplerState*>& Sam,
 		auto SamSt = reinterpret_cast<CSamplerStateOGL*>(Sam.at(i));
 
 		glBindSampler(StartSlot, SamSt->m_SamSt);
+		checkGLError();
 	}
 }
 
@@ -408,11 +479,13 @@ void COGLGraphiAPI::SetDepthStencil(CTexture* pDSTex)
 
 	glBindRenderbuffer(GL_RENDERBUFFER, 
 		               DepSten->m_DSV);
+	checkGLError();
 
 	glFramebufferRenderbuffer(GL_FRAMEBUFFER, 
 		                      GL_DEPTH_ATTACHMENT, 
 		                      GL_RENDERBUFFER, 
 		                      DepSten->m_DSV);
+	checkGLError();
 }
 
 void COGLGraphiAPI::SetShaderResource(const std::vector<CTexture*>& pRTTex,
@@ -423,6 +496,8 @@ void COGLGraphiAPI::SetShaderResource(const std::vector<CTexture*>& pRTTex,
 		auto SamSt = reinterpret_cast<CTextureOGL*>(pRTTex.at(i));
 
 		//glTextureView()
+		checkGLError();
+
 	}
 	
 }
@@ -437,6 +512,8 @@ void COGLGraphiAPI::SetViewport(unsigned int NumViewport,
 		       TopLeftY,
 		       Width,
 		       Height);
+	checkGLError();
+
 }
 
 void COGLGraphiAPI::SetPrimitiveTopology(PRIMITIVE_TOPOLOGY Topology)
@@ -445,7 +522,8 @@ void COGLGraphiAPI::SetPrimitiveTopology(PRIMITIVE_TOPOLOGY Topology)
 
 void COGLGraphiAPI::SetDefaultRenderTarget()
 {
-	glBindFramebuffer(GL_FRAMEBUFFER, m_BackBuffer);
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	checkGLError();
 
 	//separar el depth y el render
 	//glEnable(GL_DEPTH_TEST);
@@ -455,6 +533,11 @@ void COGLGraphiAPI::SetDefaultRenderTarget()
 void COGLGraphiAPI::ClearRenderTarget(CTexture* RT,
 	                                 ColorStruct Color)
 {
+	glClearColor(Color.R, Color.G, Color.B, Color.A);
+	checkGLError();
+
+	glClear(GL_COLOR_BUFFER_BIT);
+	checkGLError();
 }
 
 void COGLGraphiAPI::ClearDepthStencil(CTexture* RT,
@@ -462,23 +545,27 @@ void COGLGraphiAPI::ClearDepthStencil(CTexture* RT,
 	                                  float Depth, 
 	                                  unsigned int Stencil)
 {
+	//glClear()
 }
 
 void COGLGraphiAPI::ClearDefaultRenderTargetAndDepthStencil(ColorStruct Color)
 {
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
-	glDisable(GL_DEPTH_TEST);
+	checkGLError();
 
 	glClearColor(Color.R, Color.G, Color.B, Color.A);
+	checkGLError();
+
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	checkGLError();
 }
 
 //tamaño de los datos
 void COGLGraphiAPI::UpdateSubresource(const void* Data, 
 	                                  CConstantBuffer& ConstantBufffer)
 {
-	
-	glLinkProgram(m_AttachShaderID);
+	checkGLError();
+
 
 }
 
@@ -503,45 +590,48 @@ void COGLGraphiAPI::SetRenderTarget(const std::vector<CTexture*>& pRTTex,
 
 		glBindFramebuffer(GL_FRAMEBUFFER, 
 			              pRTODL->m_RTV);
+		checkGLError();
 
 		glFramebufferTexture(GL_FRAMEBUFFER, 
 			                 GL_COLOR_ATTACHMENT0, 
 			                 pRTODL->m_Texture,
 			                 i);
+		checkGLError();
 	}
 }
-
-//glDrawBuffers donde usar?
 
 void COGLGraphiAPI::DrawIndexed(unsigned int NumIndex,
 	                            unsigned int StartindexLocation,
 	                            unsigned int BaseVertexLocation,
 	                            const void* Index)
 {
-	//glDrawArrays(GL_TRIANGLES, StartindexLocation, NumIndex);
-
-	glDrawElements(GL_TRIANGLES, NumIndex, GL_UNSIGNED_INT, Index);
-
+	glDrawElements(GL_TRIANGLES, NumIndex, GL_UNSIGNED_INT, 0);
+	checkGLError();
 }
 void COGLGraphiAPI::DrawInstanced(unsigned int VertexCountPerInstance, 
 	                              unsigned int InstanceCount, 
 	                              unsigned int StartVertexLocation, 
 	                              unsigned int StartInstanceLocation)
 {
-	//draw instance
 	glDrawArraysInstanced(GL_TRIANGLES, StartInstanceLocation, VertexCountPerInstance, InstanceCount);
+	checkGLError();
 }
 
 void COGLGraphiAPI::Draw(unsigned int VertexCount, 
 	                     unsigned int StartVertexLocation)
 {
 	glDrawArrays(GL_TRIANGLES, StartVertexLocation, VertexCount);
+	checkGLError();
 }
 
 void COGLGraphiAPI::Present()
 {
 	glfwSwapBuffers(m_window);
+	//checkGLError();
+
 	glfwPollEvents();
+	checkGLError();
+
 }
 
 //no es del API

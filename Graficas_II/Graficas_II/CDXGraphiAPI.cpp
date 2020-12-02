@@ -400,10 +400,11 @@ CPixelShader* CDXGraphiAPI::CreatePixelShaders(const std::string & FileName,
                                                const std::string & ShaderModel,
                                                int NumPixelShader)
 {
+    std::string Temp = FileName + "_DX.txt";
     auto PixelShader = new CPixelShaderDX();
 
-    std::wstring File(FileName.length(), L' ');
-    std::copy(FileName.begin(), FileName.end(), File.begin());
+    std::wstring File(Temp.length(), L' ');
+    std::copy(Temp.begin(), Temp.end(), File.begin());
 
     if (!PixelShader->CompilePixelShaderFromFile(File,
                                                 Entry,
@@ -434,10 +435,10 @@ CVertexShader* CDXGraphiAPI::CreateVertexShaders(const std::string &FileName,
                                                  const std::string &ShaderModel,
                                                  int NumVextexShader)
 {
+    std::string Temp= FileName + "_DX.txt";
     auto VertexShaders = new CVertexShaderDX();
-   
-    std::wstring File(FileName.length(), L' ');
-    std::copy(FileName.begin(), FileName.end(), File.begin()); 
+    std::wstring File(Temp.length(), L' ');
+    std::copy(Temp.begin(), Temp.end(), File.begin());
 
     if (!VertexShaders->CompileVertexShaderFromFile(File,
                                                     Entry,
