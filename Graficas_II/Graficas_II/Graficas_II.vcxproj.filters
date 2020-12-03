@@ -144,6 +144,18 @@
     <ClCompile Include="CCamera.cpp">
       <Filter>Archivos de origen\Clase Base</Filter>
     </ClCompile>
+    <ClCompile Include="CShaderProgram.cpp">
+      <Filter>Archivos de origen\Clase Base</Filter>
+    </ClCompile>
+    <ClCompile Include="CShaderProgramDX.cpp">
+      <Filter>Archivos de origen\ClasesDX</Filter>
+    </ClCompile>
+    <ClCompile Include="CShaderProgramOGL.cpp">
+      <Filter>Archivos de origen\ClasesOGL</Filter>
+    </ClCompile>
+    <ClCompile Include="CMesh.cpp">
+      <Filter>Archivos de origen</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="resource.h">
@@ -250,6 +262,18 @@
     </ClInclude>
     <ClInclude Include="CCamera.h">
       <Filter>Archivos de encabezado\Clase Base</Filter>
+    </ClInclude>
+    <ClInclude Include="CShaderProgram.h">
+      <Filter>Archivos de encabezado\Clase Base</Filter>
+    </ClInclude>
+    <ClInclude Include="CShaderProgramDX.h">
+      <Filter>Archivos de encabezado\ClasesDX</Filter>
+    </ClInclude>
+    <ClInclude Include="CShaderProgramOGL.h">
+      <Filter>Archivos de encabezado\ClasesOGL</Filter>
+    </ClInclude>
+    <ClInclude Include="CMesh.h">
+      <Filter>Archivos de encabezado</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

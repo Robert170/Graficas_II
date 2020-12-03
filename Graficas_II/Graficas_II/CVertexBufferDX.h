@@ -19,12 +19,15 @@
 
 class CVertexBufferDX : public CVertexBuffer
 {
+public:
+    /// Destructor
+    ~CVertexBufferDX();
+
 protected:
     /// Default Constructor
     CVertexBufferDX() = default;
 
-    /// Destructor
-    ~CVertexBufferDX();
+    
 
     //Separar los buffer en diferentes clases
 

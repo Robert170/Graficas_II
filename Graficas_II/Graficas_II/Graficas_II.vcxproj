@@ -88,13 +88,13 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)Includes\glfw-3.3.2.bin.WIN32\include;$(SolutionDir)Includes;$(SolutionDir)Includes\glad;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Assimp\include;$(SolutionDir)Includes\glfw-3.3.2.bin.WIN32\include;$(SolutionDir)Includes;$(SolutionDir)Includes\glad;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>opengl32.lib;glfw3.lib;%(AdditionalDependencies);d3d11.lib;d3dcompiler.lib;dxguid.lib</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(SolutionDir)Includes\glfw-3.3.2.bin.WIN32\lib-vc2019;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)Assimp\Librerias x86;$(SolutionDir)Includes\glfw-3.3.2.bin.WIN32\lib-vc2019;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -162,6 +162,7 @@
     <ClCompile Include="CInputLayout.cpp" />
     <ClCompile Include="CInputLayoutDX.cpp" />
     <ClCompile Include="CInputLayoutOGL.cpp" />
+    <ClCompile Include="CMesh.cpp" />
     <ClCompile Include="COGLGraphiAPI.cpp" />
     <ClCompile Include="CPixelShader.cpp" />
     <ClCompile Include="CPixelShaderDX.cpp" />
@@ -172,6 +173,9 @@
     <ClCompile Include="CSamplerState.cpp" />
     <ClCompile Include="CSamplerStateDX.cpp" />
     <ClCompile Include="CSamplerStateOGL.cpp" />
+    <ClCompile Include="CShaderProgram.cpp" />
+    <ClCompile Include="CShaderProgramDX.cpp" />
+    <ClCompile Include="CShaderProgramOGL.cpp" />
     <ClCompile Include="CTexture.cpp" />
     <ClCompile Include="CTextureDX.cpp" />
     <ClCompile Include="CTextureOGL.cpp" />
@@ -200,6 +204,7 @@
     <ClInclude Include="CInputLayout.h" />
     <ClInclude Include="CInputLayoutDX.h" />
     <ClInclude Include="CInputLayoutOGL.h" />
+    <ClInclude Include="CMesh.h" />
     <ClInclude Include="COGLGraphiAPI.h" />
     <ClInclude Include="CPixelShader.h" />
     <ClInclude Include="CPixelShaderDX.h" />
@@ -210,6 +215,9 @@
     <ClInclude Include="CSamplerState.h" />
     <ClInclude Include="CSamplerStateDX.h" />
     <ClInclude Include="CSamplerStateOGL.h" />
+    <ClInclude Include="CShaderProgram.h" />
+    <ClInclude Include="CShaderProgramDX.h" />
+    <ClInclude Include="CShaderProgramOGL.h" />
     <ClInclude Include="CTexture.h" />
     <ClInclude Include="CTextureDX.h" />
     <ClInclude Include="CTextureOGL.h" />

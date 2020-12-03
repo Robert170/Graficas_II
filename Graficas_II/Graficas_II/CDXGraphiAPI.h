@@ -102,7 +102,42 @@ public:
 	  * @brief public functions
 	*/
 
+	/**
+	  * @brief      InitMatrixWorld function, to init the world matrix
+	  * @param      MatrixWorld parameter one, a matrix world to modificate
+	  * @return     Returns a world matrix initializaded
+	*/
+	glm::mat4 InitMatrixWorld(glm::mat4& MatrixWorld);
 
+	/**
+	  * @brief      InitMatrixView function, to init the view matrix
+	  * @param      MatrixView parameter one, a matrix view to modificate
+	  * @param      Eye parameter one, eye for the matrix
+	  * @param      At parameter one, lookat for the matrix
+	  * @param      Up parameter one, lookat for the matrix
+	  * @return     Returns a view matrix initializaded
+	*/
+	glm::mat4 InitMatrixView(glm::mat4& MatrixView,
+		                     glm::vec3& Eye,
+		                     glm::vec3& At,
+		                     glm::vec3& Up);
+
+	/**
+	  * @brief      InitMatrixProjection function, to init the view matrix
+	  * @param      MatrixProjection parameter one, a matrix projection to modificate
+	  * @param      Fov parameter one,feel of view for the matrix
+	  * @param      Height parameter one, Height for the matrix
+	  * @param      Width parameter one, Width for the matrix
+	  * @param      Near parameter one, Near for the matrix
+	  * @param      Far parameter one, Far for the matrix
+	  * @return     Returns a view matrix initializaded
+	*/
+	glm::mat4 InitMatrixProjection(glm::mat4& MatrixProjection,
+		                           float& Fov,
+		                           float& Height,
+		                           float& Width,
+		                           float& Near,
+		                           float& Far);
 	//create
 
 	/**
@@ -176,6 +211,27 @@ public:
     void CreateTexture3D() override;
 
 	/**
+	  * @brief      CreateShaderProgram function, to create shader program
+	  * @param      FileNameVS parameter one, name of the file of the vertex shader
+	  * @param      FileNamePS parameter two, name of the file of the pixel shader
+	  * @param      EntryVS parameter three, point of entry in the file vertex shader
+	  * @param      EntryPS parameter four, point of entry in the file pixel shader
+	  * @param      ShaderModelVS parameter five, shader model vertex shader
+	  * @param      ShaderModelPS parameter six, shader model pixel shader
+	  * @param      NumVertexShader parameter seven, number of the vertex shader
+	  * @param      NumPixelShader parameter eigth, number of the pixel shader
+	  * @bug		No know Bugs
+	  * @return     Returns a pointer of CPixelShader
+	*/
+	CShaderProgram* CreateShaderProgram(const std::string& FileNameVS,
+		                                const std::string& FileNamePS,
+		                                const std::string& EntryVS,
+		                                const std::string& EntryPS,
+		                                const std::string& ShaderModelVS,
+		                                const std::string& ShaderModelPS,
+		                                int NumVertexShader,
+		                                int NumPixelShader);
+	/**
 	  * @brief      CreatePixelShaders function, to create pixel shader
 	  * @param      FileName parameter one, name of the file of the pixel shader
 	  * @param      Entry parameter two, point of entry in the file
@@ -211,7 +267,7 @@ public:
 	  * @bug		   No know Bugs
 	  * @return     Returns a pointer of CInputLayout
 	*/
-	CInputLayout* CreateInputLayout(CVertexShader & Vertex, 
+	CInputLayout* CreateInputLayout(CShaderProgram& Vertex,
 		                            InputLayout_Desc& LayoutDesc,
 		                            unsigned int NumInputLayout) override;
 
@@ -286,6 +342,14 @@ public:
 	void SetPixelShaderConstantBuffer(CConstantBuffer*ConstBuff,
 		                              unsigned int StartSlot,
 		                              unsigned int NumBuffer) override;
+
+	/**
+	  * @brief      SetShaderProgram function, to set pixel and vertex shader
+	  * @param      Pixel parameter one, a pointer of CShaderProgram
+	  * @bug		No know Bugs
+	  * @return     Returns nothing
+	*/
+	void SetShaderProgram(CShaderProgram* ShaderProgram);
 
 	/**
 	  * @brief      SetPixelShaders function, to set pixel shader

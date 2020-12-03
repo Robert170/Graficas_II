@@ -21,6 +21,9 @@
 
 class CVertexShaderDX :public CVertexShader
 {
+public:
+	/// Destructor
+	~CVertexShaderDX();
 protected:
 
 	/**
@@ -30,8 +33,7 @@ protected:
 	/// Default Constructor
 	CVertexShaderDX() = default;
 
-	/// Destructor
-	~CVertexShaderDX();
+	
 
 
 	/**

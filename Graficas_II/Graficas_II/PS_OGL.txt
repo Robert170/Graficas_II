@@ -1,0 +1,18 @@
+#version 420 core
+
+layout (std140, binding = 0) uniform cbNeverChanges 
+{
+    mat4 View;
+    mat4 Projection;
+    mat4 World;
+    vec4 vMeshColor;
+};
+
+out vec4 OutFragColor;
+
+void main()
+{
+    OutFragColor = vMeshColor;
+}
+
+ 

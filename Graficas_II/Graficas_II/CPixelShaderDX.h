@@ -20,6 +20,10 @@
 #include <d3dcompiler.h>
 class CPixelShaderDX : public CPixelShader
 {
+public:
+	/// Destructor
+	~CPixelShaderDX();
+
 protected:
 
 	/**
@@ -29,8 +33,7 @@ protected:
 	/// Default Constructor
 	CPixelShaderDX() = default;
 
-	/// Destructor
-	~CPixelShaderDX();
+	
 
 	/**
 	 * @brief      CompilePixelShaderFromFile function, to compile a shader from a file

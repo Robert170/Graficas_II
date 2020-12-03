@@ -32,6 +32,7 @@ class CPixelShader;
 class CVertexShader;
 class CInputLayout;
 class CRasterizerState;
+class CShaderProgram;
 
 using TEXTURE_FORMAT = enum
 {
@@ -328,6 +329,44 @@ public:
 		CreateDeviceandSwap();
 	}
 
+
+	/**
+	  * @brief      InitMatrixWorld function, to init the world matrix
+	  * @param      MatrixWorld parameter one, a matrix world to modificate
+	  * @return     Returns a world matrix initializaded
+	*/
+	virtual glm::mat4 InitMatrixWorld(glm::mat4& MatrixWorld) = 0;
+
+	/**
+	  * @brief      InitMatrixView function, to init the view matrix
+	  * @param      MatrixView parameter one, a matrix view to modificate
+	  * @param      Eye parameter one, eye for the matrix
+	  * @param      At parameter one, lookat for the matrix
+	  * @param      Up parameter one, lookat for the matrix
+	  * @return     Returns a view matrix initializaded
+	*/
+	virtual glm::mat4 InitMatrixView(glm::mat4& MatrixView,
+		                             glm::vec3& Eye,
+		                             glm::vec3& At,
+		                             glm::vec3& Up) = 0;
+
+	/**
+	  * @brief      InitMatrixProjection function, to init the view matrix
+	  * @param      MatrixProjection parameter one, a matrix projection to modificate
+	  * @param      Fov parameter one,feel of view for the matrix
+	  * @param      Height parameter one, Height for the matrix
+	  * @param      Width parameter one, Width for the matrix
+	  * @param      Near parameter one, Near for the matrix
+	  * @param      Far parameter one, Far for the matrix
+	  * @return     Returns a view matrix initializaded
+	*/
+	virtual glm::mat4 InitMatrixProjection(glm::mat4& MatrixProjection,
+		                                   float &Fov,
+		                                   float &Height,
+		                                   float &Width,
+		                                   float &Near,
+		                                   float &Far) = 0;
+
 	//create
 	
 
@@ -385,7 +424,7 @@ public:
 	  * @param      width parameter one, width of the texture
 	  * @param      height parameter two, height of the texture
 	  * @param      numberTexture parameter three, Number of the texture we are create
-	  * @param      format parameter fourth, format for the desc of the txture
+	  * @param      format parameter four, format for the desc of the txture
 	  * @param      bindFlags parameter five, bind Flags for the desc of the txture
 	  * @param      Usage parameter six, Usage for the desc of the txture
 	  * @bug		   No know Bugs
@@ -405,13 +444,34 @@ public:
 	*/
 	virtual void CreateTexture3D() = 0;
 
+	/**
+	  * @brief      CreateShaderProgram function, to create shader program
+	  * @param      FileNameVS parameter one, name of the file of the vertex shader
+	  * @param      FileNamePS parameter two, name of the file of the pixel shader
+	  * @param      EntryVS parameter three, point of entry in the file vertex shader
+	  * @param      EntryPS parameter four, point of entry in the file pixel shader
+	  * @param      ShaderModelVS parameter five, shader model vertex shader
+	  * @param      ShaderModelPS parameter six, shader model pixel shader
+	  * @param      NumVertexShader parameter seven, number of the vertex shader
+	  * @param      NumPixelShader parameter eigth, number of the pixel shader
+	  * @bug		No know Bugs
+	  * @return     Returns a pointer of CPixelShader
+	*/
+	virtual CShaderProgram* CreateShaderProgram(const std::string& FileNameVS,
+		                                        const std::string& FileNamePS,
+		                                        const std::string& EntryVS = "",
+		                                        const std::string& EntryPS = "",
+		                                        const std::string& ShaderModelVS = "",
+		                                        const std::string& ShaderModelPS = "",
+		                                        int NumVertexShader = 0,
+		                                        int NumPixelShader = 0) = 0; //no va
 
 	/**
 	  * @brief      CreatePixelShaders function, to create pixel shader
 	  * @param      FileName parameter one, name of the file of the pixel shader
 	  * @param      Entry parameter two, point of entry in the file
 	  * @param      ShaderModel parameter three, shader model of pixel shader
-	  * @param      NumPixelShader parameter fourth, number of the pixel shader
+	  * @param      NumPixelShader parameter four, number of the pixel shader
 	  * @bug		   No know Bugs
 	  * @return     Returns a pointer of CPixelShader
 	*/
@@ -419,12 +479,14 @@ public:
 		                                     const std::string & Entry = "",
 		                                     const std::string & ShaderModel = "",
 		                                     int NumPixelShader = 0) = 0; //no va
+
+
 	/**
 	  * @brief      CreateVertexShaders function, to create vertex shader
 	  * @param      FileName parameter one, name of the file of the vertex shader
 	  * @param      Entry parameter two, point of entry in the file
 	  * @param      ShaderModel parameter three, shader model of vertex shader
-	  * @param      NumVertexShader parameter fourth, number of the vertex shader
+	  * @param      NumVertexShader parameter four, number of the vertex shader
 	  * @bug		   No know Bugs
 	  * @return     Returns a pointer of CVertexShader
 	*/
@@ -440,7 +502,7 @@ public:
 	  * @bug		   No know Bugs
 	  * @return     Returns a pointer of CInputLayout
 	*/
-	virtual CInputLayout* CreateInputLayout(CVertexShader & Vertex,
+	virtual CInputLayout* CreateInputLayout(CShaderProgram & Vertex,
 		                                    InputLayout_Desc &LayoutDesc,
 		                                    unsigned int NumInputLayout = 0) = 0; //no va
 
@@ -467,7 +529,7 @@ public:
 	  * @param      VerBuff parameter one, a pointer of CVertexBuffer
 	  * @param      StartSlot parameter two, start slot for set vertex buffer
 	  * @param      NumBuffer parameter three, number of buffer
-	  * @param      stride parameter fourth, stride for set vertex buffer
+	  * @param      stride parameter four, stride for set vertex buffer
 	  * @param      offset parameter five, offset for set vertex buffer
 	  * @bug		   No know Bugs
 	  * @return     Returns nothing
@@ -514,7 +576,13 @@ public:
 		                                      unsigned int StartSlot,
 		                                      unsigned int NumBuffers) = 0;
 
-	
+	/**
+	  * @brief      SetShaderProgram function, to set pixel and vertex shader
+	  * @param      Pixel parameter one, a pointer of CShaderProgram
+	  * @bug		No know Bugs
+	  * @return     Returns nothing
+	*/
+	virtual void SetShaderProgram(CShaderProgram* ShaderProgram) = 0;
 
 
 	/**
@@ -594,7 +662,7 @@ public:
 	  * @param      NumViewport parameter one, number of viewport
 	  * @param      Width parameter two, width for the desc of viewport
 	  * @param      Height parameter three, height for the desc of viewport
-	  * @param      TopLeftX parameter fourth, TopLeftX for the desc of viewport
+	  * @param      TopLeftX parameter four, TopLeftX for the desc of viewport
 	  * @param      TopLeftY parameter five, TopLeftY for the desc of viewport
 	  * @bug		   No know Bugs
 	  * @return     Returns nothing

@@ -4,6 +4,7 @@
 #include "CIndexBufferDX.h"
 #include "CVertexBufferDX.h"
 #include "CConstantBufferDX.h"
+#include "CShaderProgramDX.h"
 #include "CVertexShaderDX.h"
 #include "CPixelShaderDX.h"
 #include "CSamplerStateDX.h"
@@ -49,6 +50,41 @@ CDXGraphiAPI::CDXGraphiAPI()
 
 CDXGraphiAPI::~CDXGraphiAPI()
 {
+}
+
+glm::mat4 CDXGraphiAPI::InitMatrixWorld(glm::mat4& MatrixWorld)
+{
+    MatrixWorld = glm::mat4(1.0);
+
+    return glm::transpose(MatrixWorld);
+}
+
+glm::mat4 CDXGraphiAPI::InitMatrixView(glm::mat4& MatrixView, 
+                                       glm::vec3& Eye,
+                                       glm::vec3& At, 
+                                       glm::vec3& Up)
+{
+    ////init view matrix
+    MatrixView = glm::lookAtLH(Eye,
+                               At,
+                               Up);
+
+    return glm::transpose(MatrixView);
+}
+
+glm::mat4 CDXGraphiAPI::InitMatrixProjection(glm::mat4& MatrixProjection, 
+                                             float& Fov, 
+                                             float& Height, 
+                                             float& Width, 
+                                             float& Near, 
+                                             float& Far)
+{
+    MatrixProjection = glm::perspectiveFovLH(Fov,
+                                             Height,
+                                             Width,
+                                             Near,
+                                             Far);
+    return glm::transpose(MatrixProjection);
 }
 
 //fuction to create a window
@@ -394,6 +430,77 @@ void CDXGraphiAPI::CreateTexture3D()
 {
 } //falta
 
+CShaderProgram* CDXGraphiAPI::CreateShaderProgram(const std::string& FileNameVS, 
+                                                  const std::string& FileNamePS, 
+                                                  const std::string& EntryVS, 
+                                                  const std::string& EntryPS, 
+                                                  const std::string& ShaderModelVS,
+                                                  const std::string& ShaderModelPS,
+                                                  int NumVertexShader,
+                                                  int NumPixelShader)
+{
+    auto ShaderProgram = new CShaderProgramDX();
+
+    //vertexShder
+    std::string Temp = FileNameVS + "_DX.txt";
+    ShaderProgram->m_VertexShaderProgram = new CVertexShaderDX();
+    std::wstring FileVS(Temp.length(), L' ');
+    std::copy(Temp.begin(), Temp.end(), FileVS.begin());
+
+    if (!ShaderProgram->m_VertexShaderProgram->CompileVertexShaderFromFile(FileVS,
+                                                    EntryVS,
+                                                    ShaderModelVS,
+                                                    &ShaderProgram->m_VertexShaderProgram->m_pVSBlob))
+    {
+        std::cout << "//Error fallo la compilacion del shader" << std::endl;
+        delete ShaderProgram;
+        return nullptr;
+    }
+
+    HRESULT hr = m_pd3dDevice->CreateVertexShader(ShaderProgram->m_VertexShaderProgram->m_pVSBlob->GetBufferPointer(),
+                                                  ShaderProgram->m_VertexShaderProgram->m_pVSBlob->GetBufferSize(),
+                                                  nullptr,
+                                                  &ShaderProgram->m_VertexShaderProgram->m_VertexShader);
+    if (FAILED(hr))
+    {
+        delete ShaderProgram;
+        std::cout << "//Error fallo la creacion del vertex shader" << std::endl;
+        ///error
+        return nullptr;
+    }
+
+
+    //pixel shader
+    Temp = FileNamePS + "_DX.txt";
+    ShaderProgram->m_PixelShaderProgram = new CPixelShaderDX();
+
+    std::wstring FilePS(Temp.length(), L' ');
+    std::copy(Temp.begin(), Temp.end(), FilePS.begin());
+
+    if (!ShaderProgram->m_PixelShaderProgram->CompilePixelShaderFromFile(FilePS,
+                                                 EntryPS,
+                                                 ShaderModelPS,
+                                                 &ShaderProgram->m_PixelShaderProgram->m_pPSBlob))
+    {
+        std::cout << " //error fallo la compilacion del shader" << std::endl;
+        return nullptr;
+    }
+
+    hr = m_pd3dDevice->CreatePixelShader(ShaderProgram->m_PixelShaderProgram->m_pPSBlob->GetBufferPointer(),
+        ShaderProgram->m_PixelShaderProgram->m_pPSBlob->GetBufferSize(),
+                                         nullptr,
+                                         &ShaderProgram->m_PixelShaderProgram->m_PixelShader);
+
+    if (FAILED(hr))
+    {
+        delete ShaderProgram;
+        std::cout << "//error fallo la creacion del Pixel shader" << std::endl;
+        return nullptr;
+    }
+
+    return ShaderProgram;
+}
+
 //fuction to create a pixel shader
 CPixelShader* CDXGraphiAPI::CreatePixelShaders(const std::string & FileName,
                                                const std::string & Entry,
@@ -464,12 +571,12 @@ CVertexShader* CDXGraphiAPI::CreateVertexShaders(const std::string &FileName,
 }
 
 //fuction to create an input layout,
-CInputLayout* CDXGraphiAPI::CreateInputLayout(CVertexShader &Vertex,
+CInputLayout* CDXGraphiAPI::CreateInputLayout(CShaderProgram&Vertex,
                                               InputLayout_Desc& LayoutDesc,
                                               unsigned int NumInputLayout)
 {
     auto InputLayout = new CInputLayoutDX();
-    auto& VertexShaderBlob = reinterpret_cast<CVertexShaderDX&>(Vertex);
+    auto& VertexShaderBlob = reinterpret_cast<CShaderProgramDX&>(Vertex);
     
 
     vector<D3D11_INPUT_ELEMENT_DESC> layout;
@@ -531,10 +638,11 @@ CInputLayout* CDXGraphiAPI::CreateInputLayout(CVertexShader &Vertex,
    
     HRESULT  hr = m_pd3dDevice->CreateInputLayout(layout.data(), 
                                                   layout.size(),
-                                                  VertexShaderBlob.m_pVSBlob->GetBufferPointer(),
-                                                  VertexShaderBlob.m_pVSBlob->GetBufferSize(),
+                                                  VertexShaderBlob.m_VertexShaderProgram->m_pVSBlob->GetBufferPointer(),
+                                                  VertexShaderBlob.m_VertexShaderProgram->m_pVSBlob->GetBufferSize(),
                                                   &InputLayout->m_pInputLayout);
-    VertexShaderBlob.m_pVSBlob->Release();
+
+    VertexShaderBlob.m_VertexShaderProgram->m_pVSBlob->Release();
 
     if (FAILED(hr))
     {
@@ -599,6 +707,8 @@ void CDXGraphiAPI::SetPixelShaderConstantBuffer(CConstantBuffer* ConstBuff,
                                               &Buffer->m_pConstantBuffer);
 }
 
+
+
 //fuction to set an index buffer 
 void CDXGraphiAPI::SetIndexBuffer(CIndexBuffer* IndBuff,
                                   unsigned int offset)
@@ -630,6 +740,18 @@ void CDXGraphiAPI::SetVertexBuffer(CVertexBuffer* VerBuff,
                                             &VertexBuff->m_Offset);
 }
 
+void CDXGraphiAPI::SetShaderProgram(CShaderProgram* ShaderProgram)
+{
+
+    auto* ShaderPr = reinterpret_cast<CShaderProgramDX*>(ShaderProgram);
+    m_pImmediateContext->PSSetShader(ShaderPr->m_PixelShaderProgram->m_PixelShader,
+                                     nullptr,
+                                     0);
+
+    m_pImmediateContext->VSSetShader(ShaderPr->m_VertexShaderProgram->m_VertexShader,
+                                     nullptr,
+                                     0);
+}
 
 //fuction to set a pixel shader 
 void CDXGraphiAPI::SetPixelShaders(CPixelShader* Pixel)

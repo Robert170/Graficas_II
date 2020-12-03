@@ -3,8 +3,9 @@
 #include "CDXGraphiAPI.h"
 #include <windows.h>
 
-//CGraphiAPI* API = new CDXGraphiAPI();
-CGraphiAPI* API = new COGLGraphiAPI();
+
+CGraphiAPI* API = new CDXGraphiAPI();
+//CGraphiAPI* API = new COGLGraphiAPI();
 
 //Textures
 CTexture* g_pRenderTarget = nullptr;
@@ -20,7 +21,7 @@ std::vector<std::string> g_vSemanticNames;
 //Shader
 CVertexShader* g_pVertexShader = nullptr;
 CPixelShader* g_pPixelShader = nullptr;
-
+CShaderProgram* g_pShaderProgram = nullptr;
 CInputLayout* g_pInputLayout = nullptr;
 
 //Buffers
@@ -54,26 +55,7 @@ struct CBNeverChanges
 
 CBNeverChanges g_ConstantBuffer;
 
-std::vector<uint32_t> indices =
-{
-	3,1,0,
-	2,1,3,
 
-	6,4,5,
-	7,4,6,
-
-	11,9,8,
-	10,9,11,
-
-	14,12,13,
-	15,12,14,
-
-	19,17,16,
-	18,17,19,
-
-	22,20,21,
-	23,20,22
-};
 
 void Init()
 {
@@ -91,6 +73,26 @@ void Init()
 	glm::vec3 At = { 0.0f, 1.0f, 0.0f };
 	glm::vec3 Up = { 0.0f, 1.0f, 0.0f };
 
+	std::vector<uint32_t> indices =
+	{
+		3,1,0,
+		2,1,3,
+
+		6,4,5,
+		7,4,6,
+
+		11,9,8,
+		10,9,11,
+
+		14,12,13,
+		15,12,14,
+
+		19,17,16,
+		18,17,19,
+
+		22,20,21,
+		23,20,22
+	};
 	
 
 	std::vector<SimpleVertex> vertices =
@@ -162,11 +164,20 @@ void Init()
 
 	g_vShaderResources.push_back(g_pShaderResource);*/
 
+
+	g_pShaderProgram = API->CreateShaderProgram("VS", 
+		                                        "PS", 
+		                                        "VS", 
+		                                        "PS", 
+		                                        "vs_4_0", 
+		                                        "ps_4_0", 
+		                                        1,
+		                                        1);
 	// Create the vertex shader
-	g_pVertexShader = API->CreateVertexShaders("VS",
+	/*g_pVertexShader = API->CreateVertexShaders("VS",
 			                                   "VS",
 			                                   "vs_4_0",
-			                                    1);
+			                                    1);*/
 
     /*g_pVertexShader = API->CreateVertexShaders("Tutorial07.fx",
 			                                   "VS",
@@ -181,14 +192,14 @@ void Init()
 	g_InpLayDesc.Formats.push_back(TF_R32G32_FLOAT);
 
 	// Create the input layout
-	g_pInputLayout = API->CreateInputLayout(*g_pVertexShader,
+	g_pInputLayout = API->CreateInputLayout(*g_pShaderProgram,
 		                                    g_InpLayDesc,1);
 
 	// Create the pixel shader
-	g_pPixelShader = API->CreatePixelShaders("PS",
+	/*g_pPixelShader = API->CreatePixelShaders("PS",
 		                                     "PS",
 		                                     "ps_4_0",
-		                                     1);
+		                                     1);*/
 	/*g_pPixelShader = API->CreatePixelShaders("Tutorial07.fx",
 		                                     "PS",
 		                                     "ps_4_0", 
@@ -206,30 +217,22 @@ void Init()
 
 	// Create the constant buffers
 
-	////Init World Matrix
-	g_World = glm::mat4(1.0);
+	
 
-	////init view matrix
-	g_View = glm::lookAtLH(Eye,
-		At,
-		Up);
+	g_ConstantBuffer.mView = API->InitMatrixView(g_View,
+		                                         Eye,
+		                                         At,
+		                                         Up);
 
-	////init projection matrix
-	g_Projection = glm::perspectiveFovLH(Data.Fov,
-		                                 Data.H,
-		                                 Data.W,
-		                                 Data.Near,
-		                                 Data.Far);
+	g_ConstantBuffer.mProjection = API->InitMatrixProjection(g_Projection,
+		                                                     Data.Fov,
+		                                                     Data.H,
+		                                                     Data.W,
+		                                                     Data.Near,
+		                                                     Data.Far);
 
-	//g_ConstantBuffer.mView = glm::transpose(g_View);
-	//g_ConstantBuffer.mProjection = glm::transpose(g_Projection);
-	//g_ConstantBuffer.mWorld = glm::transpose(g_World);
-
-
-	g_ConstantBuffer.mView = g_View;
-	g_ConstantBuffer.mProjection = g_Projection;
-	g_ConstantBuffer.mWorld = g_World;
-
+	g_ConstantBuffer.mWorld = API->InitMatrixWorld(g_World);
+	
 	g_ConstantBuffer.vMeshColor = g_MeshColor;
 
 	g_pCBNeverChanges = API->CreateConstantBuffer(sizeof(CBNeverChanges),
@@ -244,10 +247,6 @@ void Init()
 
 	//g_vSamplers.push_back(g_pSamplerState);
 
-	
-		                                
-	
-	
 }
 
 void Update()
@@ -308,10 +307,11 @@ void Render()
 
 	API->ClearDefaultRenderTargetAndDepthStencil(Color);
 
-	
+	//shader program
+	API->SetShaderProgram(g_pShaderProgram);
 
 	//set vertex shader
-	API->SetVertexShaders(g_pVertexShader);
+	//API->SetVertexShaders(g_pVertexShader);
 
 	//set all vertex shader constant buffer
 
@@ -322,7 +322,7 @@ void Render()
 	
 
 	//set pixel shader
-	API->SetPixelShaders(g_pPixelShader);
+	//API->SetPixelShaders(g_pPixelShader);
 
 	//set pixel shader constant buffer
 
@@ -339,7 +339,7 @@ void Render()
 	API->DrawIndexed(36,
 		             0,
 		             0,
-		             &indices);
+		             nullptr);
 	API->Present();
 }
 
