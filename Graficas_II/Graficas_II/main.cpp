@@ -5,8 +5,8 @@
 #include <windows.h>
 
 
-//CGraphiAPI* API = new CDXGraphiAPI();
-CGraphiAPI* API = new COGLGraphiAPI();
+CGraphiAPI* API = new CDXGraphiAPI();
+//CGraphiAPI* API = new COGLGraphiAPI();
 
 //Textures
 CTexture* g_pRenderTarget = nullptr;
@@ -195,7 +195,7 @@ void Init()
 	g_InpLayDesc.Formats.push_back(TF_R32G32_FLOAT);
 
 	g_Model = new CModel();
-	g_Model->Init("Modelo/Animacion/Knuckles.fbx", 
+	g_Model->Init("Modelo/Scene.fbx", 
 		          API, 
 		          g_InpLayDesc);
 	
@@ -346,10 +346,10 @@ void Render()
 	/*API->SetSamplerState(g_vSamplers,
 		                 0);*/
 	g_Model->Draw(*g_pShaderProgram, API);
-	API->DrawIndexed(36,
+	/*API->DrawIndexed(36,
 		             0,
 		             0,
-		             nullptr);
+		             nullptr);*/
 	API->Present();
 }
 
