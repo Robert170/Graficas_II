@@ -18,6 +18,9 @@
 #include <d3dcompiler.h>
 class CRasterizerStateDX : public CRasterizerState
 {
+public:
+	/// Destructor
+	~CRasterizerStateDX();
 protected:
 
 	/**
@@ -26,9 +29,6 @@ protected:
 
 	/// Default Constructor
 	CRasterizerStateDX() = default;
-
-	/// Destructor
-	~CRasterizerStateDX();
 
 	/**
 	  * @brief protected variables member

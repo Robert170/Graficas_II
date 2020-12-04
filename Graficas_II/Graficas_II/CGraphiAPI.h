@@ -33,6 +33,7 @@ class CVertexShader;
 class CInputLayout;
 class CRasterizerState;
 class CShaderProgram;
+class CModel;
 
 using TEXTURE_FORMAT = enum
 {
@@ -366,6 +367,17 @@ public:
 		                                   float &Width,
 		                                   float &Near,
 		                                   float &Far) = 0;
+
+	/**
+	  * @brief      LoadModel function, to load model
+	  * @param      API parameter one, Api to have acces the functions
+	  * @param      ID parameter two, id for the vertex buffer
+	  * @bug		   No know Bugs
+	  * @return     Returns a pointer of CBuffer
+	*/
+	/*virtual CModel* LoadModel(CGraphiAPI* API, 
+		                      InputLayout_Desc InpLayDesc, 
+		                      std::string Path) = 0;*/
 
 	//create
 	
@@ -718,7 +730,7 @@ public:
 	/**
 	  * @brief      ClearDefaultRenderTargetAndDepthStencil function, to
 	  *             clear default render target and depth stencil
-	  * @param      Color parameter two, of for the color of back buffer
+	  * @param      Color parameter one, of for the color of back buffer
 	  * @bug		No know Bugs
 	  * @return     Returns nothing
 	*/
@@ -733,11 +745,19 @@ public:
 	//draw
 
 	/**
+	  * @brief      DrawModel function, to draw model
+	  * @param      ShaderPro parameter one, shader program for the model
+	  * @bug		No know Bugs
+	  * @return     Returns nothing
+	*/
+	//virtual void DrawModel(CShaderProgram& ShaderPro) = 0;
+
+	/**
 	  * @brief      DrawIndexed function, to draw
 	  * @param      SizeIndex parameter one, num of index
 	  * @param      StartindexLocation parameter two, start index location
 	  * @param      BaseVertexLocation parameter two, base vertex location
-	  * @bug		   No know Bugs
+	  * @bug		No know Bugs
 	  * @return     Returns nothing
 	*/
 	virtual void DrawIndexed(unsigned int NumIndex,

@@ -18,13 +18,15 @@
 #include <d3dcompiler.h>
 class CInputLayoutDX : public CInputLayout
 {
+public:
+	/// Destructor
+	~CInputLayoutDX();
 protected:
 
 	/// Default Constructor
 	CInputLayoutDX() = default;
 
-	/// Destructor
-	~CInputLayoutDX();
+	
 
 	/**
 	  * @brief protected variables member

@@ -20,6 +20,9 @@
 
 class CTextureDX : public CTexture
 {
+public:
+	/// Destructor
+	~CTextureDX();
 protected:
 	/**
 	  * @brief protected functions
@@ -28,8 +31,7 @@ protected:
 	/// Default Constructor
 	CTextureDX() = default;
 
-	/// Destructor
-	~CTextureDX();
+	
 
 	/**
 	  * @brief protected variables member

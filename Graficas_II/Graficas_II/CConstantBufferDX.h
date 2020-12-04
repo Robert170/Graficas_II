@@ -19,12 +19,12 @@
 #include <d3dcompiler.h>
 class CConstantBufferDX : public CConstantBuffer
 {
+public:
+    /// Destructor
+    ~CConstantBufferDX();
 protected:
     /// Default Constructor
     CConstantBufferDX() = default;
-
-    /// Destructor
-    ~CConstantBufferDX();
 
     //Separar los buffer en diferentes clases
 

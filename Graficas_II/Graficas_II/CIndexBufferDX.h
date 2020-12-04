@@ -18,12 +18,12 @@
 #include <d3dcompiler.h>
 class CIndexBufferDX : public CIndexBuffer
 {
+public:
+    /// Destructor
+    ~CIndexBufferDX();
 protected:
     /// Default Constructor
     CIndexBufferDX() = default;
-
-    /// Destructor
-    ~CIndexBufferDX();
 
     //Separar los buffer en diferentes clases
 

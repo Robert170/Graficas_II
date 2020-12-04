@@ -8,6 +8,7 @@
 #include "CInputLayoutOGL.h"
 #include "CSamplerStateOGL.h"
 #include "CShaderProgramOGL.h"
+#include "CModel.h"
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 
@@ -99,6 +100,17 @@ glm::mat4 COGLGraphiAPI::InitMatrixProjection(glm::mat4& MatrixProjection,
 		                                     Far);
 	return MatrixProjection;
 }
+
+//CModel* COGLGraphiAPI::LoadModel(CGraphiAPI* API, 
+//	                             InputLayout_Desc InpLayDesc, 
+//	                             std::string Path)
+//{
+//	
+//	ModelOgl->Init(Path, 
+//		           API,
+//		           InpLayDesc);
+//	return ModelOgl;
+//}
 
 
 CVertexBuffer* COGLGraphiAPI::CreateVertexBuffer(const std::vector <SimpleVertex>& Ver,
@@ -267,80 +279,85 @@ CShaderProgram* COGLGraphiAPI::CreateShaderProgram(const std::string& FileNameVS
 	// vertex Shader
 	std::string RealName = FileNameVS + "_OGL.txt";
 
-	auto VertexShader = new CVertexShaderOGL();
+	ShaderProgram->m_VertexShaderProgram = new CVertexShaderOGL();
 
-	std::string Temp = VertexShader->ReadFile(RealName);
+	std::string Temp = ShaderProgram->m_VertexShaderProgram->ReadFile(RealName);
 
 	const char* VertexCode = Temp.c_str();
 
-	VertexShader->m_VertexShader = glCreateShader(GL_VERTEX_SHADER);
+	ShaderProgram->m_VertexShaderProgram->m_VertexShader = glCreateShader(GL_VERTEX_SHADER);
 
-	glShaderSource(VertexShader->m_VertexShader,
+	glShaderSource(ShaderProgram->m_VertexShaderProgram->m_VertexShader,
 		           NumVertexShader,
 		           &VertexCode,
 		           nullptr);
 
-	glCompileShader(VertexShader->m_VertexShader);
+	glCompileShader(ShaderProgram->m_VertexShaderProgram->m_VertexShader);
 
 	GLint isCompiled = 0;
 
-	glGetShaderiv(VertexShader->m_VertexShader, GL_COMPILE_STATUS, &isCompiled);
+	glGetShaderiv(ShaderProgram->m_VertexShaderProgram->m_VertexShader, 
+		          GL_COMPILE_STATUS, 
+		          &isCompiled);
 
 	if (isCompiled == GL_FALSE) {
 
 		GLint maxLength = 0;
-		glGetShaderiv(VertexShader->m_VertexShader, GL_INFO_LOG_LENGTH, &maxLength);
+		glGetShaderiv(ShaderProgram->m_VertexShaderProgram->m_VertexShader, 
+			          GL_INFO_LOG_LENGTH, 
+			          &maxLength);
 
 		// The maxLength includes the NULL character
 		std::vector<GLchar> infoLog(maxLength);
-		glGetShaderInfoLog(VertexShader->m_VertexShader, maxLength, &maxLength, &infoLog[0]);
+		glGetShaderInfoLog(ShaderProgram->m_VertexShaderProgram->m_VertexShader, 
+			               maxLength, 
+			               &maxLength, 
+			               &infoLog[0]);
 
 		// We don't need the shader anymore.
-		glDeleteShader(VertexShader->m_VertexShader);
-		delete VertexShader;
+		glDeleteShader(ShaderProgram->m_VertexShaderProgram->m_VertexShader);
+		delete ShaderProgram;
 
 		return nullptr;
 	}
 
-	ShaderProgram->m_VertexShaderProgram = VertexShader;
 
 	//pixel shader
 	RealName = FileNamePS + "_OGL.txt";
 
-	auto PixelShader = new CPixelShaderOGL();
+	ShaderProgram->m_PixelShaderProgram = new CPixelShaderOGL();
 
-	Temp = PixelShader->ReadFile(RealName);
+	Temp = ShaderProgram->m_PixelShaderProgram->ReadFile(RealName);
 
 	const char* PixelCode = Temp.c_str();
 
-	PixelShader->m_PixelShader = glCreateShader(GL_FRAGMENT_SHADER);
+	ShaderProgram->m_PixelShaderProgram->m_PixelShader = glCreateShader(GL_FRAGMENT_SHADER);
 
-	glShaderSource(PixelShader->m_PixelShader,
+	glShaderSource(ShaderProgram->m_PixelShaderProgram->m_PixelShader,
 		           NumPixelShader,
 		           &PixelCode,
 		           nullptr);
 
-	glCompileShader(PixelShader->m_PixelShader);
+	glCompileShader(ShaderProgram->m_PixelShaderProgram->m_PixelShader);
 
-	glGetShaderiv(PixelShader->m_PixelShader, GL_COMPILE_STATUS, &isCompiled);
+	glGetShaderiv(ShaderProgram->m_PixelShaderProgram->m_PixelShader, GL_COMPILE_STATUS, &isCompiled);
 
 	if (isCompiled == GL_FALSE) {
 
 		GLint maxLength = 0;
-		glGetShaderiv(PixelShader->m_PixelShader, GL_INFO_LOG_LENGTH, &maxLength);
+		glGetShaderiv(ShaderProgram->m_PixelShaderProgram->m_PixelShader, GL_INFO_LOG_LENGTH, &maxLength);
 
 		// The maxLength includes the NULL character
 		std::vector<GLchar> infoLog(maxLength);
-		glGetShaderInfoLog(PixelShader->m_PixelShader, maxLength, &maxLength, &infoLog[0]);
+		glGetShaderInfoLog(ShaderProgram->m_PixelShaderProgram->m_PixelShader, maxLength, &maxLength, &infoLog[0]);
 
 		// We don't need the shader anymore.
-		glDeleteShader(PixelShader->m_PixelShader);
-		delete PixelShader;
+		glDeleteShader(ShaderProgram->m_PixelShaderProgram->m_PixelShader);
+		delete ShaderProgram;
 
 		return nullptr;
 	}
 
-	ShaderProgram->m_PixelShaderProgram = PixelShader;
 
 	//set del shader
 	glAttachShader(ShaderProgram->m_AttachShaderID,
@@ -743,6 +760,11 @@ void COGLGraphiAPI::SetRenderTarget(const std::vector<CTexture*>& pRTTex,
 		checkGLError();
 	}
 }
+
+//void COGLGraphiAPI::DrawModel(CShaderProgram& ShaderPro)
+//{
+//	auto& ShaderProOGL = reinterpret_cast<CShaderProgramOGL&>(ShaderPro);
+//}
 
 void COGLGraphiAPI::DrawIndexed(unsigned int NumIndex,
 	                            unsigned int StartindexLocation,

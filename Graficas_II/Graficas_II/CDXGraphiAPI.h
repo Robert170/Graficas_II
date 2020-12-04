@@ -138,6 +138,19 @@ public:
 		                           float& Width,
 		                           float& Near,
 		                           float& Far);
+
+	/**
+	  * @brief      LoadModel function, to load model
+	  * @param      Model parameter one, object to load model
+	  * @param      API parameter two, Api to have acces the functions
+	  * @param      ID parameter three, id for the vertex buffer
+	  * @bug		   No know Bugs
+	  * @return     Returns a pointer of CBuffer
+	*/
+	CModel* LoadModel(CModel* Model,
+		              CGraphiAPI* API,
+		              InputLayout_Desc InpLayDesc,
+		              std::string Path);
 	//create
 
 	/**
@@ -494,6 +507,16 @@ public:
 		                   CConstantBuffer& ConstantBufffer);
 
 	//draw
+
+	/**
+	  * @brief      DrawModel function, to draw model
+	  * @param      Model parameter one, model to draw
+	  * @param      ShaderPro parameter two, shader program for the model
+	  * @bug		No know Bugs
+	  * @return     Returns nothing
+	*/
+	void DrawModel(CModel* Model,
+		           CShaderProgram& ShaderPro);
 
 	/**
 	  * @brief      DrawIndexed function, to draw

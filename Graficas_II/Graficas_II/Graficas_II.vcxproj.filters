@@ -60,15 +60,6 @@
     <ClCompile Include="CTextureOGL.cpp">
       <Filter>Archivos de origen\ClasesOGL</Filter>
     </ClCompile>
-    <ClCompile Include="CDepthStencilView.cpp">
-      <Filter>Archivos de origen\Clase Base</Filter>
-    </ClCompile>
-    <ClCompile Include="CDepthStencilViewDX.cpp">
-      <Filter>Archivos de origen\ClasesDX</Filter>
-    </ClCompile>
-    <ClCompile Include="CDepthStencilViewOGL.cpp">
-      <Filter>Archivos de origen\ClasesOGL</Filter>
-    </ClCompile>
     <ClCompile Include="CVertexShader.cpp">
       <Filter>Archivos de origen\Clase Base</Filter>
     </ClCompile>
@@ -154,7 +145,10 @@
       <Filter>Archivos de origen\ClasesOGL</Filter>
     </ClCompile>
     <ClCompile Include="CMesh.cpp">
-      <Filter>Archivos de origen</Filter>
+      <Filter>Archivos de origen\Clase Base</Filter>
+    </ClCompile>
+    <ClCompile Include="CModel.cpp">
+      <Filter>Archivos de origen\Clase Base</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -178,12 +172,6 @@
     </ClInclude>
     <ClInclude Include="CTextureOGL.h">
       <Filter>Archivos de encabezado\ClasesOGL</Filter>
-    </ClInclude>
-    <ClInclude Include="CDepthStencilView.h">
-      <Filter>Archivos de encabezado\Clase Base</Filter>
-    </ClInclude>
-    <ClInclude Include="CDepthStencilViewDX.h">
-      <Filter>Archivos de encabezado\ClasesDX</Filter>
     </ClInclude>
     <ClInclude Include="CVertexShader.h">
       <Filter>Archivos de encabezado\Clase Base</Filter>
@@ -230,9 +218,6 @@
     <ClInclude Include="CRasterizerStateOGL.h">
       <Filter>Archivos de encabezado\ClasesOGL</Filter>
     </ClInclude>
-    <ClInclude Include="CDepthStencilViewOGL.h">
-      <Filter>Archivos de encabezado\ClasesDX</Filter>
-    </ClInclude>
     <ClInclude Include="CIndexBuffer.h">
       <Filter>Archivos de encabezado\Clase Base</Filter>
     </ClInclude>
@@ -273,7 +258,10 @@
       <Filter>Archivos de encabezado\ClasesOGL</Filter>
     </ClInclude>
     <ClInclude Include="CMesh.h">
-      <Filter>Archivos de encabezado</Filter>
+      <Filter>Archivos de encabezado\Clase Base</Filter>
+    </ClInclude>
+    <ClInclude Include="CModel.h">
+      <Filter>Archivos de encabezado\Clase Base</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

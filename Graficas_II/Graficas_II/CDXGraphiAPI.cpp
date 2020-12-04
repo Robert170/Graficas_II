@@ -87,6 +87,11 @@ glm::mat4 CDXGraphiAPI::InitMatrixProjection(glm::mat4& MatrixProjection,
     return glm::transpose(MatrixProjection);
 }
 
+CModel* CDXGraphiAPI::LoadModel(CModel* Model, CGraphiAPI* API, InputLayout_Desc InpLayDesc, std::string Path)
+{
+    return nullptr;
+}
+
 //fuction to create a window
 void CDXGraphiAPI::InitWindow(unsigned int width, 
                               unsigned int height)
@@ -928,6 +933,10 @@ void CDXGraphiAPI::UpdateSubresource(const void* Data,
                                            0);
 }
 
+
+void CDXGraphiAPI::DrawModel(CModel* Model, CShaderProgram& ShaderPro)
+{
+}
 
 //fuction to draw
 void CDXGraphiAPI::DrawIndexed(unsigned int NumIndex,

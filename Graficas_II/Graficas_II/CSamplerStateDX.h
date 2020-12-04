@@ -18,6 +18,9 @@
 #include <d3dcompiler.h>
 class CSamplerStateDX : public CSamplerState
 {
+public:
+	/// Destructor
+	~CSamplerStateDX();
 protected:
 	/**
 	  * @brief protected functions
@@ -25,9 +28,6 @@ protected:
 
 	/// Default Constructor
 	CSamplerStateDX() = default;
-
-	/// Destructor
-	~CSamplerStateDX();
 
 	/**
 	  * @brief protected variables member
