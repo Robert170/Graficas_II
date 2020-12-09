@@ -320,7 +320,7 @@ public:
 	  * @brief      Init function, to init the api
 	  * @param      width parameter one, width of the window
 	  * @param      height parameter two, height of the window
-	  * @bug		   No know Bugs
+	  * @bug		No know Bugs
 	  * @return     Returns nothing
 	*/
 	virtual void Init(unsigned int width,
@@ -331,82 +331,75 @@ public:
 	}
 
 
-	/**
-	  * @brief      InitMatrixWorld function, to init the world matrix
-	  * @param      MatrixWorld parameter one, a matrix world to modificate
-	  * @return     Returns a world matrix initializaded
-	*/
-	virtual glm::mat4 InitMatrixWorld(glm::mat4& MatrixWorld) = 0;
-
-	/**
-	  * @brief      InitMatrixView function, to init the view matrix
-	  * @param      MatrixView parameter one, a matrix view to modificate
-	  * @param      Eye parameter one, eye for the matrix
-	  * @param      At parameter one, lookat for the matrix
-	  * @param      Up parameter one, lookat for the matrix
-	  * @return     Returns a view matrix initializaded
-	*/
-	virtual glm::mat4 InitMatrixView(glm::mat4& MatrixView,
-		                             glm::vec3& Eye,
-		                             glm::vec3& At,
-		                             glm::vec3& Up) = 0;
-
-	/**
-	  * @brief      InitMatrixProjection function, to init the view matrix
-	  * @param      MatrixProjection parameter one, a matrix projection to modificate
-	  * @param      Fov parameter one,feel of view for the matrix
-	  * @param      Height parameter one, Height for the matrix
-	  * @param      Width parameter one, Width for the matrix
-	  * @param      Near parameter one, Near for the matrix
-	  * @param      Far parameter one, Far for the matrix
-	  * @return     Returns a view matrix initializaded
-	*/
-	virtual glm::mat4 InitMatrixProjection(glm::mat4& MatrixProjection,
-		                                   float &Fov,
-		                                   float &Height,
-		                                   float &Width,
-		                                   float &Near,
-		                                   float &Far) = 0;
-
-	/**
-	  * @brief      LoadModel function, to load model
-	  * @param      API parameter one, Api to have acces the functions
-	  * @param      ID parameter two, id for the vertex buffer
-	  * @bug		   No know Bugs
-	  * @return     Returns a pointer of CBuffer
-	*/
-	/*virtual CModel* LoadModel(CGraphiAPI* API, 
-		                      InputLayout_Desc InpLayDesc, 
-		                      std::string Path) = 0;*/
+	
 
 	//create
-	
+
+	/**
+	  * @brief      CreateMatrixWorld function, to create the world matrix
+	  * @bug		No know Bugs
+	  * @return     Returns a world matrix
+	*/
+	virtual glm::mat4 CreateMatrixWorld() = 0;
+
+	/**
+	  * @brief      InitMatrixView function, to create the view matrix
+	  * @param      Eye parameter one, eye for the matrix
+	  * @param      At parameter two, lookat for the matrix
+	  * @param      Up parameter three, lookat for the matrix
+	  * @bug		No know Bugs
+	  * @return     Returns a view matrix
+	*/
+	virtual glm::mat4 CreateMatrixView(glm::vec3 Eye,
+		                               glm::vec3 At,
+		                               glm::vec3 Up) = 0;
+
+	/**
+	  * @brief      CreateMatrixProjection function, to vreate the projection matrix
+	  * @param      Fov parameter one,feel of view for the matrix
+	  * @param      Height parameter two, Height for the matrix
+	  * @param      Width parameter three, Width for the matrix
+	  * @param      Near parameter four, Near for the matrix
+	  * @param      Far parameter five, Far for the matrix
+	  * @bug		No know Bugs
+	  * @return     Returns a view matrix initializaded
+	*/
+	virtual glm::mat4 CreateMatrixProjection(float Fov,
+		                                     float Height,
+		                                     float Width,
+		                                     float Near,
+		                                     float Far) = 0;
+
+	/**
+	  * @brief      CreateInputLayoutDesc function, to create the descriptor of the
+	  *             input layout
+	  * @param      SemanticsVector parameter one, a vector of semantics
+	  * @param      FormatsVector parameter two, a vector of formats
+	  * @bug		No know Bugs
+	  * @return     Returns a pointer of InputLayout_Desc
+	*/
+	virtual InputLayout_Desc CreateInputLayoutDesc(std::vector<std::string> SemanticsVector,
+		                                           std::vector<unsigned int> FormatsVector) 
+		                                           = 0;
 
 	/**
 	  * @brief      CreateVertexBuffer function, to create vertex buffer
-	  * @param      bindFlags parameter one, bind Flags for the desc of vertex buffer
-	  * @param      Ver parameter two, a vector whit positions and tex of vertices
-	  * @param      ID parameter three, id for the vertex buffer
-	  * @bug		   No know Bugs
+	  * @param      Ver parameter one, a vector whit positions and tex of vertices
+	  * @param      NumBuffer parameter two, NumBuffer for the vertex buffer
+	  * @bug		No know Bugs
 	  * @return     Returns a pointer of CBuffer
 	*/
-
-	//preguntar tamaño del buffer, puntero del inicio del buffer y tamaño del buffer
-	
 	virtual CVertexBuffer* CreateVertexBuffer(const std::vector <SimpleVertex>& Ver,
-		                                      unsigned int BufferSize,
 		                                      unsigned int NumBuffer = 0) = 0;
 
 	/**
 	  * @brief      CreateIndexBuffer function, to create index buffer
-	  * @param      bindFlags parameter one, bind Flags for the desc of index buffer
-	  * @param      Ind parameter two, a vector unsigned ints of indices
-	  * @param      NumBuffer parameter three, NumBuffer for the index buffer
-	  * @bug		   No know Bugs
+	  * @param      Ind parameter one, a vector unsigned ints of indices
+	  * @param      NumBuffer parameter two, NumBuffer for the index buffer
+	  * @bug		No know Bugs
 	  * @return     Returns a pointer of CBuffer
 	*/
 	virtual CIndexBuffer* CreateIndexBuffer(const std::vector<uint32_t> & Ind,
-		                                    unsigned int BufferSize,
 		                                    unsigned int NumBuffer = 0) = 0;
 
 	/**

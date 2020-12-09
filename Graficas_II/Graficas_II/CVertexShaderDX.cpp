@@ -6,10 +6,10 @@ CVertexShaderDX::~CVertexShaderDX()
     {
         m_VertexShader->Release();
     }
-    if (m_pVSBlob)
+    /*if (m_pVSBlob)
     {
         m_pVSBlob->Release();
-    }
+    }*/
 }
 
 bool CVertexShaderDX::CompileVertexShaderFromFile(const std::wstring& FileName,

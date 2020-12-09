@@ -4,9 +4,28 @@
 #include "CModel.h"
 #include <windows.h>
 
-
 CGraphiAPI* API = new CDXGraphiAPI();
 //CGraphiAPI* API = new COGLGraphiAPI();
+
+const unsigned int g_Width = 800;
+const unsigned int g_Height = 600;
+const unsigned int g_NumberOfPixelShader = 1;
+const unsigned int g_NumberOfVertexShader = 1;
+const unsigned int g_NumberOfInputLayout = 1;
+const unsigned int g_NumberOfViewport = 1;
+const unsigned int g_NumberOfBuffers = 1;
+const unsigned int g_StartSlot = 0;
+const float g_Far = 100.0f;
+const float g_Near = 1.0f;
+const float g_FieldOfView = 0.7f;
+const float g_ColorR = 0.0f;
+const float g_ColorG = 0.125f;
+const float g_ColorB = 0.3f;
+const float g_ColorA = 1.0f;
+
+const glm::vec3 g_vEye = { 0.0f, 3.0f, -6.0f };
+const glm::vec3 g_vAt = { 0.0f, 1.0f, 0.0f };
+const glm::vec3 g_vUp = { 0.0f, 1.0f, 0.0f };
 
 //Textures
 CTexture* g_pRenderTarget = nullptr;
@@ -17,7 +36,6 @@ std::vector<CTexture*> g_vRenderTargets;
 std::vector<CTexture*> g_vShaderResources;
 std::vector<CSamplerState*> g_vSamplers;
 std::vector<CConstantBuffer*> g_vConstantBuffers;
-std::vector<std::string> g_vSemanticNames;
 
 //Shader
 CVertexShader* g_pVertexShader = nullptr;
@@ -43,6 +61,9 @@ glm::vec4 g_MeshColor;
 ColorStruct Color;
 
 InputLayout_Desc g_InpLayDesc;
+std::vector<std::string> g_vSemanticNames;
+std::vector<unsigned int> g_vFormats;
+
 
 CModel* g_Model;
 
@@ -57,88 +78,27 @@ struct CBNeverChanges
 
 CBNeverChanges g_ConstantBuffer;
 
-
-
 void Init()
 {
-
-
-
 	CCameraDatas Data;
-	Data.Far = 100;
-	Data.Fov = 0.7f;
-	Data.H = 800;
-	Data.W = 600;
-	Data.Near = 1.0f;
-
-	glm::vec3 Eye = { 0.0f, 3.0f, -6.0f };
-	glm::vec3 At = { 0.0f, 1.0f, 0.0f };
-	glm::vec3 Up = { 0.0f, 1.0f, 0.0f };
-
-	/*std::vector<uint32_t> indices =
-	{
-		3,1,0,
-		2,1,3,
-
-		6,4,5,
-		7,4,6,
-
-		11,9,8,
-		10,9,11,
-
-		14,12,13,
-		15,12,14,
-
-		19,17,16,
-		18,17,19,
-
-		22,20,21,
-		23,20,22
-	};*/
-	
-
-	//std::vector<SimpleVertex> vertices =
-	//{
-	//	// positions                    // texture coords
-	//	{glm::vec3(-1.0f, 1.0f, -1.0f),  glm::vec2(0.0f, 0.0f) },
-	//	{glm::vec3(1.0f, 1.0f, -1.0f),   glm::vec2(1.0f, 0.0f) },
-	//	{glm::vec3(1.0f, 1.0f, 1.0f),    glm::vec2(1.0f, 1.0f) },
-	//	{glm::vec3(-1.0f, 1.0f, 1.0f),   glm::vec2(0.0f, 1.0f) },
-
-	//	{glm::vec3(-1.0f, -1.0f, -1.0f), glm::vec2(0.0f, 0.0f) },
-	//	{glm::vec3(1.0f, -1.0f, -1.0f),  glm::vec2(1.0f, 0.0f) },
-	//	{glm::vec3(1.0f, -1.0f, 1.0f),   glm::vec2(1.0f, 1.0f) },
-	//	{glm::vec3(-1.0f, -1.0f, 1.0f),  glm::vec2(0.0f, 1.0f) },
-
-	//	{glm::vec3(-1.0f, -1.0f, 1.0f),  glm::vec2(0.0f, 0.0f) },
-	//	{glm::vec3(-1.0f, -1.0f, -1.0f), glm::vec2(1.0f, 0.0f) },
-	//	{glm::vec3(-1.0f, 1.0f, -1.0f),  glm::vec2(1.0f, 1.0f) },
-	//	{glm::vec3(-1.0f, 1.0f, 1.0f),   glm::vec2(0.0f, 1.0f) },
-
-	//	{glm::vec3(1.0f, -1.0f, 1.0f),   glm::vec2(0.0f, 0.0f) },
-	//	{glm::vec3(1.0f, -1.0f, -1.0f),  glm::vec2(1.0f, 0.0f) },
-	//	{glm::vec3(1.0f, 1.0f, -1.0f),   glm::vec2(1.0f, 1.0f) },
-	//	{glm::vec3(1.0f, 1.0f, 1.0f),    glm::vec2(0.0f, 1.0f) },
-
-	//	{glm::vec3(-1.0f, -1.0f, -1.0f), glm::vec2(0.0f, 0.0f) },
-	//	{glm::vec3(1.0f, -1.0f, -1.0f),  glm::vec2(1.0f, 0.0f) },
-	//	{glm::vec3(1.0f, 1.0f, -1.0f),   glm::vec2(1.0f, 1.0f) },
-	//	{glm::vec3(-1.0f, 1.0f, -1.0f),  glm::vec2(0.0f, 1.0f) },
-
-	//	{glm::vec3(-1.0f, -1.0f, 1.0f),  glm::vec2(0.0f, 0.0f) },
-	//	{glm::vec3(1.0f, -1.0f, 1.0f),   glm::vec2(1.0f, 0.0f) },
-	//	{glm::vec3(1.0f, 1.0f, 1.0f),    glm::vec2(1.0f, 1.0f) },
-	//	{glm::vec3(-1.0f, 1.0f, 1.0f),   glm::vec2(0.0f, 1.0f) },
-	//};
-
+	Data.Far = g_Far;
+	Data.Fov = g_FieldOfView;
+	Data.H = g_Height;
+	Data.W = g_Width;
+	Data.Near = g_Near;
 
 	g_MeshColor.x = 1;
 	g_MeshColor.y = 1;
 	g_MeshColor.z = 1;
 
 
-	API->Init(800,
-		      600);
+	API->Init(g_Width,
+		      g_Height);
+
+	//load model
+	g_Model = new CModel();
+	g_Model->Init("Modelo/Scene.fbx",
+		           API);
 
 	//Create render Target
 	/*g_pRenderTarget = API->CreateTexture2D(800,
@@ -173,8 +133,8 @@ void Init()
 		                                        "PS", 
 		                                        "vs_4_0", 
 		                                        "ps_4_0", 
-		                                        1,
-		                                        1);
+		                                        g_NumberOfVertexShader,
+		                                        g_NumberOfPixelShader);
 	// Create the vertex shader
 	/*g_pVertexShader = API->CreateVertexShaders("VS",
 			                                   "VS",
@@ -188,22 +148,20 @@ void Init()
 
 
 	//Set semantic 
-	g_InpLayDesc.Semantics.push_back("POSITION");
-	g_InpLayDesc.Semantics.push_back("TEXCOORD");
+	g_vSemanticNames.push_back("POSITION");
+	g_vSemanticNames.push_back("TEXCOORD");
 
-	g_InpLayDesc.Formats.push_back(TF_R32G32B32_FLOAT);
-	g_InpLayDesc.Formats.push_back(TF_R32G32_FLOAT);
+	//formats
+	g_vFormats.push_back(TF_R32G32B32_FLOAT);
+	g_vFormats.push_back(TF_R32G32_FLOAT);
 
-	g_Model = new CModel();
-	g_Model->Init("Modelo/Scene.fbx", 
-		          API, 
-		          g_InpLayDesc);
-	
-
-
+	//Create input layout desc
+	g_InpLayDesc = API->CreateInputLayoutDesc(g_vSemanticNames,
+		                                      g_vFormats);
 	// Create the input layout
 	g_pInputLayout = API->CreateInputLayout(*g_pShaderProgram,
-		                                    g_InpLayDesc,1);
+		                                    g_InpLayDesc,
+		                                    g_NumberOfInputLayout);
 
 	// Create the pixel shader
 	/*g_pPixelShader = API->CreatePixelShaders("PS",
@@ -225,28 +183,24 @@ void Init()
 		                                    indices.size(),
 		                                    1);*/
 
-	// Create the constant buffers
+	// Create the matrixs
 
-	
+	g_ConstantBuffer.mView = API->CreateMatrixView(g_vEye,
+		                                           g_vAt,
+		                                           g_vUp);
 
-	g_ConstantBuffer.mView = API->InitMatrixView(g_View,
-		                                         Eye,
-		                                         At,
-		                                         Up);
+	g_ConstantBuffer.mProjection = API->CreateMatrixProjection(Data.Fov,
+		                                                       Data.H,
+		                                                       Data.W,
+		                                                       Data.Near,
+		                                                       Data.Far);
 
-	g_ConstantBuffer.mProjection = API->InitMatrixProjection(g_Projection,
-		                                                     Data.Fov,
-		                                                     Data.H,
-		                                                     Data.W,
-		                                                     Data.Near,
-		                                                     Data.Far);
-
-	g_ConstantBuffer.mWorld = API->InitMatrixWorld(g_World);
+	g_ConstantBuffer.mWorld = API->CreateMatrixWorld();
 	
 	g_ConstantBuffer.vMeshColor = g_MeshColor;
 
 	g_pCBNeverChanges = API->CreateConstantBuffer(sizeof(CBNeverChanges),
-		                                          1, 
+		                                          g_NumberOfBuffers,
 		                                          &g_ConstantBuffer);
 
 	g_vConstantBuffers.push_back(g_pCBNeverChanges);
@@ -261,34 +215,27 @@ void Init()
 
 void Update()
 {
-	
-
 	API->UpdateSubresource(&g_ConstantBuffer,
 		                   *g_pCBNeverChanges);
-
-
 }
 
 void Render()
 {
 
-	Color.R = 0.0f;
-	Color.G = 0.125f;
-	Color.B = 0.3f;
-	Color.A = 1.0f;
-
+	Color.R = g_ColorR;
+	Color.G = g_ColorG;
+	Color.B = g_ColorB;
+	Color.A = g_ColorA;
 
 	/*API->SetRenderTarget(g_vRenderTargets,
 		                 g_pDepthStencil);*/
 
 	API->SetDefaultRenderTarget();
 
-
-
 	// Setup the viewport
-	API->SetViewport(1,
-		             800,
-		             600,0,0);
+	API->SetViewport(g_NumberOfViewport,
+		             g_Width,
+		             g_Height);
 
 	//set inputlayout
 	API->SetInputLayout(g_pInputLayout);
@@ -326,19 +273,16 @@ void Render()
 	//set all vertex shader constant buffer
 
 	API->SetVertexShaderConstantBuffer(g_pCBNeverChanges,
-		                               0,
-		                               1);
-
-	
-
+		                               g_StartSlot,
+		                               g_NumberOfBuffers);
 	//set pixel shader
 	//API->SetPixelShaders(g_pPixelShader);
 
 	//set pixel shader constant buffer
 
 	API->SetPixelShaderConstantBuffer(g_pCBNeverChanges,
-		                              0,
-		                              1);
+		                              g_StartSlot,
+		                              g_NumberOfBuffers);
 
 	/*API->SetShaderResource(g_vShaderResources,
 		                   0);*/
@@ -387,6 +331,8 @@ void Destroy()
 
 	//index buffer
 	//delete g_pIndexBuffer;
+
+	delete g_pShaderProgram;
 
 	//input layout
 	delete g_pInputLayout;
@@ -442,7 +388,6 @@ int main()
 	g_vSamplers.clear();
 	g_vConstantBuffers.clear();
 	g_vSemanticNames.clear();
-		
 	
 	return 0;
 }

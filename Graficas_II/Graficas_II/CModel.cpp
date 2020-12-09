@@ -10,10 +10,8 @@ CModel::~CModel()
 
 void CModel::Init(std::string const& path, 
 	              CGraphiAPI* API, 
-	              InputLayout_Desc InpLayDesc, 
 	              bool gamma)
 {
-	m_InpLayDesc = InpLayDesc;
 	LoadModel(path,
 		      API);
 }
@@ -21,10 +19,10 @@ void CModel::Init(std::string const& path,
 void CModel::Draw(CShaderProgram& shader,
 	              CGraphiAPI* API)
 {
-	for (unsigned int i = 0; i < meshes.size(); i++)
+	for (unsigned int i = 0; i < m_vMeshes.size(); i++)
 	{
-		meshes[i].Draw(shader, 
-                      API);
+        m_vMeshes[i].Draw(shader,
+                          API);
 	}
 }
 
@@ -45,7 +43,7 @@ void CModel::LoadModel(std::string const& path,
 		return;
 	}
 	// retrieve the directory path of the filepath
-	directory = path.substr(0, path.find_last_of('/'));
+    m_Directory = path.substr(0, path.find_last_of('/'));
 
 	// process ASSIMP's root node recursively
 	ProcessNode(scene->mRootNode, 
@@ -63,7 +61,7 @@ void CModel::ProcessNode(aiNode* node,
 		// the node object only contains indices to index the actual objects in the scene. 
 		// the scene contains all the data, node is just to keep stuff organized (like relations between nodes).
 		aiMesh* mesh = scene->mMeshes[node->mMeshes[i]];
-		meshes.push_back(ProcessMesh(mesh, scene, API));
+        m_vMeshes.push_back(ProcessMesh(mesh, scene, API));
 	}
 	// after we've processed all of the meshes (if any) we then recursively process each of the children nodes
 	for (unsigned int i = 0; i < node->mNumChildren; i++)
@@ -161,7 +159,82 @@ CMesh CModel::ProcessMesh(aiMesh* mesh,
     // return a mesh object created from the extracted mesh data
     return CMesh(vertices,
                  indices,
-                 m_InpLayDesc,
                  //textures, 
                  API);
 }
+
+//std::vector<Texture> CModel::loadMaterialTextures(aiMaterial* mat, 
+//                                                  aiTextureType type, 
+//                                                  std::string typeName)
+//{
+//    std::vector<Texture> textures;
+//    for (unsigned int i = 0; i < mat->GetTextureCount(type); i++)
+//    {
+//        aiString str;
+//        mat->GetTexture(type, i, &str);
+//         check if texture was loaded before and if so, continue to next iteration: skip loading a new texture
+//        bool skip = false;
+//        for (unsigned int j = 0; j < m_Texturesloaded.size(); j++)
+//        {
+//            if (std::strcmp(m_Texturesloaded[j].path.data(), str.C_Str()) == 0)
+//            {
+//                textures.push_back(m_Texturesloaded[j]);
+//                skip = true; // a texture with the same filepath has already been loaded, continue to next one. (optimization)
+//                break;
+//            }
+//        }
+//        if (!skip)
+//        {   // if texture hasn't been loaded already, load it
+//            Texture texture;
+//            texture.id = TextureFromFile(str.C_Str(), this->m_Directory);
+//            texture.type = typeName;
+//            texture.path = str.C_Str();
+//            textures.push_back(texture);
+//            m_Texturesloaded.push_back(texture);  // store it as texture loaded for entire model, to ensure we won't unnecesery load duplicate textures.
+//        }
+//    }
+//    return textures;
+//}
+
+
+//unsigned int CModel::TextureFromFile(const char* path, 
+//                                     const std::string& directory, 
+//                                     bool gamma)
+//{
+//    std::string filename = std::string(path);
+//    filename = directory + '/' + filename;
+//
+//    unsigned int textureID;
+//    glGenTextures(1, &textureID);
+//
+//    int width, height, nrComponents;
+//    unsigned char* data = stbi_load(filename.c_str(), &width, &height, &nrComponents, 0);
+//    if (data)
+//    {
+//        GLenum format;
+//        if (nrComponents == 1)
+//            format = GL_RED;
+//        else if (nrComponents == 3)
+//            format = GL_RGB;
+//        else if (nrComponents == 4)
+//            format = GL_RGBA;
+//
+//        glBindTexture(GL_TEXTURE_2D, textureID);
+//        glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, data);
+//        glGenerateMipmap(GL_TEXTURE_2D);
+//
+//        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+//        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+//        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+//        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+//
+//        stbi_image_free(data);
+//    }
+//    else
+//    {
+//        std::cout << "Texture failed to load at path: " << path << std::endl;
+//        stbi_image_free(data);
+//    }
+//
+//    return textureID;
+//}

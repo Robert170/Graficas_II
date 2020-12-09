@@ -68,53 +68,45 @@ COGLGraphiAPI::~COGLGraphiAPI()
 {
 }
 
-glm::mat4 COGLGraphiAPI::InitMatrixWorld(glm::mat4& MatrixWorld)
+glm::mat4 COGLGraphiAPI::CreateMatrixWorld()
 {
-	return MatrixWorld = glm::mat4(1.0);
+	return glm::mat4(1.0);
 }
 
-glm::mat4 COGLGraphiAPI::InitMatrixView(glm::mat4& MatrixView, 
-	                                    glm::vec3& Eye, 
-	                                    glm::vec3& At, 
-	                                    glm::vec3& Up)
+glm::mat4 COGLGraphiAPI::CreateMatrixView(glm::vec3 Eye, 
+	                                      glm::vec3 At, 
+	                                      glm::vec3 Up)
 {
-	////init view matrix
-	MatrixView = glm::lookAtLH(Eye,
-		                       At,
-		                       Up);
-
-	return MatrixView;
+	return glm::lookAtLH(Eye,
+		                 At,
+		                 Up);
 }
 
-glm::mat4 COGLGraphiAPI::InitMatrixProjection(glm::mat4& MatrixProjection, 
-	                                          float &Fov, 
-	                                          float &Height, 
-	                                          float &Width, 
-	                                          float &Near, 
-	                                          float &Far)
+glm::mat4 COGLGraphiAPI::CreateMatrixProjection(float Fov, 
+	                                            float Height, 
+	                                            float Width, 
+	                                            float Near, 
+	                                            float Far)
 {
-	MatrixProjection = glm::perspectiveFovLH(Fov,
-		                                     Height,
-		                                     Width,
-		                                     Near,
-		                                     Far);
-	return MatrixProjection;
+	return glm::perspectiveFovLH(Fov,
+		                         Width,
+		                         Height,
+		                         Near,
+		                         Far);
 }
 
-//CModel* COGLGraphiAPI::LoadModel(CGraphiAPI* API, 
-//	                             InputLayout_Desc InpLayDesc, 
-//	                             std::string Path)
-//{
-//	
-//	ModelOgl->Init(Path, 
-//		           API,
-//		           InpLayDesc);
-//	return ModelOgl;
-//}
+InputLayout_Desc COGLGraphiAPI::CreateInputLayoutDesc(std::vector<std::string> SemanticsVector,
+	                                                  std::vector<unsigned int> FormatsVector)
+{
+	InputLayout_Desc Temp;
 
+	Temp.Semantics = SemanticsVector;
+	Temp.Formats = FormatsVector;
+
+	return Temp;
+}
 
 CVertexBuffer* COGLGraphiAPI::CreateVertexBuffer(const std::vector <SimpleVertex>& Ver,
-	                                             unsigned int BufferSize,
 	                                             unsigned int NumBuffers)
 {
 	auto VertexBuffer = new CVertexBufferOGL();
@@ -140,7 +132,6 @@ CVertexBuffer* COGLGraphiAPI::CreateVertexBuffer(const std::vector <SimpleVertex
 }
 
 CIndexBuffer* COGLGraphiAPI::CreateIndexBuffer(const std::vector<unsigned int>& Ind,
-	                                           unsigned int BufferSize, //no va
 	                                           unsigned int NumBuffer)
 {
 	auto IndexBuffer = new CIndexBufferOGL();
@@ -174,7 +165,7 @@ CConstantBuffer* COGLGraphiAPI::CreateConstantBuffer(unsigned int BufferSize,//2
 
 	glBufferData(GL_UNIFORM_BUFFER, 
 		         BufferSize,
-		         &Data, 
+		         Data, 
 		         GL_DYNAMIC_DRAW);
 
 	glBindBuffer(GL_UNIFORM_BUFFER, 

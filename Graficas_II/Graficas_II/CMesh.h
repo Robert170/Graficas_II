@@ -19,9 +19,9 @@
 #include <iostream>
 #include <vector>
 #include "CShaderProgram.h"
-#include "CInputLayout.h"
 #include "CVertexBuffer.h"
 #include "CIndexBuffer.h"
+#include "CGraphiAPI.h"
 
 struct Vertex {
     // position
@@ -44,13 +44,10 @@ public:
     std::vector<unsigned int> m_Indices;
     //std::vector<Texture> m_Textures;
 
-    CInputLayout* m_InutLaout;
-    InputLayout_Desc m_InpLayDesc;
 
     // constructor
     CMesh(std::vector<SimpleVertex> Vertices,
           std::vector<unsigned int> indices,
-          InputLayout_Desc InpLayDesc,
           //std::vector<Texture> textures,
           CGraphiAPI* API);
 

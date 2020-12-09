@@ -52,44 +52,31 @@ CDXGraphiAPI::~CDXGraphiAPI()
 {
 }
 
-glm::mat4 CDXGraphiAPI::InitMatrixWorld(glm::mat4& MatrixWorld)
+glm::mat4 CDXGraphiAPI::CreateMatrixWorld()
 {
-    MatrixWorld = glm::mat4(1.0);
-
-    return glm::transpose(MatrixWorld);
+    return glm::transpose(glm::mat4(1.0));
 }
 
-glm::mat4 CDXGraphiAPI::InitMatrixView(glm::mat4& MatrixView, 
-                                       glm::vec3& Eye,
-                                       glm::vec3& At, 
-                                       glm::vec3& Up)
+glm::mat4 CDXGraphiAPI::CreateMatrixView(glm::vec3 Eye, glm::vec3 At, glm::vec3 Up)
 {
-    ////init view matrix
-    MatrixView = glm::lookAtLH(Eye,
-                               At,
-                               Up);
 
-    return glm::transpose(MatrixView);
+    return glm::transpose(glm::lookAtLH(Eye,
+                                        At,
+                                        Up));
 }
 
-glm::mat4 CDXGraphiAPI::InitMatrixProjection(glm::mat4& MatrixProjection, 
-                                             float& Fov, 
-                                             float& Height, 
-                                             float& Width, 
-                                             float& Near, 
-                                             float& Far)
+glm::mat4 CDXGraphiAPI::CreateMatrixProjection(float Fov, 
+                                               float Height, 
+                                               float Width, 
+                                               float Near, 
+                                               float Far)
 {
-    MatrixProjection = glm::perspectiveFovLH(Fov,
-                                             Height,
-                                             Width,
-                                             Near,
-                                             Far);
-    return glm::transpose(MatrixProjection);
-}
-
-CModel* CDXGraphiAPI::LoadModel(CModel* Model, CGraphiAPI* API, InputLayout_Desc InpLayDesc, std::string Path)
-{
-    return nullptr;
+    
+    return glm::transpose(glm::perspectiveFovLH(Fov,
+                                                Height,
+                                                Width,
+                                                Near,
+                                                Far));
 }
 
 //fuction to create a window
@@ -265,9 +252,19 @@ void CDXGraphiAPI::CreateDeferredContext()
 }
 
 
+InputLayout_Desc CDXGraphiAPI::CreateInputLayoutDesc(std::vector<std::string> SemanticsVector,
+                                                     std::vector<unsigned int> FormatsVector)
+{
+    InputLayout_Desc Temp;
+
+    Temp.Semantics = SemanticsVector;
+    Temp.Formats = FormatsVector;
+
+    return Temp;
+}
+
 //fuction to create a vertex buffer 
 CVertexBuffer* CDXGraphiAPI::CreateVertexBuffer(const vector <SimpleVertex>& Ver,
-                                                unsigned int BufferSize,
                                                 unsigned int NumBuffer)
 {
     auto VertexBuffer = new CVertexBufferDX();
@@ -292,7 +289,6 @@ CVertexBuffer* CDXGraphiAPI::CreateVertexBuffer(const vector <SimpleVertex>& Ver
 
 //fuction to create an index buffer 
 CIndexBuffer* CDXGraphiAPI::CreateIndexBuffer(const std::vector<uint32_t>& Ind,
-                                              unsigned int BufferSize,
                                               unsigned int NumBuffer)
 {
     auto IndexBuffer = new CIndexBufferDX();
@@ -583,7 +579,6 @@ CInputLayout* CDXGraphiAPI::CreateInputLayout(CShaderProgram&Vertex,
     auto InputLayout = new CInputLayoutDX();
     auto& VertexShaderBlob = reinterpret_cast<CShaderProgramDX&>(Vertex);
     
-
     vector<D3D11_INPUT_ELEMENT_DESC> layout;
 
     unsigned int SemanticIndexPosition = 0;
