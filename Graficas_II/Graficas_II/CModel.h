@@ -23,26 +23,33 @@
 class CModel
 {
 public:
-    // model data 
-    std::vector<Texture> m_Texturesloaded;	
-    std::vector<CMesh>  m_vMeshes;
-    std::string m_Directory;
-    bool gammaCorrection;
+   
 
     CModel();
     ~CModel();
 
 
-    void Init(std::string const& path,
-              CGraphiAPI* API,
-              bool gamma = false);
+    void LoadModel(std::string const& path,
+                   CGraphiAPI* API,
+                   bool gamma = false);
 
     // draws the model, and thus all its meshes
     void Draw(CShaderProgram& shader, CGraphiAPI* API);
 
 private:
 
-    void LoadModel(std::string const& path, CGraphiAPI* API);
+    // model data 
+    std::vector<CTexture*> m_Texturesloaded;
+    std::vector<CSamplerState*> m_vSamplers;
+    std::vector<CMesh>  m_vMeshes;
+    std::string m_Directory;
+    bool gammaCorrection;
+
+    CTexture* m_Texture;
+    CSamplerState* m_Sampler;
+
+
+    void LoadModel_2(std::string const& path, CGraphiAPI* API);
 
     void ProcessNode(aiNode* node, const aiScene* scene, CGraphiAPI* API);
 
@@ -50,12 +57,14 @@ private:
 
     // checks all material textures of a given type and loads the textures if they're not loaded yet.
     // the required info is returned as a Texture struct.
-    /*std::vector<Texture> loadMaterialTextures(aiMaterial* mat, 
-                                              aiTextureType type, 
-                                              std::string typeName);*/
+    void LoadMaterialTextures(aiMaterial* mat,
+                              aiTextureType type, 
+                              std::string typeName,
+                              CGraphiAPI* API);
 
-    /*unsigned int TextureFromFile(const char* path,
-                                 const std::string& directory,
-                                 bool gamma = false);*/
+    void TextureFromFile(const char* path,
+                         const std::string& directory,
+                         CGraphiAPI* API,
+                         bool gamma = false);
 };
 

@@ -14,10 +14,18 @@
  */
 #pragma once
 #include "CVertexShader.h"
+#include "glad.h"
 #include <fstream>
 #include <sstream>
 class CVertexShaderOGL : public CVertexShader
 {
+public:
+	/**
+	  * @brief public functions
+	*/
+	/// Destructor
+	~CVertexShaderOGL();
+
 protected:
 
 	/**
@@ -26,9 +34,6 @@ protected:
 
 	/// Default Constructor
 	CVertexShaderOGL() = default;
-
-	/// Destructor
-	~CVertexShaderOGL() = default;
 
 	/**
 	 * @brief      ReadFile function, to read a file

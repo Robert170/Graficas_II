@@ -264,11 +264,11 @@ InputLayout_Desc CDXGraphiAPI::CreateInputLayoutDesc(std::vector<std::string> Se
 }
 
 //fuction to create a vertex buffer 
-CVertexBuffer* CDXGraphiAPI::CreateVertexBuffer(const vector <SimpleVertex>& Ver,
+CVertexBuffer* CDXGraphiAPI::CreateVertexBuffer(const vector <VertexTexture>& Ver,
                                                 unsigned int NumBuffer)
 {
     auto VertexBuffer = new CVertexBufferDX();
-    CD3D11_BUFFER_DESC BufferDesc(Ver.size() * sizeof(SimpleVertex),
+    CD3D11_BUFFER_DESC BufferDesc(Ver.size() * sizeof(VertexTexture),
                                   D3D11_BIND_VERTEX_BUFFER);
 
     D3D11_SUBRESOURCE_DATA InitData;
@@ -341,11 +341,12 @@ CTexture* CDXGraphiAPI::CreateTexture2D(unsigned int width,
                                         unsigned int numberTexture,
 	                                    TEXTURE_FORMAT format,
 	                                    unsigned int bindFlags,
-                                        TYPE_USAGE Usage)
+                                        TYPE_USAGE Usage,
+                                        const void* Data)
 {
     HRESULT hr;
     auto texture = new CTextureDX();
-
+    format = TF_R8G8B8A8_UNORM;
 
     CD3D11_TEXTURE2D_DESC desc(static_cast<DXGI_FORMAT>(format),
                                width,
@@ -355,8 +356,12 @@ CTexture* CDXGraphiAPI::CreateTexture2D(unsigned int width,
                                bindFlags,
                                static_cast<D3D11_USAGE>(Usage));
 
+    D3D11_SUBRESOURCE_DATA ResourceDataDesc;
+    ResourceDataDesc.pSysMem = Data;
+    ResourceDataDesc.SysMemPitch = desc.Width * 4;
+    ResourceDataDesc.SysMemSlicePitch = 0;
     //Crear textura
-    hr = m_pd3dDevice->CreateTexture2D(&desc, nullptr, &texture->m_pTexture);
+    hr = m_pd3dDevice->CreateTexture2D(&desc, &ResourceDataDesc, &texture->m_pTexture);
     if(FAILED(hr))
     {
         std::cout << "//Error fallo la creacion de la textura" << std::endl;

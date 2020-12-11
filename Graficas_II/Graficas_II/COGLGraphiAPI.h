@@ -122,7 +122,7 @@ public:
 	  * @bug		No know Bugs
 	  * @return     Returns a pointer of CBuffer
 	*/
-	CVertexBuffer* CreateVertexBuffer(const std::vector <SimpleVertex>& Ver,
+	CVertexBuffer* CreateVertexBuffer(const std::vector <VertexTexture>& Ver,
 		                              unsigned int NumBuffer) override;
 
 	/**
@@ -164,7 +164,8 @@ public:
 	  * @param      format parameter four, format for the desc of the txture
 	  * @param      bindFlags parameter five, bind Flags for the desc of the txture
 	  * @param      Usage parameter six, Usage for the desc of the txture
-	  * @bug		No know Bugs
+	  * @param      Data parameter seven, data of the texture
+	  * @bug		   No know Bugs
 	  * @return     Returns a pointer of CTexture
 	*/
 	CTexture* CreateTexture2D(unsigned int width,
@@ -172,7 +173,8 @@ public:
 		                      unsigned int numberTexture,
 		                      TEXTURE_FORMAT format,
 		                      unsigned int bindFlags,
-		                      TYPE_USAGE Usage) override;
+		                      TYPE_USAGE Usage,
+		                      const void* Data)  override;
 
 	/**
 	  * @brief      CreateTexture3D function, to create a texture 3D

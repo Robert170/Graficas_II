@@ -15,14 +15,21 @@
 #pragma once
 #include "CInputLayout.h"
 #include <map>
+#include "glad.h"
 class CInputLayoutOGL : public CInputLayout
 {
+
+public:
+	/**
+	  * @brief public functions
+	*/
+
+	/// Destructor
+	~CInputLayoutOGL();
+
 protected:
 	/// Default Constructor
 	CInputLayoutOGL();
-
-	/// Destructor
-	~CInputLayoutOGL() = default;
 
 	/**
 	  * @brief protected variables member
@@ -42,6 +49,11 @@ protected:
 	  * @Variable m_Offset, offset for each element 
 	*/
 	unsigned int m_Offset = 0;
+
+	/**
+	  * @Variable m_NumberOfInputLayout, nuber of input layout to delete
+	*/
+	unsigned int m_NumberOfInputLayout = 0;
 
 	/**
 	  * @Variable m_mFormatSize, map whit the size of formats

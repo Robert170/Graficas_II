@@ -12,6 +12,12 @@ CInputLayoutOGL::CInputLayoutOGL()
 	m_mFormatSize.insert(std::pair<unsigned int, unsigned int>(TF_R32_UINT, 1));
 }
 
+CInputLayoutOGL::~CInputLayoutOGL()
+{
+	glDeleteVertexArrays(m_NumberOfInputLayout,
+		                 &m_IPLA);
+}
+
 unsigned int CInputLayoutOGL::GetSize(unsigned int Format)
 {
 	if (m_mFormatSize.find(Format) != m_mFormatSize.end())

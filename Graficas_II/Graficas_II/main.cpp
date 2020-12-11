@@ -1,12 +1,15 @@
+#define STB_IMAGE_IMPLEMENTATION
+
 #include "CGraphiAPI.h"
 #include "COGLGraphiAPI.h"
 #include "CDXGraphiAPI.h"
 #include "CModel.h"
 #include <windows.h>
 
-CGraphiAPI* API = new CDXGraphiAPI();
-//CGraphiAPI* API = new COGLGraphiAPI();
+//CGraphiAPI* API = new CDXGraphiAPI();
+CGraphiAPI* API = new COGLGraphiAPI();
 
+// consts variables
 const unsigned int g_Width = 800;
 const unsigned int g_Height = 600;
 const unsigned int g_NumberOfPixelShader = 1;
@@ -58,6 +61,7 @@ glm::mat4 g_Projection;
 
 glm::vec4 g_MeshColor;
 
+//color for backbuffer
 ColorStruct Color;
 
 InputLayout_Desc g_InpLayDesc;
@@ -97,8 +101,8 @@ void Init()
 
 	//load model
 	g_Model = new CModel();
-	g_Model->Init("Modelo/Scene.fbx",
-		           API);
+	g_Model->LoadModel("Modelo/Animacion/Knuckles.fbx",
+		               API);
 
 	//Create render Target
 	/*g_pRenderTarget = API->CreateTexture2D(800,
@@ -326,6 +330,9 @@ void Destroy()
 		}
 	}
 
+	//Model
+	delete g_Model;
+
 	//vertex buffer
 	//delete g_pVertexBuffer;
 
@@ -388,6 +395,7 @@ int main()
 	g_vSamplers.clear();
 	g_vConstantBuffers.clear();
 	g_vSemanticNames.clear();
+	g_vFormats.clear();
 	
 	return 0;
 }

@@ -12,9 +12,11 @@ layout (std140, binding = 0) uniform cbNeverChanges
 };
 
 out vec4 OutPos;
+out vec2 OutTexCoords;
 
 void main()
 {
+    OutTexCoords = Tex;
     OutPos = World * vec4(Pos.xyz, 1.0);
     OutPos= View * OutPos;
     gl_Position = Projection * OutPos;

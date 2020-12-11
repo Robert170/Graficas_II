@@ -1,5 +1,11 @@
 #include "CPixelShaderOGL.h"
 
+CPixelShaderOGL::~CPixelShaderOGL()
+{
+    //delte pixel shader
+    glDeleteShader(m_PixelShader);
+}
+
 std::string CPixelShaderOGL::ReadFile(std::string FileName)
 {
     m_PixelShaderFile.exceptions(std::ifstream::failbit | std::ifstream::badbit);

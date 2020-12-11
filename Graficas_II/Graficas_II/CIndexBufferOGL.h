@@ -14,14 +14,26 @@
  */
 #pragma once
 #include "CIndexBuffer.h"
+#include "glad.h"
 class CIndexBufferOGL : public CIndexBuffer
 {
+public:
+	/**
+	  * @brief public functions
+	*/
 
+	/// Destructor
+	~CIndexBufferOGL();
+
+protected:
+
+	/**
+	  * @brief protected functions
+	*/
 	/// Default Constructor
 	CIndexBufferOGL() = default;
 
-	/// Destructor
-	~CIndexBufferOGL() = default;
+	
 
 	/**
 	  * @brief protected variables member
@@ -30,7 +42,12 @@ class CIndexBufferOGL : public CIndexBuffer
 	/**
 	  * @Variable m_IBO, is for a index buffer
 	*/
-	unsigned int m_IBO;
+	unsigned int m_IBO = 0;
+
+	/**
+	  * @Variable m_NumberOfBuffers, number of index buffer to delete
+	*/
+	unsigned int m_NumberOfBuffers = 0;
 
 	friend class COGLGraphiAPI;
 };

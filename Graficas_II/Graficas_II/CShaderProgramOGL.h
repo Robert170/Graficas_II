@@ -18,6 +18,14 @@
 #include "CVertexShaderOGL.h"
 class CShaderProgramOGL : public CShaderProgram
 {
+public:
+	/**
+	  * @brief public functions
+	*/
+
+	/// Destructor
+	~CShaderProgramOGL();
+
 protected:
 
 	/**
@@ -27,8 +35,7 @@ protected:
 	/// Default Constructor
 	CShaderProgramOGL() = default;
 
-	/// Destructor
-	~CShaderProgramOGL();
+	
 
 	/**
 	  * @brief protected variables member
@@ -37,7 +44,7 @@ protected:
 	/**
 	  * @Variable m_AttachShaderID, shader id for atyachand link shaders
     */
-	int m_AttachShaderID;
+	int m_AttachShaderID = 0;
 
 	/**
 	  * @Variable m_PixelShaderProgram, pointer for the pixel shader of opengl

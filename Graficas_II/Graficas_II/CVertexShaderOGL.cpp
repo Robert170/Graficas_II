@@ -1,5 +1,11 @@
 #include "CVertexShaderOGL.h"
 
+CVertexShaderOGL::~CVertexShaderOGL()
+{
+    //delte pixel shader
+    glDeleteShader(m_VertexShader);
+}
+
 std::string CVertexShaderOGL::ReadFile(std::string FileName)
 {
     m_VertexShaderFile.exceptions(std::ifstream::failbit | std::ifstream::badbit);

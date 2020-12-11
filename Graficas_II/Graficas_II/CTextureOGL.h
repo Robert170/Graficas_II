@@ -14,8 +14,16 @@
  */
 #pragma once
 #include "CTexture.h"
+#include "glad.h"
 class CTextureOGL : public CTexture
 {
+public:
+	/**
+	  * @brief public functions
+	*/
+
+	/// Destructor
+	~CTextureOGL();
 protected:
 	/**
 	  * @brief protected functions
@@ -23,9 +31,6 @@ protected:
 
 	/// Default Constructor
 	CTextureOGL() = default;
-
-	/// Destructor
-	~CTextureOGL() = default;
 
 	/**
 	  * @brief protected variables member

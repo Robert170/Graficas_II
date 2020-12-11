@@ -14,8 +14,18 @@
  */
 #pragma once
 #include "CSamplerState.h"
+#include "glad.h"
 class CSamplerStateOGL : public CSamplerState
 {
+
+public:
+	/**
+	  * @brief public functions
+	*/
+
+	/// Destructor
+	~CSamplerStateOGL();
+
 protected:
 
 	/**
@@ -24,7 +34,6 @@ protected:
 
 	/// Default Constructor
 	CSamplerStateOGL() = default;
-	~CSamplerStateOGL() = default;
 
 	/**
 	  * @brief protected variables member
@@ -33,7 +42,12 @@ protected:
 	/**
 	  * @Variable m_SamSt, unsigned int for the sampler state
 	*/
-	unsigned int m_SamSt;
+	unsigned int m_SamSt = 0;
+
+	/**
+	  * @Variable m_SamSt, unsigned int for the sampler state
+	*/
+	unsigned int m_NumberOfSampler = 0;
 
 	friend class COGLGraphiAPI;
 };

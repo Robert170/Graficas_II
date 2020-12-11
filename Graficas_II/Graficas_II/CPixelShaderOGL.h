@@ -14,10 +14,15 @@
  */
 #pragma once
 #include "CPixelShader.h"
+#include "glad.h"
 #include <fstream>
 #include <sstream>
 class CPixelShaderOGL : public CPixelShader
 {
+public:
+	/// Destructor
+	~CPixelShaderOGL();
+
 protected:
 	/**
 	  * @brief protected functions
@@ -26,8 +31,7 @@ protected:
 	/// Default Constructor
 	CPixelShaderOGL() = default;
 
-	/// Destructor
-	~CPixelShaderOGL() = default;
+	
 
 	/**
 	 * @brief      ReadFile function, to read a file

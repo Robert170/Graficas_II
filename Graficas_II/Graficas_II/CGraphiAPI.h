@@ -239,6 +239,14 @@ struct SimpleVertex
 	glm::vec2 Tex;
 };
 
+struct VertexTexture {
+	glm::vec3 Position;
+	glm::vec3 Normal;
+	glm::vec2 TexCoords;
+	glm::vec3 Tangent;
+	glm::vec3 Bitangent;
+};
+
 struct ColorStruct
 {
 	float R = 0;
@@ -389,7 +397,7 @@ public:
 	  * @bug		No know Bugs
 	  * @return     Returns a pointer of CBuffer
 	*/
-	virtual CVertexBuffer* CreateVertexBuffer(const std::vector <SimpleVertex>& Ver,
+	virtual CVertexBuffer* CreateVertexBuffer(const std::vector <VertexTexture>& Ver,
 		                                      unsigned int NumBuffer = 0) = 0;
 
 	/**
@@ -432,6 +440,7 @@ public:
 	  * @param      format parameter four, format for the desc of the txture
 	  * @param      bindFlags parameter five, bind Flags for the desc of the txture
 	  * @param      Usage parameter six, Usage for the desc of the txture
+	  * @param      Data parameter seven, data of the texture
 	  * @bug		   No know Bugs
 	  * @return     Returns a pointer of CTexture
 	*/
@@ -440,7 +449,8 @@ public:
 		                              unsigned int numberTexture, //deberia estar en la clase texture
 		                              TEXTURE_FORMAT format = TF_R8G8B8A8_UNORM,
 		                              unsigned int bindFlags = TEXTURE_BIND_SHADER_RESOURCE,
-		                              TYPE_USAGE Usage = TYPE_USAGE_DEFAULT) = 0;
+		                              TYPE_USAGE Usage = TYPE_USAGE_DEFAULT,
+		                              const void* Data = nullptr) = 0;
 
 	/**
 	  * @brief      CreateTexture3D function, to create a texture 3D

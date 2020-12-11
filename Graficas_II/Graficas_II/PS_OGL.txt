@@ -8,11 +8,16 @@ layout (std140, binding = 0) uniform cbNeverChanges
     vec4 vMeshColor;
 };
 
+in vec2 TexCoords;
+uniform sampler2D texture_diffuse1;
+
 out vec4 OutFragColor;
 
 void main()
 {
+
     OutFragColor = vMeshColor;
+    OutFragColor = texture(texture_diffuse1, TexCoords);
 }
 
  

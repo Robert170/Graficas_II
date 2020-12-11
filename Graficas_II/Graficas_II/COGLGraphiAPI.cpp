@@ -106,11 +106,12 @@ InputLayout_Desc COGLGraphiAPI::CreateInputLayoutDesc(std::vector<std::string> S
 	return Temp;
 }
 
-CVertexBuffer* COGLGraphiAPI::CreateVertexBuffer(const std::vector <SimpleVertex>& Ver,
+CVertexBuffer* COGLGraphiAPI::CreateVertexBuffer(const std::vector <VertexTexture>& Ver,
 	                                             unsigned int NumBuffers)
 {
 	auto VertexBuffer = new CVertexBufferOGL();
 
+	VertexBuffer->m_NumberOfBuffers = NumBuffers;
 	glGenBuffers(NumBuffers,
 		         &VertexBuffer->m_VBO);
 
@@ -118,7 +119,7 @@ CVertexBuffer* COGLGraphiAPI::CreateVertexBuffer(const std::vector <SimpleVertex
 		         VertexBuffer->m_VBO);
 
 	glBufferData(GL_ARRAY_BUFFER, 
-		         Ver.size()* sizeof(SimpleVertex),
+		         Ver.size()* sizeof(VertexTexture),
 		         Ver.data(), 
 		         GL_STATIC_DRAW);
 
@@ -135,6 +136,8 @@ CIndexBuffer* COGLGraphiAPI::CreateIndexBuffer(const std::vector<unsigned int>& 
 	                                           unsigned int NumBuffer)
 {
 	auto IndexBuffer = new CIndexBufferOGL();
+
+	IndexBuffer->m_NumberOfBuffers = NumBuffer;
 
 
 	glGenBuffers(NumBuffer, 
@@ -156,6 +159,8 @@ CConstantBuffer* COGLGraphiAPI::CreateConstantBuffer(unsigned int BufferSize,//2
 	                                                 const void* Data) //3
 {
 	auto ConstantBuffer = new CConstantBufferOGL();
+
+	ConstantBuffer->m_NumberOfBuffers = NumBuffer;
 
 	glGenBuffers(NumBuffer,
 		         &ConstantBuffer->m_CBO);
@@ -185,10 +190,12 @@ CTexture* COGLGraphiAPI::CreateTexture2D(unsigned int width,
 	                                     unsigned int numberTexture,
 	                                     TEXTURE_FORMAT format,
 	                                     unsigned int bindFlags,
-	                                     TYPE_USAGE Usage)
+	                                     TYPE_USAGE Usage,
+	                                     const void* Data)
 {
 	auto Texture = new CTextureOGL();
 	
+
 
 	//Checar que interfaces se van a crear
 	//se puede omitir
@@ -219,7 +226,19 @@ CTexture* COGLGraphiAPI::CreateTexture2D(unsigned int width,
 		
 
 	}
-
+	unsigned int OglFormat;
+	if (TF_R16_UINT == format)
+	{
+		OglFormat = GL_RED;
+	}
+	else if (TF_R32G32B32_UINT == format)
+	{
+		OglFormat = GL_RGB;
+	}
+	else if (TF_R16G16B16A16_UINT == format)
+	{
+		OglFormat = GL_RGBA;
+	}
 	glGenTextures(numberTexture, 
 		          &Texture->m_Texture);
 
@@ -228,22 +247,30 @@ CTexture* COGLGraphiAPI::CreateTexture2D(unsigned int width,
 
 	glTexImage2D(GL_TEXTURE_2D, 
 		         0, 
-		         GL_RGB, 
+		         OglFormat,
 		         width, 
 		         height, 
 		         0, 
-		         GL_RGB, 
+		         OglFormat,
 		         GL_UNSIGNED_BYTE, 
-		         0);
+		         Data);
 
 	glTexParameteri(GL_TEXTURE_2D, 
-		            GL_TEXTURE_MAG_FILTER, 
-		            GL_NEAREST);
-
+		            GL_TEXTURE_WRAP_S, 
+		            GL_REPEAT);	
+	glTexParameteri(GL_TEXTURE_2D, 
+		            GL_TEXTURE_WRAP_T, 
+		            GL_REPEAT);
+	
 	glTexParameteri(GL_TEXTURE_2D, 
 		            GL_TEXTURE_MIN_FILTER, 
-		            GL_NEAREST);
+		            GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, 
+		            GL_TEXTURE_MAG_FILTER, 
+		            GL_LINEAR);
 
+	glGenerateMipmap(GL_TEXTURE_2D);
+	
 	return Texture;
 }
 
@@ -480,10 +507,10 @@ CInputLayout* COGLGraphiAPI::CreateInputLayout(CShaderProgram&Vertex,
 	                                           unsigned int NumInputLayout)
 {
 	auto InputLa = new CInputLayoutOGL();
-
+	InputLa->m_NumberOfInputLayout = NumInputLayout;
 	glGenVertexArrays(NumInputLayout,
 		              &InputLa->m_IPLA);
-	//checkGLError();
+	checkGLError();
 
 
 	glBindVertexArray(InputLa->m_IPLA);
@@ -618,7 +645,8 @@ void COGLGraphiAPI::SetSamplerState(const std::vector<CSamplerState*>& Sam,
 	for (int i = 0; i < Sam.size(); i++)
 	{
 		auto SamSt = reinterpret_cast<CSamplerStateOGL*>(Sam.at(i));
-
+		// now set the sampler to the correct texture unit
+		//glUniform1i(glGetUniformLocation(SamSt->m_SamSt, , i);
 		glBindSampler(StartSlot, SamSt->m_SamSt);
 		checkGLError();
 	}
@@ -647,7 +675,7 @@ void COGLGraphiAPI::SetShaderResource(const std::vector<CTexture*>& pRTTex,
 	{
 		auto SamSt = reinterpret_cast<CTextureOGL*>(pRTTex.at(i));
 
-		//glTextureView()
+		glBindTexture(GL_TEXTURE_2D, SamSt->m_SRV);
 		checkGLError();
 
 	}

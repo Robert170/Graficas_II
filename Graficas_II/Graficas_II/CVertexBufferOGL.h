@@ -14,13 +14,25 @@
  */
 #pragma once
 #include "CVertexBuffer.h"
+#include "glad.h"
 class CVertexBufferOGL : public CVertexBuffer
 {
-	/// Default Constructor
-	CVertexBufferOGL() = default;
+public:
+	/**
+	  * @brief public functions
+	*/
 
 	/// Destructor
-	~CVertexBufferOGL() = default;
+	~CVertexBufferOGL();
+
+protected:
+
+	/**
+	  * @brief protected functions
+	*/
+
+	/// Default Constructor
+	CVertexBufferOGL() = default;
 
 	/**
 	  * @brief protected variables member
@@ -29,7 +41,12 @@ class CVertexBufferOGL : public CVertexBuffer
 	/**
 	  * @Variable m_VBO, is for a vertex buffer
 	*/
-	unsigned int m_VBO;
+	unsigned int m_VBO = 0;
+
+	/**
+	  * @Variable m_NumberOfBuffers, number of vertex buffer to delete
+	*/
+	unsigned int m_NumberOfBuffers = 0;
 
 	friend class COGLGraphiAPI;
 

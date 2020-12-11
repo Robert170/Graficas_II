@@ -21,6 +21,8 @@
 #include "CShaderProgram.h"
 #include "CVertexBuffer.h"
 #include "CIndexBuffer.h"
+#include "CTexture.h"
+#include "CSamplerState.h"
 #include "CGraphiAPI.h"
 
 struct Vertex {
@@ -40,20 +42,26 @@ class CMesh
 {
 public:
     // mesh Data
-    std::vector<SimpleVertex> m_Vertices;
+    std::vector<VertexTexture> m_Vertices;
     std::vector<unsigned int> m_Indices;
-    //std::vector<Texture> m_Textures;
+    std::vector<CTexture*> m_vTextures;
+    std::vector<CSamplerState*> m_vSamplers;
 
 
     // constructor
-    CMesh(std::vector<SimpleVertex> Vertices,
+    CMesh(std::vector<VertexTexture> Vertices,
           std::vector<unsigned int> indices,
-          //std::vector<Texture> textures,
+          std::vector<CTexture*> Textures,
+          std::vector<CSamplerState*> Samplers,
           CGraphiAPI* API);
+
+    ~CMesh();
 
     // render the mesh
     void Draw(CShaderProgram& shader, 
               CGraphiAPI* API);
+
+    void DeletePointers();
 
 private:
     // render data 

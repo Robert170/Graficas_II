@@ -14,6 +14,7 @@
  */
 #pragma once
 #include "CRasterizerState.h"
+#include "glad.h"
 class CRasterizerStateOGL : public CRasterizerState
 {
 protected:
