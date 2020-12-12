@@ -361,7 +361,7 @@ CTexture* CDXGraphiAPI::CreateTexture2D(unsigned int width,
     ResourceDataDesc.SysMemPitch = desc.Width * 4;
     ResourceDataDesc.SysMemSlicePitch = 0;
     //Crear textura
-    hr = m_pd3dDevice->CreateTexture2D(&desc, &ResourceDataDesc, &texture->m_pTexture);
+    hr = m_pd3dDevice->CreateTexture2D(&desc, nullptr, &texture->m_pTexture);
     if(FAILED(hr))
     {
         std::cout << "//Error fallo la creacion de la textura" << std::endl;

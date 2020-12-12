@@ -312,16 +312,16 @@ protected:
 	virtual void CreateDeferredContext() = 0;
 public:
 
+	/**
+	  * @brief public functions
+	*/
+
 	/// Default Constructor
 	CGraphiAPI() = default;
 
 	/// Destructor
 	virtual ~CGraphiAPI() = default;
 	
-
-	/**
-	  * @brief public functions
-	*/
 
 
 	/**

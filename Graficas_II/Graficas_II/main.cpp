@@ -6,8 +6,8 @@
 #include "CModel.h"
 #include <windows.h>
 
-//CGraphiAPI* API = new CDXGraphiAPI();
-CGraphiAPI* API = new COGLGraphiAPI();
+CGraphiAPI* API = new CDXGraphiAPI();
+//CGraphiAPI* API = new COGLGraphiAPI();
 
 // consts variables
 const unsigned int g_Width = 800;
@@ -84,6 +84,7 @@ CBNeverChanges g_ConstantBuffer;
 
 void Init()
 {
+	//init data of the camera
 	CCameraDatas Data;
 	Data.Far = g_Far;
 	Data.Fov = g_FieldOfView;
@@ -91,11 +92,12 @@ void Init()
 	Data.W = g_Width;
 	Data.Near = g_Near;
 
+	//init mesh color
 	g_MeshColor.x = 1;
 	g_MeshColor.y = 1;
 	g_MeshColor.z = 1;
 
-
+	//init the api
 	API->Init(g_Width,
 		      g_Height);
 
@@ -130,7 +132,7 @@ void Init()
 
 	g_vShaderResources.push_back(g_pShaderResource);*/
 
-
+	//create shader program
 	g_pShaderProgram = API->CreateShaderProgram("VS", 
 		                                        "PS", 
 		                                        "VS", 
@@ -151,11 +153,11 @@ void Init()
 		                                        1);*/
 
 
-	//Set semantic 
+	//Set semantic for input layout
 	g_vSemanticNames.push_back("POSITION");
 	g_vSemanticNames.push_back("TEXCOORD");
 
-	//formats
+	//Set formats for input layout
 	g_vFormats.push_back(TF_R32G32B32_FLOAT);
 	g_vFormats.push_back(TF_R32G32_FLOAT);
 
@@ -187,7 +189,7 @@ void Init()
 		                                    indices.size(),
 		                                    1);*/
 
-	// Create the matrixs
+	// Create and set matrixs
 
 	g_ConstantBuffer.mView = API->CreateMatrixView(g_vEye,
 		                                           g_vAt,
@@ -201,8 +203,10 @@ void Init()
 
 	g_ConstantBuffer.mWorld = API->CreateMatrixWorld();
 	
+	//set mesh color
 	g_ConstantBuffer.vMeshColor = g_MeshColor;
 
+	//create constant buffer
 	g_pCBNeverChanges = API->CreateConstantBuffer(sizeof(CBNeverChanges),
 		                                          g_NumberOfBuffers,
 		                                          &g_ConstantBuffer);
@@ -219,6 +223,7 @@ void Init()
 
 void Update()
 {
+	
 	API->UpdateSubresource(&g_ConstantBuffer,
 		                   *g_pCBNeverChanges);
 }
@@ -231,6 +236,7 @@ void Render()
 	Color.B = g_ColorB;
 	Color.A = g_ColorA;
 
+	//se render target
 	/*API->SetRenderTarget(g_vRenderTargets,
 		                 g_pDepthStencil);*/
 
@@ -274,7 +280,7 @@ void Render()
 	//set vertex shader
 	//API->SetVertexShaders(g_pVertexShader);
 
-	//set all vertex shader constant buffer
+	//set vertex shader constant buffer
 
 	API->SetVertexShaderConstantBuffer(g_pCBNeverChanges,
 		                               g_StartSlot,
@@ -293,17 +299,21 @@ void Render()
 
 	/*API->SetSamplerState(g_vSamplers,
 		                 0);*/
+
+	//draw
 	g_Model->Draw(*g_pShaderProgram, API);
 	/*API->DrawIndexed(36,
 		             0,
 		             0,
 		             nullptr);*/
+
+	//present
 	API->Present();
 }
 
 void Destroy()
 {
-	//sampler state
+	// delete sampler state
 	for (int i = g_vSamplers.size() - 1; i >= 0; i--)
 	{
 		if (nullptr != g_vSamplers.at(i))
@@ -312,7 +322,7 @@ void Destroy()
 		}
 	}
 
-	//ShaderResource
+	//delete Shader Resource
 	for (int i = g_vShaderResources.size() - 1; i >= 0; i--)
 	{
 		if (nullptr != g_vShaderResources.at(i))
@@ -321,7 +331,7 @@ void Destroy()
 		}
 	}
 
-	//constant Buffers
+	//delete constant Buffers
 	for (int i = g_vConstantBuffers.size() - 1; i >= 0; i--)
 	{
 		if (nullptr != g_vConstantBuffers.at(i))
@@ -330,7 +340,7 @@ void Destroy()
 		}
 	}
 
-	//Model
+	//delete Model
 	delete g_Model;
 
 	//vertex buffer
@@ -339,21 +349,22 @@ void Destroy()
 	//index buffer
 	//delete g_pIndexBuffer;
 
+	//delete shader program
 	delete g_pShaderProgram;
 
-	//input layout
+	//delete input layout
 	delete g_pInputLayout;
 
-	//vertex shader
+	//delete vertex shader
 	delete g_pVertexShader;
 
-	//pixel shader
+	//delete pixel shader
 	delete g_pPixelShader;
 
-	//depthstencil
+	//delete depthstencil
 	delete g_pDepthStencil;
 
-	//render targets
+	//delete render targets
 	for (int i = g_vRenderTargets.size() - 1; i >= 0; i--)
 	{
 		if (nullptr != g_vRenderTargets.at(i))
@@ -365,6 +376,7 @@ void Destroy()
 
 int main()
 {
+	//init the program
 	Init();
 
 	// Main message loop
@@ -387,6 +399,7 @@ int main()
 		}
 	}
 
+	//when we finish destroy all
 	Destroy();
 	API->Destroy();
 

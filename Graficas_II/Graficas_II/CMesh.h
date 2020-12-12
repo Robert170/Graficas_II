@@ -41,37 +41,94 @@ struct Texture {
 class CMesh
 {
 public:
-    // mesh Data
+
+    /**
+       * @brief public functions
+    */
+
+    /**
+      * @Variable m_Vertices, textures vertex
+    */
     std::vector<VertexTexture> m_Vertices;
+
+    /**
+      * @Variable m_Indices, textures indices
+    */
     std::vector<unsigned int> m_Indices;
+
+    /**
+      * @Variable m_vTextures, all textures
+    */
     std::vector<CTexture*> m_vTextures;
+
+    /**
+      * @Variable m_vSamplers, all samplers
+    */
     std::vector<CSamplerState*> m_vSamplers;
 
 
-    // constructor
+    /**
+      * @brief      CMesh function, constructor whit parameters
+      * @param      Vertices parameter one, textures vertex
+      * @param      indices parameter two, textures indices
+      * @param      Textures parameter three, all textures
+      * @param      Samplers parameter four, all samplers
+      * @param      API parameter five, api to have acces to diferent functions
+      * @bug		No know Bugs
+      * @return     Returns nothing
+    */
     CMesh(std::vector<VertexTexture> Vertices,
           std::vector<unsigned int> indices,
           std::vector<CTexture*> Textures,
           std::vector<CSamplerState*> Samplers,
           CGraphiAPI* API);
 
+    /// Destructor
     ~CMesh();
 
-    // render the mesh
+    /**
+      * @brief      Draw function, to draw the load model
+      * @param      shader parameter one, to use shader
+      * @param      API parameter two, api to have acces to diferent functions
+      * @bug		No know Bugs
+      * @return     Returns nothing
+    */
     void Draw(CShaderProgram& shader, 
               CGraphiAPI* API);
 
+    /**
+      * @brief      DeletePointers function, to delete pointers
+      * @bug		No know Bugs
+      * @return     Returns nothing
+    */
     void DeletePointers();
 
 private:
-    // render data 
+    /**
+      * @brief private variables
+    */
 
+    /**
+      * @Variable m_IndexBuffer, index buffer
+    */
     CIndexBuffer* m_IndexBuffer;
+
+    /**
+      * @Variable m_VertexBuffer, vertex buffer
+    */
     CVertexBuffer* m_VertexBuffer;
 
 
+    /**
+       * @brief private functions
+    */
 
-    // initializes all the buffer objects/arrays
+    /**
+      * @brief      setupMesh function, to set mesh
+      * @param      API parameter one, api to have acces to diferent functions
+      * @bug		No know Bugs
+      * @return     Returns nothing
+    */
     void setupMesh(CGraphiAPI* API);
 };
 

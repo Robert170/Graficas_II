@@ -5,6 +5,7 @@ CModel::CModel()
 {
 }
 
+//destroy mesh
 CModel::~CModel()
 {
     for (unsigned int i = 0; i < m_vMeshes.size(); i++)
@@ -13,6 +14,7 @@ CModel::~CModel()
     }
 }
 
+//init to load model
 void CModel::LoadModel(std::string const& path,
 	                   CGraphiAPI* API, 
 	                   bool gamma)
@@ -22,6 +24,7 @@ void CModel::LoadModel(std::string const& path,
 		        API);
 }
 
+//draw model
 void CModel::Draw(CShaderProgram& shader,
 	              CGraphiAPI* API)
 {
@@ -32,6 +35,7 @@ void CModel::Draw(CShaderProgram& shader,
 	}
 }
 
+//Load model
 void CModel::LoadModel_2(std::string const& path,
 	                     CGraphiAPI* API)
 {
@@ -57,6 +61,7 @@ void CModel::LoadModel_2(std::string const& path,
 		        API);
 }
 
+//procese each node and mesh
 void CModel::ProcessNode(aiNode* node, 
 	                     const aiScene* scene, 
 	                     CGraphiAPI* API)
@@ -65,17 +70,20 @@ void CModel::ProcessNode(aiNode* node,
 	for (unsigned int i = 0; i < node->mNumMeshes; i++)
 	{
 		// the node object only contains indices to index the actual objects in the scene. 
-		// the scene contains all the data, node is just to keep stuff organized (like relations between nodes).
+		// the scene contains all the data, node is just to keep stuff organized 
+        //(like relations between nodes).
 		aiMesh* mesh = scene->mMeshes[node->mMeshes[i]];
         m_vMeshes.push_back(ProcessMesh(mesh, scene, API));
 	}
-	// after we've processed all of the meshes (if any) we then recursively process each of the children nodes
+	// after we've processed all of the meshes (if any) we then recursively process 
+    //each of the children nodes
 	for (unsigned int i = 0; i < node->mNumChildren; i++)
 	{
 		ProcessNode(node->mChildren[i], scene, API);
 	}
 }
 
+//process mesh
 CMesh CModel::ProcessMesh(aiMesh* mesh, 
 	                      const aiScene* scene, 
 	                      CGraphiAPI* API)
@@ -89,7 +97,10 @@ CMesh CModel::ProcessMesh(aiMesh* mesh,
     for (unsigned int i = 0; i < mesh->mNumVertices; i++)
     {
         VertexTexture Vertex;
-        glm::vec3 vector; // we declare a placeholder vector since assimp uses its own vector class that doesn't directly convert to glm's vec3 class so we transfer the data to this placeholder glm::vec3 first.
+        glm::vec3 vector; // we declare a placeholder vector since assimp uses its own 
+        //vector class that doesn't directly convert to glm's vec3 class so we transfer the 
+        //data to this placeholder glm::vec3 first.
+
         // positions
         vector.x = mesh->mVertices[i].x;
         vector.y = mesh->mVertices[i].y;
@@ -107,8 +118,10 @@ CMesh CModel::ProcessMesh(aiMesh* mesh,
         if (mesh->mTextureCoords[0]) // does the mesh contain texture coordinates?
         {
             glm::vec2 vec;
-            // a vertex can contain up to 8 different texture coordinates. We thus make the assumption that we won't 
-            // use models where a vertex can have multiple texture coordinates so we always take the first set (0).
+            // a vertex can contain up to 8 different texture coordinates. 
+            //We thus make the assumption that we won't 
+            // use models where a vertex can have multiple texture coordinates so we always
+            //take the first set (0).
             vec.x = mesh->mTextureCoords[0][i].x;
             vec.y = mesh->mTextureCoords[0][i].y;
             Vertex.TexCoords = vec;
@@ -184,6 +197,7 @@ CMesh CModel::ProcessMesh(aiMesh* mesh,
                  API);
 }
 
+//load texture
 void CModel::LoadMaterialTextures(aiMaterial* mat,
                                   aiTextureType type, 
                                   std::string typeName,
@@ -194,14 +208,16 @@ void CModel::LoadMaterialTextures(aiMaterial* mat,
     {
         aiString str;
         mat->GetTexture(type, i, &str);
-         //check if texture was loaded before and if so, continue to next iteration: skip loading a new texture
+         //check if texture was loaded before and if so, continue to next iteration: 
+         //skip loading a new texture
         bool skip = false;
         for (unsigned int j = 0; j < m_Texturesloaded.size(); j++)
         {
             if (m_Texturesloaded[j] != nullptr)
             {
                 Textures.push_back(m_Texturesloaded[j]);
-                skip = true; // a texture with the same filepath has already been loaded, continue to next one. (optimization)
+                skip = true; // a texture with the same filepath has already been loaded, 
+                //continue to next one. (optimization)
                 break;
             }
         }
@@ -213,7 +229,7 @@ void CModel::LoadMaterialTextures(aiMaterial* mat,
     return;
 }
 
-
+//optan texture from file
 void CModel::TextureFromFile(const char* path,
                                      const std::string& directory, 
                                      CGraphiAPI* API,
@@ -233,7 +249,7 @@ void CModel::TextureFromFile(const char* path,
             format = TF_R32G32B32_UINT;
         else if (nrComponents == 4)
             format = TF_R16G16B16A16_UINT;
-        
+        //create texture
      m_Texture = API->CreateTexture2D(width,
                                          height, 
                                          1, 
@@ -242,7 +258,7 @@ void CModel::TextureFromFile(const char* path,
                                          TYPE_USAGE_DEFAULT, 
                                          data);
         m_Texturesloaded.push_back(m_Texture);
-
+        //create sampler
         m_Sampler = API->CreateSamplerState(1);
 
         m_vSamplers.push_back(m_Sampler);
